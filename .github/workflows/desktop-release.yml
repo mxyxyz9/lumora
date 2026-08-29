@@ -67,7 +67,7 @@ jobs:
         run: ${{ matrix.dist_cmd }}
 
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lumora-${{ matrix.target }}-artifacts
           path: |
