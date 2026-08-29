@@ -30,6 +30,8 @@ export const App: React.FC = () => {
         message: 'Are you sure you want to close and exit Lumora? Any active workspace edits and notes are securely cached in local storage.',
         confirmText: 'Quit Lumora',
         cancelText: 'Stay',
+        variant: 'quit',
+        icon: 'logout',
         isDestructive: false,
         onConfirm: () => {
           if (window.electronAPI?.quitApp) {
@@ -53,6 +55,8 @@ export const App: React.FC = () => {
             message: 'Are you sure you want to close and exit Lumora? Any active workspace edits and notes are securely cached in local storage.',
             confirmText: 'Quit Lumora',
             cancelText: 'Stay',
+            variant: 'quit',
+            icon: 'logout',
             isDestructive: false,
             onConfirm: () => {
               if (window.electronAPI?.quitApp) {

@@ -81,6 +81,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   setConfirmBeforeQuit: (enabled: boolean) => {
     return ipcRenderer.invoke('app:setConfirmBeforeQuit', enabled);
   },
+  setAppIcon: (iconTheme: string) => {
+    return ipcRenderer.invoke('app:setAppIcon', iconTheme);
+  },
   quitApp: () => {
     return ipcRenderer.invoke('app:quitConfirmed');
   },

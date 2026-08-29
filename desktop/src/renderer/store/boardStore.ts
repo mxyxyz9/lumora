@@ -168,6 +168,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   githubSyncIntervalSec: 30,
   watchLevel: 'watching',
   confirmBeforeQuit: true,
+  appIcon: 'dark',
 };
 
 function applyThemeToDom(theme: string) {
@@ -183,6 +184,9 @@ function loadStoredSettings(): AppSettings {
     if (raw) {
       const stored = { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
       applyThemeToDom(stored.theme || DEFAULT_SETTINGS.theme);
+      if (stored.appIcon && typeof window !== 'undefined' && window.electronAPI?.setAppIcon) {
+        window.electronAPI.setAppIcon(stored.appIcon);
+      }
       return stored;
     }
   } catch (_) {}
@@ -197,6 +201,10 @@ export interface ConfirmDialogState {
   confirmText?: string;
   cancelText?: string;
   isDestructive?: boolean;
+  variant?: 'danger' | 'warning' | 'primary' | 'info' | 'quit' | 'default';
+  icon?: 'logout' | 'danger' | 'warning' | 'info' | 'help' | 'sparkles';
+  badge?: string;
+  note?: string;
   onConfirm: () => void | Promise<void>;
   onCancel?: () => void;
 }
@@ -333,6 +341,9 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     set({ settings: updated });
     if (newSettings.theme) {
       applyThemeToDom(newSettings.theme);
+    }
+    if (newSettings.appIcon && window.electronAPI?.setAppIcon) {
+      window.electronAPI.setAppIcon(newSettings.appIcon);
     }
     if (typeof newSettings.confirmBeforeQuit === 'boolean' && window.electronAPI?.setConfirmBeforeQuit) {
       window.electronAPI.setConfirmBeforeQuit(newSettings.confirmBeforeQuit);

@@ -1,7 +1,7 @@
 {
   "name": "lumora-kanban",
   "productName": "Lumora",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Minimalist, distraction-free desktop Kanban client with live DDP sync",
 
   "main": "dist-electron/main/main.js",

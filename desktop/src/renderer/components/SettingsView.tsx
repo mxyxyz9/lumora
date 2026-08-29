@@ -44,6 +44,7 @@ import {
   Flame,
   FileCode2,
   Brain,
+  Sparkles,
 } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
@@ -65,6 +66,7 @@ export const SettingsView: React.FC = () => {
 
   // Form states
   const [theme, setTheme] = useState<string>(settings.theme || 'midnight');
+  const [appIconTheme, setAppIconTheme] = useState<string>(settings.appIcon || 'dark');
   const [listWidth, setListWidth] = useState<number>(settings.listWidth || 300);
   const [showApiKey, setShowApiKey] = useState(false);
   const [defaultSubfolders, setDefaultSubfolders] = useState<string>(
@@ -311,6 +313,47 @@ export const SettingsView: React.FC = () => {
     setTheme(newTheme);
     updateSettings({ theme: newTheme as any });
   };
+
+  const handleAppIconChange = (newIconTheme: string) => {
+    setAppIconTheme(newIconTheme);
+    updateSettings({ appIcon: newIconTheme as any });
+    if (typeof window !== 'undefined' && window.electronAPI?.setAppIcon) {
+      window.electronAPI.setAppIcon(newIconTheme);
+    }
+  };
+
+  const APP_ICONS = [
+    {
+      id: 'dark',
+      name: 'Midnight Dark',
+      desc: 'Deep obsidian squircle with luminous white & electric blue emblem.',
+      badge: 'Classic Dark',
+      preview: './icon-dark.png',
+      accent: '#3b82f6',
+      borderAccent: '#232838',
+      bgPreview: '#0b0d13',
+    },
+    {
+      id: 'light',
+      name: 'Studio Light',
+      desc: 'Crisp Apple silver & platinum squircle with obsidian slate & sapphire pills.',
+      badge: 'Light Mode',
+      preview: './icon-light.png',
+      accent: '#2563eb',
+      borderAccent: '#cbd5e1',
+      bgPreview: '#f8fafc',
+    },
+    {
+      id: 'liquid_glass',
+      name: 'Liquid Glass',
+      desc: 'Translucent glassmorphic squircle with iridescent refraction & caustic neon glow.',
+      badge: 'Liquid Glass',
+      preview: './icon-liquid_glass.png',
+      accent: '#60a5fa',
+      borderAccent: '#c084fc',
+      bgPreview: '#0f172a',
+    },
+  ];
 
   const THEMES = [
     // Dark Themes
@@ -770,8 +813,105 @@ export const SettingsView: React.FC = () => {
                   Appearance & Curated Themes
                 </h2>
                 <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
-                  Switch between 6 hand-tuned themes crafted for high contrast, minimal eye strain, and precision focus.
+                  Customize your workspace themes and macOS Dock / Window icon aesthetics in real time.
                 </p>
+              </div>
+
+              {/* App & Dock Icon Style Selector */}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                  <Sparkles size={14} style={{ color: 'var(--accent-blue)' }} />
+                  <span style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    App & Dock Icon Style (3)
+                  </span>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+                  {APP_ICONS.map((icon) => {
+                    const isSelected = appIconTheme === icon.id;
+                    return (
+                      <div
+                        key={icon.id}
+                        onClick={() => handleAppIconChange(icon.id)}
+                        style={{
+                          background: 'var(--bg-card)',
+                          border: isSelected ? `2px solid var(--accent-primary)` : '1px solid var(--border-medium)',
+                          borderRadius: 'var(--r-lg)',
+                          padding: '16px',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '14px',
+                          boxShadow: isSelected ? `0 0 16px rgba(59, 130, 246, 0.22)` : 'var(--shadow-xs)',
+                          transition: 'all var(--t-fast)',
+                          position: 'relative',
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: '54px',
+                            height: '54px',
+                            borderRadius: '13px',
+                            background: icon.bgPreview,
+                            border: `1px solid ${icon.borderAccent}`,
+                            padding: '2px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            flexShrink: 0,
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.25)',
+                          }}
+                        >
+                          <img
+                            src={icon.preview}
+                            alt={icon.name}
+                            style={{ width: '100%', height: '100%', borderRadius: '11px', objectFit: 'contain' }}
+                          />
+                        </div>
+
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}>
+                            <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>
+                              {icon.name}
+                            </span>
+                            {isSelected ? (
+                              <span
+                                style={{
+                                  background: 'var(--accent-primary)',
+                                  color: '#ffffff',
+                                  borderRadius: '50%',
+                                  width: '18px',
+                                  height: '18px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  flexShrink: 0,
+                                }}
+                              >
+                                <Check size={11} strokeWidth={3} />
+                              </span>
+                            ) : (
+                              <span
+                                style={{
+                                  fontSize: '10.5px',
+                                  fontWeight: 600,
+                                  padding: '2px 7px',
+                                  borderRadius: 'var(--r-full)',
+                                  background: 'var(--bg-badge)',
+                                  color: 'var(--text-muted)',
+                                }}
+                              >
+                                {icon.badge}
+                              </span>
+                            )}
+                          </div>
+                          <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px', lineHeight: 1.4 }}>
+                            {icon.desc}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
               {/* Dark Themes Grid */}

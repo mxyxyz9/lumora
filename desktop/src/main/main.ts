@@ -16,13 +16,20 @@ let mainWindow: BrowserWindow | null = null;
 let confirmBeforeQuit = true;
 let isQuittingConfirmed = false;
 
-function getAppIcon(): string | undefined {
+function getAppIcon(theme?: string): string | undefined {
+  const iconFilename = theme ? `icon-${theme}.png` : 'icon.png';
   const possiblePaths = [
+    path.join(__dirname, `../../build/${iconFilename}`),
+    path.join(__dirname, `../build/${iconFilename}`),
+    path.join(__dirname, `../../../build/${iconFilename}`),
+    path.join(process.cwd(), `build/${iconFilename}`),
+    path.join(process.cwd(), `desktop/build/${iconFilename}`),
+    path.join(process.cwd(), `public/${iconFilename}`),
+    path.join(process.cwd(), `desktop/public/${iconFilename}`),
+    // Fallbacks to default icon.png
     path.join(__dirname, '../../build/icon.png'),
     path.join(__dirname, '../build/icon.png'),
-    path.join(__dirname, '../../../build/icon.png'),
     path.join(process.cwd(), 'build/icon.png'),
-    path.join(process.cwd(), 'desktop/build/icon.png'),
   ];
   for (const p of possiblePaths) {
     if (fs.existsSync(p)) {
@@ -193,6 +200,27 @@ function createWindow() {
 ipcMain.handle('app:setConfirmBeforeQuit', (event, enabled: boolean) => {
   confirmBeforeQuit = Boolean(enabled);
   return confirmBeforeQuit;
+});
+
+ipcMain.handle('app:setAppIcon', (event, iconTheme: string) => {
+  const iconPath = getAppIcon(iconTheme);
+  if (!iconPath) {
+    console.warn(`Icon path not found for theme "${iconTheme}"`);
+    return false;
+  }
+  try {
+    const img = nativeImage.createFromPath(iconPath);
+    if (process.platform === 'darwin' && app.dock) {
+      app.dock.setIcon(img);
+    }
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.setIcon(img);
+    }
+    return true;
+  } catch (e) {
+    console.warn('Could not set app icon dynamically:', e);
+    return false;
+  }
 });
 
 ipcMain.handle('app:quitConfirmed', () => {

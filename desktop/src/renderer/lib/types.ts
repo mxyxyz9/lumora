@@ -206,6 +206,7 @@ export interface AppSettings {
   syncIntervalSeconds?: number;
   watchLevel?: 'muted' | 'tracking' | 'watching';
   confirmBeforeQuit?: boolean;
+  appIcon?: 'dark' | 'light' | 'liquid_glass';
 }
 
 export interface AuthSession {
@@ -328,6 +329,7 @@ declare global {
       readLearningsFile?: (repoPath?: string) => Promise<string>;
       writeLearningsFile?: (content: string, repoPath?: string) => Promise<boolean>;
       setConfirmBeforeQuit?: (enabled: boolean) => Promise<boolean>;
+      setAppIcon?: (iconTheme: string) => Promise<boolean>;
       quitApp?: () => Promise<void>;
       onRequestClosePrompt?: (callback: () => void) => () => void;
     };
