@@ -6,6 +6,11 @@ directories:
   output: release
   buildResources: build
 
+publish:
+  provider: github
+  owner: mxyxyz9
+  repo: lumora
+
 files:
   - dist/**/*
   - dist-electron/**/*

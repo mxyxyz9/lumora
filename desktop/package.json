@@ -4,6 +4,11 @@
   "version": "1.0.1",
   "description": "Minimalist, distraction-free desktop Kanban client with live DDP sync",
 
+  "author": "mxyxyz9 <mxyxyz9@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mxyxyz9/lumora.git"
+  },
   "main": "dist-electron/main/main.js",
   "scripts": {
     "dev": "vite",
@@ -13,10 +18,10 @@
     "build:electron": "tsc -p tsconfig.electron.json",
     "start": "npm run build:electron && electron .",
     "pack": "npm run build && npm run build:electron && electron-builder --dir --config electron-builder.yml",
-    "dist": "npm run build && npm run build:electron && electron-builder --config electron-builder.yml",
-    "dist:mac": "npm run build && npm run build:electron && electron-builder --mac --config electron-builder.yml",
-    "dist:win": "npm run build && npm run build:electron && electron-builder --win --config electron-builder.yml",
-    "dist:linux": "npm run build && npm run build:electron && electron-builder --linux --config electron-builder.yml",
+    "dist": "npm run build && npm run build:electron && electron-builder --config electron-builder.yml --publish never",
+    "dist:mac": "npm run build && npm run build:electron && electron-builder --mac --config electron-builder.yml --publish never",
+    "dist:win": "npm run build && npm run build:electron && electron-builder --win --config electron-builder.yml --publish never",
+    "dist:linux": "npm run build && npm run build:electron && electron-builder --linux --config electron-builder.yml --publish never",
     "test": "vitest run --fileParallelism=false",
     "bun:dev": "bun --bun vite",
     "bun:dev:desktop": "bun run build:electron && concurrently -k -s first \"bun run dev\" \"node scripts/wait-and-electron.cjs\"",
