@@ -96,7 +96,7 @@ jobs:
         run: ls -lh release-binaries/
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.ref_name || inputs.version || 'v1.0.2' }}
           name: Lumora Desktop ${{ github.ref_name || inputs.version || 'v1.0.2' }}
