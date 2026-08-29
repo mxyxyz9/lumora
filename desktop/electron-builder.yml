@@ -72,8 +72,14 @@ nsis:
 
 # Linux Configuration
 linux:
-  category: Office;Development;Utility;
+  category: Office;Development;Utility;ProjectManagement;
   icon: build/icon.png
+  desktop:
+    Name: Lumora
+    Comment: Minimalist, AI-Powered Kanban Workspace & Autonomous Dev Pipeline
+    GenericName: Kanban Workspace
+    Categories: Office;Development;ProjectManagement;
+    StartupWMClass: Lumora
   target:
     - target: AppImage
       arch:
@@ -83,4 +89,31 @@ linux:
       arch:
         - x64
         - arm64
+    - target: rpm
+      arch:
+        - x64
+        - arm64
+    - target: tar.gz
+      arch:
+        - x64
+        - arm64
+    - target: zip
+      arch:
+        - x64
+        - arm64
   artifactName: "${productName}-${version}-Linux-${arch}.${ext}"
+
+deb:
+  priority: optional
+  packageCategory: utils
+  depends:
+    - gconf2
+    - gconf-service
+    - libnotify4
+    - libappindicator1 | libayatana-appindicator3-1
+    - libxtst6
+    - libnss3
+    - libasound2
+
+rpm:
+  category: Development/Tools

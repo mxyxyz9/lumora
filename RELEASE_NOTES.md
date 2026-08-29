@@ -1,3 +1,56 @@
+# Lumora v1.0.2 — Multi-Platform & Universal Linux Release ⚡
+
+### Full Linux Distro Matrix (Debian, Ubuntu, Fedora, RHEL, Arch), Chromebook (ChromeOS), macOS & Windows
+
+Lumora v1.0.2 expands platform support across all major desktop operating systems and Linux distributions, introducing official **RPM packages**, **Debian/Ubuntu DEBs**, **Universal AppImages**, **portable tar.gz/zip archives**, and native **Chromebook (ChromeOS Linux / Crostini)** compatibility alongside macOS (Apple Silicon + Intel DMGs) and Windows (NSIS + Portable).
+
+---
+
+## 📦 Downloads & Compatibility Matrix (v1.0.2)
+
+### 🍎 macOS
+| Architecture | Installer / Format | Direct Download |
+|---|---|---|
+| **Apple Silicon** (`arm64` - M1 / M2 / M3 / M4 / M5) | Apple Disk Image (`.dmg`) | [**Lumora-1.0.2-Mac-arm64.dmg**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Mac-arm64.dmg) |
+| **Apple Silicon** (`arm64`) | Portable Archive (`.zip`) | [**Lumora-1.0.2-Mac-arm64.zip**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Mac-arm64.zip) |
+| **Intel Mac** (`x64`) | Apple Disk Image (`.dmg`) | [**Lumora-1.0.2-Mac-x64.dmg**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Mac-x64.dmg) |
+| **Intel Mac** (`x64`) | Portable Archive (`.zip`) | [**Lumora-1.0.2-Mac-x64.zip**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Mac-x64.zip) |
+
+---
+
+### 🪟 Windows
+| Architecture | Installer / Format | Direct Download |
+|---|---|---|
+| **Windows 64-bit** (`x64`) | NSIS Setup Executable (`.exe`) | [**Lumora-1.0.2-Windows-x64-Setup.exe**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Windows-x64-Setup.exe) |
+| **Windows 64-bit** (`x64`) | Portable Archive (`.zip`) | [**Lumora-1.0.2-Windows-x64-Setup.zip**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Windows-x64-Setup.zip) |
+
+---
+
+### 🐧 Linux & Chromebook Distributions
+| Linux Distribution / OS | Architecture | Package Format | Direct Download |
+|---|---|---|---|
+| **Debian, Ubuntu, Pop!_OS, Linux Mint, Zorin OS, Elementary OS** | 64-bit (`x86_64`) | Debian Package (`.deb`) | [**Lumora-1.0.2-Linux-amd64.deb**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Linux-amd64.deb) |
+| **Debian, Ubuntu, Pop!_OS, Raspberry Pi OS (64-bit)** | ARM64 (`aarch64`) | Debian Package (`.deb`) | [**Lumora-1.0.2-Linux-arm64.deb**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Linux-arm64.deb) |
+| **Fedora, RHEL, openSUSE, AlmaLinux, Rocky Linux, CentOS Stream** | 64-bit (`x86_64`) | RPM Package (`.rpm`) | [**Lumora-1.0.2-Linux-x86_64.rpm**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Linux-x86_64.rpm) |
+| **Fedora, RHEL, openSUSE, AlmaLinux, Rocky Linux** | ARM64 (`aarch64`) | RPM Package (`.rpm`) | [**Lumora-1.0.2-Linux-arm64.rpm**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Linux-arm64.rpm) |
+| **Arch Linux, Manjaro, SteamOS, EndeavourOS, Alpine, Solus, Void (Universal)** | 64-bit (`x86_64`) | Standalone AppImage | [**Lumora-1.0.2-Linux-x86_64.AppImage**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Linux-x86_64.AppImage) |
+| **Arch Linux ARM, Manjaro ARM (Universal)** | ARM64 (`aarch64`) | Standalone AppImage | [**Lumora-1.0.2-Linux-arm64.AppImage**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Linux-arm64.AppImage) |
+| **Portable Linux Binary Archive** | 64-bit (`x86_64`) | Compressed Tarball (`.tar.gz`) | [**Lumora-1.0.2-Linux-x64.tar.gz**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Linux-x64.tar.gz) |
+| **Portable Linux Binary Archive** | ARM64 (`aarch64`) | Compressed Tarball (`.tar.gz`) | [**Lumora-1.0.2-Linux-arm64.tar.gz**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Linux-arm64.tar.gz) |
+
+---
+
+### 💻 Chromebook / ChromeOS Installation Guide
+Chromebooks natively support Lumora through the **ChromeOS Linux Development Environment (Crostini)**:
+1. Open **ChromeOS Settings** → **Advanced** → **Developers** → Turn on **Linux development environment**.
+2. Download the appropriate Debian package:
+   - For Intel/AMD Chromebooks: [**Lumora-1.0.2-Linux-amd64.deb**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Linux-amd64.deb)
+   - For ARM Chromebooks (MediaTek, Qualcomm Snapdragon, Rockchip): [**Lumora-1.0.2-Linux-arm64.deb**](https://github.com/mxyxyz9/lumora/releases/download/v1.0.2/Lumora-1.0.2-Linux-arm64.deb)
+3. Open the **Files app** on ChromeOS, right-click the downloaded `.deb` file, and select **"Install with Linux"**.
+4. Click **Install**. Lumora will appear directly in your ChromeOS App Launcher inside the **Linux apps** folder with full GPU acceleration and keyboard shortcuts!
+
+---
+
 # Lumora v1.0.1 — Official Release ⚡
 
 ### Simplified Quit Modal & Dynamic App / macOS Dock Icon Customizer

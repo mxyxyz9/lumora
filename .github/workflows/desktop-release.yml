@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version tag (e.g. v1.0.1)'
+        description: 'Release version tag (e.g. v1.0.2)'
         required: false
-        default: 'v1.0.1'
+        default: 'v1.0.2'
 
 permissions:
   contents: write
@@ -47,7 +47,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libarchive-tools libfuse2
+          sudo apt-get install -y libarchive-tools libfuse2 rpm graphicsmagick icnsutils
 
       - name: Install dependencies
         working-directory: desktop
@@ -75,6 +75,8 @@ jobs:
             desktop/release/*.exe
             desktop/release/*.AppImage
             desktop/release/*.deb
+            desktop/release/*.rpm
+            desktop/release/*.tar.gz
             desktop/release/*.zip
           if-no-files-found: warn
 
@@ -96,8 +98,8 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name || inputs.version || 'v1.0.1' }}
-          name: Lumora Desktop ${{ github.ref_name || inputs.version || 'v1.0.1' }}
+          tag_name: ${{ github.ref_name || inputs.version || 'v1.0.2' }}
+          name: Lumora Desktop ${{ github.ref_name || inputs.version || 'v1.0.2' }}
           draft: false
           prerelease: false
           generate_release_notes: true
@@ -106,6 +108,8 @@ jobs:
             release-binaries/*.exe
             release-binaries/*.AppImage
             release-binaries/*.deb
+            release-binaries/*.rpm
+            release-binaries/*.tar.gz
             release-binaries/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
