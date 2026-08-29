@@ -1,0 +1,81 @@
+appId: fi.wekan.lumora
+productName: Lumora
+copyright: "Copyright © 2026 Lauri Ojansivu / WeKan / Lumora"
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - build/**/*
+  - package.json
+
+extraMetadata:
+  main: dist-electron/main/main.js
+
+# macOS Configuration
+mac:
+  category: public.app-category.productivity
+  icon: build/icon.icns
+  darkModeSupport: true
+  target:
+    - target: dmg
+      arch:
+        - arm64
+        - x64
+    - target: zip
+      arch:
+        - arm64
+        - x64
+  artifactName: "${productName}-${version}-Mac-${arch}.${ext}"
+
+dmg:
+  title: "${productName} ${version} Installer"
+  window:
+    width: 540
+    height: 380
+  contents:
+    - x: 140
+      y: 190
+      type: file
+    - x: 400
+      y: 190
+      type: link
+      path: /Applications
+
+# Windows Configuration
+win:
+  icon: build/icon.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: zip
+      arch:
+        - x64
+  artifactName: "${productName}-${version}-Windows-${arch}-Setup.${ext}"
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  shortcutName: "Lumora Kanban"
+
+# Linux Configuration
+linux:
+  category: Office;Development;Utility;
+  icon: build/icon.png
+  target:
+    - target: AppImage
+      arch:
+        - x64
+        - arm64
+    - target: deb
+      arch:
+        - x64
+        - arm64
+  artifactName: "${productName}-${version}-Linux-${arch}.${ext}"

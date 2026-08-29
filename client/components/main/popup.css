@@ -1,0 +1,1147 @@
+.pop-over {
+  background: #fff;
+  border-radius: 6px;
+  border: 1px solid #dbdbdb;
+  border-bottom-color: #c2c2c2;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);
+  position: absolute;
+  /* Wider default to fit full color palette */
+  width: min(380px, 55vw);
+  /* …and never wider than the window it opens in. A popup is positioned from the
+     element that opened it, so one opened near the right edge used to run off the
+     screen and lose its right-hand side - fields, and the Save button with them. */
+  max-width: calc(100vw - 20px);
+  z-index: 99999;
+  margin-top: 6px;
+}
+.pop-over hr {
+  margin: 5px 0px;
+}
+.pop-over p,
+.pop-over textarea,
+.pop-over input[type='text'],
+.pop-over input[type='email'],
+.pop-over input[type='password'],
+.pop-over input[type='file'] {
+  width: 100%;
+}
+.pop-over select {
+  width: 100%;
+  margin-bottom: 16px;
+}
+.pop-over textarea {
+  height: 81px;
+}
+.pop-over form a span {
+  padding: 0 10px;
+}
+/* The gap under the header plus `.content`'s 12px top padding is the space above the
+   first row of a popup, and it must match the space beside it: `.content` has 18px of
+   side padding, so 6 + 12 = 18 makes the top gap and the left gutter the same. */
+.pop-over .header {
+  height: 41px;
+  position: relative;
+  margin-bottom: 6px;
+  background: #f7f7f7;
+  border-bottom: 1px solid #dcdcdc;
+  color: #666;
+}
+.pop-over .header .header-title {
+  display: block;
+  line-height: calc(36px * var(--wekan-ui-font-scale, 1));
+  padding-top: 5px;
+  margin: 0 18px;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pop-over .header .back-btn {
+  float: inline-start;
+  overflow: hidden;
+  width: 56px;
+  transition: width 0.2s;
+}
+.pop-over .header .back-btn i.fa {
+  margin: 18px;
+  margin-top: 14px;
+}
+.pop-over .header .back-btn.is-hidden {
+  width: 0;
+}
+.pop-over .header .close-btn {
+  padding: 12px 18px 12px 7px;
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+}
+.pop-over.no-title .header {
+  background: none;
+}
+.pop-over .content-wrapper {
+  width: 100%;
+  max-height: calc(70vh + 20px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Bounded height: flex column + clip so inline max-height cannot spill past the shell.
+   Class pop-over--bounded matches popup.tpl.jade when max-height is set (more reliable
+   than attribute substring matching on the style attribute alone). */
+.pop-over.pop-over--bounded,
+.pop-over[style*='max-height'] {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.pop-over.pop-over--bounded .header,
+.pop-over[style*='max-height'] .header {
+  flex: 0 0 auto;
+}
+
+.pop-over.pop-over--bounded .content-wrapper,
+.pop-over[style*='max-height'] .content-wrapper {
+  /* 0% basis: use remaining space under header, scroll inside (not past white bg) */
+  flex: 1 1 0%;
+  min-height: 0;
+  max-height: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: inherit;
+}
+.pop-over .content-container {
+  width: 100%;
+  max-height: calc(70vh + 20px);
+  transition: transform 0.2s;
+}
+
+/* Allow dynamic max-height to override default constraint for content-container */
+.pop-over.pop-over--bounded .content-container,
+.pop-over[style*='max-height'] .content-container {
+  max-height: none;
+}
+
+/* Fix overflow in the Member Settings (member menu) popup:
+   the popup itself gets a max-height inline style, but the header consumes space.
+   Make the header overlay the scrollable area so the list can't spill out. */
+.pop-over[data-popup='memberMenuPopup'] {
+  overflow: hidden;
+}
+.pop-over[data-popup='memberMenuPopup'] > .header {
+  position: absolute;
+  top: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  margin-bottom: 0;
+  z-index: 1;
+}
+.pop-over[data-popup='memberMenuPopup'] > .content-wrapper {
+  /* The header is out of the flow here, so its height is padding instead: 41px of
+     header + its 1px bottom border + the same 6px gap every other popup has. */
+  padding-top: calc(41px + 1px + 6px);
+  box-sizing: border-box;
+}
+
+/* Admin edit popups: use full height - and be fully visible whatever the window
+   size is. These are tall forms with a Save button at the bottom, opened from a row
+   that can sit anywhere in a wide table, so positioning them from that row pushed
+   their right-hand side off the screen. They are centred on the window instead:
+   always whole, always reachable, at any width. `left: 50%` + a -50% shift centres
+   the same way in both directions, so this needs no RTL variant. */
+.pop-over[data-popup='editUserPopup'],
+.pop-over[data-popup='editOrgPopup'],
+.pop-over[data-popup='editTeamPopup'] {
+  position: fixed !important;
+  top: 10px !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  /* Wide enough for two or three columns of fields when the window has the room,
+     and never wider than the window. */
+  width: min(1040px, calc(100vw - 20px)) !important;
+  max-width: calc(100vw - 20px) !important;
+  height: calc(100vh - 20px) !important;
+  max-height: calc(100vh - 20px) !important;
+  margin-top: 0 !important;
+}
+
+/* …and, when the window is wide enough, in SEVERAL COLUMNS. These forms are long -
+   Edit User is a dozen fields - and one column meant scrolling past most of them to
+   reach Save. The columns come from `auto-fit`, so the count follows the width the
+   popup actually got: three on a wide desktop, two on a laptop, one on a phone. No
+   breakpoint is guessed, and nothing has to know how many fields the form has.
+   The separator and the buttons always span the full width, so Save stays one wide
+   button under everything rather than a narrow one in the last column. */
+.pop-over[data-popup='editUserPopup'] .content > form,
+.pop-over[data-popup='editOrgPopup'] .content > form,
+.pop-over[data-popup='editTeamPopup'] .content > form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0 18px;
+  align-items: start;
+}
+
+.pop-over[data-popup='editUserPopup'] .content > form > hr,
+.pop-over[data-popup='editOrgPopup'] .content > form > hr,
+.pop-over[data-popup='editTeamPopup'] .content > form > hr,
+.pop-over[data-popup='editUserPopup'] .content > form > .buttonsContainer,
+.pop-over[data-popup='editOrgPopup'] .content > form > .buttonsContainer,
+.pop-over[data-popup='editTeamPopup'] .content > form > .buttonsContainer,
+.pop-over[data-popup='editUserPopup'] .content > form > h2,
+.pop-over[data-popup='editOrgPopup'] .content > form > h2,
+.pop-over[data-popup='editTeamPopup'] .content > form > h2,
+.pop-over[data-popup='editUserPopup'] .content > form > span.form-text,
+.pop-over[data-popup='editOrgPopup'] .content > form > span.form-text,
+.pop-over[data-popup='editTeamPopup'] .content > form > span.form-text {
+  grid-column: 1 / -1;
+}
+
+/* A hidden field must not take a column of its own (the popups carry a hidden id
+   label as their first child, which would leave the first cell blank). */
+.pop-over[data-popup='editUserPopup'] .content > form > .hide,
+.pop-over[data-popup='editOrgPopup'] .content > form > .hide,
+.pop-over[data-popup='editTeamPopup'] .content > form > .hide {
+  display: none !important;
+}
+
+.pop-over[data-popup='editUserPopup'] .content-wrapper,
+.pop-over[data-popup='editOrgPopup'] .content-wrapper,
+.pop-over[data-popup='editTeamPopup'] .content-wrapper {
+  max-height: calc(100vh - 80px) !important; /* Subtract header height */
+  height: calc(100vh - 80px) !important;
+  overflow-y: auto !important;
+}
+
+.pop-over[data-popup='editUserPopup'] .content-container,
+.pop-over[data-popup='editOrgPopup'] .content-container,
+.pop-over[data-popup='editTeamPopup'] .content-container {
+  max-height: calc(100vh - 80px) !important; /* Subtract header height */
+  height: calc(100vh - 80px) !important;
+}
+
+/* Ensure language popup list can scroll properly */
+.pop-over .pop-over-list {
+  max-height: none;
+  overflow: visible;
+}
+
+/* Specific styling for language popup list */
+.pop-over[data-popup='changeLanguagePopup'] .pop-over-list {
+  max-height: none;
+  overflow: visible;
+  height: auto;
+  flex: 1;
+  /* Auto-filling columns so as many languages as possible are visible at once when
+     there is browser width; collapses to a single column on narrow windows. */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  align-content: start;
+  column-gap: 4px;
+}
+
+/* Ensure content div in language popup contains all items */
+.pop-over[data-popup='changeLanguagePopup'] .content {
+  height: auto;
+  /* Remove forced min-height to avoid top gap */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure hidden stack pages truly take no space */
+.pop-over[data-popup='changeLanguagePopup'] .content.no-height {
+  min-height: 0 !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Select Color (Member Settings and Board Settings) is wide enough for several
+ * columns of swatches, the same idea as the language popup below: width buys
+ * columns, and the picker's grid (customTheme.css) takes as many as fit.
+ *
+ * Desktop only. Below 800px popup.css lays every popup out as a full-screen
+ * sheet, and an !important width here would fight that rule and win.
+ *
+ * 720px is mirrored in client/lib/popupOffset.js: the JS clamps a popup into the
+ * viewport using its width, and computed for the default 380px it would place a
+ * wide popup opened near the right edge with a third of itself off the screen.
+ * Change one and change the other. */
+@media screen and (min-width: 801px) {
+  .pop-over[data-popup='changeColorPopup'],
+  .pop-over[data-popup='boardChangeColorPopup'],
+  /* Stickers, for the same reason as the colours: the picker is a GRID, and
+     width buys columns. At the default 380px it was eight icons per row and a
+     hundred and fifty stickers made a column taller than the screen, so
+     choosing one meant scrolling past most of them. */
+  .pop-over[data-popup='cardStickersPopup'] {
+    width: min(90vw, 720px) !important;
+    max-width: 90vw !important;
+  }
+
+  /* Show on Card / Show on Minicard: two dozen settings, and with one of the
+     two checkbox columns hidden each row is half as wide as it was. Width here
+     buys COLUMNS of rows (sidebar.css), which is what turns a list you scroll
+     into a table you read. */
+  .pop-over[data-popup='showOnCardPopup'],
+  .pop-over[data-popup='showOnMinicardPopup'] {
+    width: min(90vw, 900px) !important;
+    max-width: 90vw !important;
+  }
+}
+
+/* Make language popup extend to bottom of browser window */
+.pop-over[data-popup='changeLanguagePopup'] {
+  position: fixed !important;
+  bottom: 0 !important;
+  top: auto !important;
+  inset-inline-start: auto !important;
+  inset-inline-end: 20px !important;
+  /* Wide enough for multiple language columns when the browser is wide, but never
+     wider than ~90% of the viewport (falls back to a single narrow column). */
+  width: min(90vw, 1100px) !important;
+  max-width: 90vw !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  min-height: 300px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  margin: 0 !important;
+}
+
+/* Allow dynamic height for Change Language popup */
+.pop-over[data-popup='changeLanguagePopup'] .header {
+  flex-shrink: 0 !important;
+  height: auto !important;
+}
+
+.pop-over[data-popup='changeLanguagePopup'] .content-wrapper {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  height: auto !important;
+  width: 100% !important;
+}
+
+.pop-over[data-popup='changeLanguagePopup'] .content-container {
+  height: auto !important;
+  max-height: none !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+}
+
+.pop-over[data-popup='changeLanguagePopup'] .content {
+  height: auto !important;
+  max-height: none !important;
+  padding-bottom: 50px !important;
+  width: 100% !important;
+}
+
+/* Date popup sizing for native HTML inputs */
+.pop-over[data-popup='editCardReceivedDatePopup'],
+.pop-over[data-popup='editCardStartDatePopup'],
+.pop-over[data-popup='editCardDueDatePopup'],
+.pop-over[data-popup='editCardEndDatePopup'],
+.pop-over[data-popup*='Date'] {
+  width: min(400px, 90vw) !important; /* Smaller width for native inputs */
+  min-width: 350px !important;
+  max-height: 80vh !important;
+}
+
+.pop-over[data-popup='editCardReceivedDatePopup'] .content-wrapper,
+.pop-over[data-popup='editCardStartDatePopup'] .content-wrapper,
+.pop-over[data-popup='editCardDueDatePopup'] .content-wrapper,
+.pop-over[data-popup='editCardEndDatePopup'] .content-wrapper,
+.pop-over[data-popup*='Date'] .content-wrapper {
+  max-height: 60vh !important;
+  overflow-y: auto !important;
+}
+
+.pop-over[data-popup='editCardReceivedDatePopup'] .content-container,
+.pop-over[data-popup='editCardStartDatePopup'] .content-container,
+.pop-over[data-popup='editCardDueDatePopup'] .content-container,
+.pop-over[data-popup='editCardEndDatePopup'] .content-container,
+.pop-over[data-popup*='Date'] .content-container {
+  max-height: 60vh !important;
+}
+
+/* Native HTML input styling */
+.pop-over[data-popup*='Date'] .datepicker-container {
+  width: 100% !important;
+  padding: 15px !important;
+}
+
+.pop-over[data-popup*='Date'] .datepicker-container .fields {
+  display: flex !important;
+  gap: 15px !important;
+  margin-bottom: 15px !important;
+}
+
+.pop-over[data-popup*='Date'] .datepicker-container .fields .left,
+.pop-over[data-popup*='Date'] .datepicker-container .fields .right {
+  flex: 1 !important;
+  width: auto !important;
+}
+
+.pop-over[data-popup*='Date'] .datepicker-container label {
+  display: block !important;
+  margin-bottom: 5px !important;
+  font-weight: bold !important;
+}
+
+.pop-over[data-popup*='Date'] .datepicker-container input[type='date'],
+.pop-over[data-popup*='Date'] .datepicker-container input[type='time'] {
+  width: 100% !important;
+  padding: 8px !important;
+  border: 1px solid #ccc !important;
+  border-radius: 4px !important;
+  font-size: calc(14px * var(--wekan-ui-font-scale, 1)) !important;
+  box-sizing: border-box !important;
+}
+
+.pop-over[data-popup*='Date'] .datepicker-container input[type='date']:focus,
+.pop-over[data-popup*='Date'] .datepicker-container input[type='time']:focus {
+  outline: none !important;
+  border-color: #007cba !important;
+  box-shadow: 0 0 0 2px rgba(0, 124, 186, 0.2) !important;
+}
+
+/* Ensure date popup buttons stay within popup boundaries */
+.pop-over[data-popup='editCardReceivedDatePopup'] .content,
+.pop-over[data-popup='editCardStartDatePopup'] .content,
+.pop-over[data-popup='editCardDueDatePopup'] .content,
+.pop-over[data-popup='editCardEndDatePopup'] .content,
+.pop-over[data-popup*='Date'] .content {
+  max-height: 60vh !important; /* Leave space for buttons */
+  overflow-y: auto !important;
+  padding-bottom: 100px !important; /* More space for buttons */
+  margin-bottom: 0 !important;
+}
+
+/* Workspace Settings popup: ensure modal doesn't overflow viewport */
+.pop-over[data-popup='workspaceActionsPopup'] {
+  max-height: 80vh !important;
+  width: min(420px, 85vw) !important;
+}
+
+.pop-over[data-popup='workspaceActionsPopup'] .content-wrapper {
+  max-height: calc(80vh - 70px) !important; /* Subtract header height */
+  overflow-y: auto !important;
+}
+
+.pop-over[data-popup='workspaceActionsPopup'] .content-container {
+  max-height: calc(80vh - 70px) !important;
+}
+
+.pop-over[data-popup='workspaceActionsPopup'] .content {
+  max-height: none !important; /* Allow content to scroll within container */
+  overflow: visible !important; /* Overflow handled by parent */
+}
+
+/* Card Details Actions popup: ensure menu doesn't overflow viewport */
+.pop-over[data-popup="cardDetailsActionsPopup"] {
+  max-height: 80vh !important;
+  width: min(380px, 85vw) !important;
+}
+
+.pop-over[data-popup="cardDetailsActionsPopup"] .content-wrapper {
+  max-height: calc(80vh - 70px) !important; /* Subtract header height */
+  overflow-y: auto !important;
+}
+
+.pop-over[data-popup="cardDetailsActionsPopup"] .content-container {
+  max-height: calc(80vh - 70px) !important;
+}
+
+.pop-over[data-popup="cardDetailsActionsPopup"] .content {
+  max-height: none !important; /* Allow content to scroll within container */
+  overflow: visible !important; /* Overflow handled by parent */
+}
+
+.pop-over[data-popup='editCardReceivedDatePopup'] .datepicker-container,
+.pop-over[data-popup='editCardStartDatePopup'] .datepicker-container,
+.pop-over[data-popup='editCardDueDatePopup'] .datepicker-container,
+.pop-over[data-popup='editCardEndDatePopup'] .datepicker-container,
+.pop-over[data-popup*='Date'] .datepicker-container {
+  max-height: 50vh !important; /* Limit calendar height */
+  overflow-y: auto !important;
+  margin-bottom: 20px !important; /* Space before buttons */
+}
+
+/* Ensure buttons are properly positioned */
+.pop-over[data-popup='editCardReceivedDatePopup'] .edit-date,
+.pop-over[data-popup='editCardStartDatePopup'] .edit-date,
+.pop-over[data-popup='editCardDueDatePopup'] .edit-date,
+.pop-over[data-popup='editCardEndDatePopup'] .edit-date,
+.pop-over[data-popup*='Date'] .edit-date {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+.pop-over[data-popup='editCardReceivedDatePopup'] .edit-date .fields,
+.pop-over[data-popup='editCardStartDatePopup'] .edit-date .fields,
+.pop-over[data-popup='editCardDueDatePopup'] .edit-date .fields,
+.pop-over[data-popup='editCardEndDatePopup'] .edit-date .fields,
+.pop-over[data-popup*='Date'] .edit-date .fields {
+  flex-shrink: 0 !important;
+  margin-bottom: 15px !important;
+}
+
+.pop-over[data-popup='editCardReceivedDatePopup'] .edit-date .js-datepicker,
+.pop-over[data-popup='editCardStartDatePopup'] .edit-date .js-datepicker,
+.pop-over[data-popup='editCardDueDatePopup'] .edit-date .js-datepicker,
+.pop-over[data-popup='editCardEndDatePopup'] .edit-date .js-datepicker,
+.pop-over[data-popup*='Date'] .edit-date .js-datepicker {
+  flex: 1 !important;
+  overflow-y: auto !important;
+}
+
+.pop-over[data-popup='editCardReceivedDatePopup'] .edit-date button,
+.pop-over[data-popup='editCardStartDatePopup'] .edit-date button,
+.pop-over[data-popup='editCardDueDatePopup'] .edit-date button,
+.pop-over[data-popup='editCardEndDatePopup'] .edit-date button,
+.pop-over[data-popup*='Date'] .edit-date button {
+  flex-shrink: 0 !important;
+  margin-top: 15px !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+.pop-over .content-container .content {
+  /* Match wider popover, leave padding */
+  width: 100%;
+  padding: 12px 18px 12px;
+  box-sizing: border-box;
+  /* Ensure content is not shifted left */
+  margin-inline-start: 0 !important;
+}
+
+/* Utility: remove left gutter inside specific popups */
+.pop-over .content .flush-left {
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+  width: 100%;
+}
+
+/* Swimlane popups: remove left gutter, align content fully left */
+.pop-over .content form.swimlane-color-popup,
+.pop-over .content .swimlane-height-popup {
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+  width: 100%;
+}
+
+/* Color selection popups: ensure proper alignment */
+.pop-over .content form.swimlane-color-popup .palette-colors,
+.pop-over .content form.edit-label .palette-colors,
+.pop-over .content form.create-label .palette-colors {
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+  width: 100%;
+}
+
+/* Color palette items: ensure proper positioning */
+.pop-over .content .palette-colors .palette-color {
+  margin-inline-start: 0;
+  margin-inline-end: 2px;
+  margin-bottom: 2px;
+}
+
+/* Fix popup depth containers - don't block transforms which are needed for popup navigation */
+.pop-over .popup-container-depth-1,
+.pop-over .popup-container-depth-2,
+.pop-over .popup-container-depth-3,
+.pop-over .popup-container-depth-4,
+.pop-over .popup-container-depth-5,
+.pop-over .popup-container-depth-6 {
+  margin-inline-start: 0 !important;
+  padding-inline-start: 0 !important;
+}
+
+/* Ensure buttons don’t reserve left space; align to flow */
+.pop-over .content form.swimlane-color-popup .primary.confirm,
+.pop-over .content form.swimlane-color-popup .negate.wide.right,
+.pop-over .content .swimlane-height-popup .primary.confirm,
+.pop-over .content .swimlane-height-popup .negate.wide.right {
+  float: none;
+  margin-inline-start: 0;
+}
+.pop-over .content-container .content.no-height {
+  height: 0;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  visibility: hidden;
+}
+.pop-over.search-over {
+  background: #f0f0f0;
+  min-height: 126px;
+}
+.pop-over.search-over .header {
+  display: none;
+}
+.pop-over.search-over .content {
+  padding: 8px 4px 8px 10px;
+  margin-inline-end: 8px;
+}
+.pop-over .at-form .at-error,
+.pop-over .at-form .at-result {
+  padding: 8px 12px;
+  margin: 0 0 10px 0;
+}
+.pop-over .at-form .at-error {
+  background: #ef9a9a;
+}
+.pop-over .at-form .at-result {
+  background: #b2dfdb;
+}
+.pop-over .sk-spinner {
+  margin: 40px auto;
+}
+.pop-over .popup-container-depth-1 {
+  transform: none;
+}
+.pop-over .popup-container-depth-2 {
+  transform: none;
+}
+.pop-over .popup-container-depth-3 {
+  transform: none;
+}
+.pop-over .popup-container-depth-4 {
+  transform: none;
+}
+.pop-over .popup-container-depth-5 {
+  transform: none;
+}
+.pop-over .popup-container-depth-6 {
+  transform: none;
+}
+.select-members-list,
+.select-avatars-list {
+  margin-bottom: 8px;
+}
+.pop-over-list li {
+  display: block;
+  clear: both;
+}
+.pop-over-list li > a {
+  clear: both;
+  cursor: pointer;
+  display: block;
+  font-weight: 700;
+  padding: 1.5px 10px;
+  position: relative;
+  margin: 0;
+  text-decoration: none;
+  overflow: hidden;
+  line-height: calc(33px * var(--wekan-ui-font-scale, 1));
+  display: flex;
+  /*  flex-wrap:wrap;*/
+  gap: 5px;
+  align-items: center;
+  color: #000 !important;
+}
+.pop-over-list li > a > .member {
+  align-self: flex-start;
+  flex: 0 0 auto;
+}
+.pop-over-list li > a .item-name {
+  display: block;
+  width: auto;
+  padding-inline-end: 22px;
+}
+/* Custom Fields, from the card's own section: a row is the field's name with the
+   checkbox that puts it on this card, and the pencil that edits the field at the
+   far end of the same line. Every other pop-over list has ONE anchor per row, so
+   `li` is a block and the anchor fills it; two anchors in a block stack, which
+   put the pencil on a line of its own under the name. The row is the flex
+   container here, and the name takes the space the pencil does not.
+   client/components/cards/cardCustomFields.jade */
+.pop-over[data-popup='cardCustomFieldsPopup'] .pop-over-list li.item {
+  display: flex;
+  align-items: center;
+}
+
+.pop-over[data-popup='cardCustomFieldsPopup'] .pop-over-list li.item > a.name {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.pop-over[data-popup='cardCustomFieldsPopup'] .pop-over-list li.item > a.js-edit-custom-field {
+  flex: 0 0 auto;
+}
+
+/* The highlighted row is the SAME highlight the All Boards left menu gives its
+   selected entry, and the Admin Panel gives its own: the theme accent, with the
+   label AND the icon in white. It was a fixed dark navy (#005377), so Member
+   Settings highlighted "My Cards" in a colour that appeared nowhere else on the
+   page and stayed navy however the user had themed WeKan.
+
+   The fallback is the WeKan header blue, so with no chosen theme the row matches
+   the bar above it exactly. `!important` on the colour because the base rule
+   above pins every row's text to `#000 !important`; the icon is named separately
+   for the same reason. */
+.pop-over-list li > a:not(.disabled):hover {
+  background-color: var(--theme-accent, #2980b9);
+  color: #fff !important;
+}
+.pop-over-list li > a:not(.disabled):hover i,
+.pop-over-list li > a:not(.disabled):hover i.fa {
+  color: #fff !important;
+}
+.pop-over-list li > a:not(.disabled):hover .sub-name,
+.pop-over-list li > a:not(.disabled):hover .quiet {
+  color: #eee;
+}
+.pop-over-list li > a:not(.disabled):hover .unread-indicator {
+  background: #fff;
+}
+.pop-over-list li > a .sub-name {
+  color: #8c8c8c;
+  display: block;
+  font-size: calc(12px * var(--wekan-ui-font-scale, 1));
+  font-weight: 400;
+  line-height: calc(15px * var(--wekan-ui-font-scale, 1));
+}
+
+/* A menu whose rows are "icon - name - description" (Change Visibility, Change
+   Watch) reads as three columns, so the three must LINE UP. As a flex row each
+   row packed its own icon, name and text one after the other, so every row started
+   its description at a different x - and the check mark on the active row pushed
+   that row's description further right still.
+   Grid, with fixed leading tracks: each row is its own grid container and separate
+   grids cannot share auto-sized tracks, so the tracks are given a width instead of
+   being measured per row. The check mark has a track of its own, which is why it
+   can no longer move the description. */
+.pop-over-list.described-list li > a {
+  display: grid;
+  grid-template-columns: 1.4em 6em 1.2em minmax(0, 1fr);
+  column-gap: 6px;
+  align-items: start;
+  line-height: 1.5;
+  padding: 8px 10px;
+  overflow-wrap: break-word;
+}
+.pop-over-list.described-list li > a > i.fa {
+  /* The 0 10px of the flex layout would offset the icon inside its own track. */
+  margin: 0;
+  line-height: inherit;
+  justify-self: start;
+}
+.pop-over-list.described-list li > a > .fa-check {
+  grid-column: 3;
+}
+.pop-over-list.described-list li > a > .sub-name {
+  grid-column: 4;
+  line-height: 1.5;
+}
+.pop-over-list li > a.current {
+  background-color: #e2e6e9;
+}
+.pop-over-list li > a:active {
+  background-color: #2e85b8;
+}
+.pop-over-list li > a.disabled {
+  color: #8c8c8c;
+  cursor: default;
+}
+.pop-over-list li > a.disabled .vis-icon {
+  opacity: 0.35;
+}
+.pop-over-list li > a.disabled:hover {
+  background: none;
+}
+.pop-over-list li > a.disabled:hover .sub-name,
+.pop-over-list li > a.disabled:hover .quiet {
+  color: #8c8c8c;
+}
+.pop-over-list li > a.disabled:active {
+  background: none;
+}
+.pop-over-list.inset li > a {
+  border-radius: 3px;
+  margin: 0;
+}
+.pop-over-list .pop-over-list.checkable .fa-check {
+  display: none;
+  position: absolute;
+  top: 6px;
+  inset-inline-end: 12px;
+  color: #3cb500;
+}
+.pop-over-list .pop-over-list.checkable li.active a {
+  padding-inline-end: 28px;
+}
+.pop-over-list .pop-over-list.checkable li.active a .fa-check {
+  display: block;
+}
+.pop-over.miniprofile .header {
+  border-bottom-color: transparent;
+  height: 30px;
+  position: absolute;
+  inset-inline-end: 0;
+  top: 0;
+  width: 60px;
+  z-index: 1;
+}
+.pop-over.miniprofile .header-title {
+  display: none;
+}
+.pop-over.miniprofile .pop-over-list {
+  padding-top: 8px;
+}
+.pop-over.miniprofile .miniprofile-header {
+  margin-top: 8px;
+  min-height: 56px;
+  position: relative;
+}
+.pop-over.miniprofile .miniprofile-header .member,
+.pop-over.miniprofile .miniprofile-header .avatar {
+  position: absolute;
+  top: 2px;
+  inset-inline-start: 2px;
+  height: 50px;
+  width: 50px;
+}
+.pop-over.miniprofile .miniprofile-header .info {
+  margin: 0 0 0 64px;
+  word-wrap: break-word;
+}
+.pop-over.miniprofile .miniprofile-header .info h3 a {
+  text-decoration: none;
+}
+.pop-over.miniprofile .miniprofile-header .info h3 a:hover {
+  text-decoration: underline;
+}
+@media screen and (max-width: 800px) {
+  .pop-over {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    margin-top: 0px;
+    border: 0px solid #dbdbdb;
+    /* Ensure popups appear above card details on mobile */
+    z-index: 999999 !important;
+    /* iOS Safari scrolling fix */
+    -webkit-overflow-scrolling: touch;
+    /* ...and PINNED to the viewport. This block already gives the popup the whole
+       width and its own 48px header with a back button, but it left the inline
+       `left`/`top` that Popup._getOffset writes on the element - so the sheet
+       started wherever the button that opened it was. On a phone that put "Create
+       board" 160px in and its right half off the screen, where the Create button
+       could not be reached. `!important` because those are inline styles.
+       `body.mobile-mode` said this already; a narrow window is now enough, so a
+       phone in DESKTOP mode gets it too. */
+    position: fixed !important;
+    top: 0 !important;
+    inset-inline-start: 0 !important;
+    inset-inline-end: 0 !important;
+    max-width: 100vw !important;
+    max-height: 100% !important;
+  }
+  .pop-over .header {
+    color: #fff;
+    /* The active theme, not a fixed blue: every theme publishes its accent as
+       --theme-accent (models/lib/themeAccents.js), so this header follows the
+       user's own theme, the board's colour or the site theme - whichever is in
+       force. The fallback is the stock WeKan blue, so an unthemed instance is
+       unchanged. */
+    background: var(--theme-accent, #2980b9);
+    height: 48px;
+    padding: 0px 0px;
+    border: 0px;
+    margin: 0px 0px;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+  }
+  .pop-over .header .header-title {
+    font-size: calc(20px * var(--wekan-ui-font-scale, 1));
+    font-weight: normal;
+    padding-top: 8px;
+  }
+  .pop-over .header .back-btn {
+    width: 30px;
+    padding: 8px 12px 8px 12px;
+  }
+  .pop-over .header .back-btn i.fa {
+    color: #fff;
+  }
+  .pop-over .header .close-btn {
+    padding: 10px 12px;
+  }
+  .pop-over .header .close-btn i.fa {
+    font-size: calc(24px * var(--wekan-ui-font-scale, 1));
+    color: #fff;
+  }
+  .pop-over .content-wrapper {
+    width: 100%;
+    height: calc(100% - 48px);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin: 48px 0px 0px 0px;
+  }
+  .pop-over .content-container {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+  }
+  .pop-over .content-container .content {
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    padding: 10px;
+  }
+  .pop-over .content-container .content form {
+    margin: 10px 10px;
+    width: calc(100% - 20px);
+  }
+  .pop-over .content-container .content p,
+  .pop-over .content-container .content textarea,
+  .pop-over .content-container .content input[type='text'],
+  .pop-over .content-container .content input[type='email'],
+  .pop-over .content-container .content input[type='password'],
+  .pop-over .content-container .content input[type='file'] {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .pop-over .pop-over-list li > a {
+    width: calc(100% - 20px);
+    margin: 0px 0px;
+  }
+  .pop-over .popup-container-depth-1 {
+    transform: none !important;
+  }
+  .pop-over .popup-container-depth-2 {
+    transform: none !important;
+  }
+  .pop-over .popup-container-depth-3 {
+    transform: none !important;
+  }
+  .pop-over .popup-container-depth-4 {
+    transform: none !important;
+  }
+  .pop-over .popup-container-depth-5 {
+    transform: none !important;
+  }
+  .pop-over .popup-container-depth-6 {
+    transform: none !important;
+  }
+}
+
+/* Force full-screen popups in mobile mode regardless of screen width */
+body.mobile-mode .pop-over {
+  position: fixed !important;
+  top: 0 !important;
+  inset-inline-start: 0 !important;
+  inset-inline-end: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
+  /* #6488. `100vh` is the viewport with the browser's toolbars HIDDEN, so a
+     `position: fixed` box sized that way reaches under them: on a phone the
+     bottom of this popup is off screen, and being fixed there is no gesture that
+     brings it back. `100dvh` is the viewport as it is right now. The `vh` pair
+     stays first as the fallback where `dvh` is unknown - the same fix
+     body.mobile-mode already carries in layouts.css. */
+  height: 100vh !important;
+  max-height: 100vh !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+}
+body.mobile-mode .pop-over .content-wrapper {
+  width: 100% !important;
+  /* #6488. This was `calc(100vh - 48px)`, which is two guesses at once: the
+     viewport measured with the toolbars hidden, minus a fixed 48px for the
+     popup's own title bar. When the title wraps - a long board name, a
+     translated label - the bar is taller than 48px and the list inside this
+     wrapper ends below the screen, so its last rows cannot be scrolled to.
+     Nothing needs measuring: `.pop-over` above is a flex column of exactly one
+     viewport, `.pop-over .header` is `flex-shrink: 0`, and this wrapper is
+     already `flex: 1 1 auto; min-height: 0` - so it is whatever the title bar
+     leaves, at whatever height the title bar really is. */
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+/* ============================================
+   FIX: Popup overflow (Issues #6200, #6221, #6223)
+   Prevents menus from overflowing outside viewport
+   ============================================ */
+
+/* Specific fix for list actions menu */
+.pop-over[data-popup="listActionsPopup"] {
+  max-height: 85vh !important;
+}
+
+.pop-over[data-popup="listActionsPopup"] .content-wrapper {
+  max-height: calc(85vh - 50px) !important;
+  overflow-y: auto !important;
+}
+
+/* Prevent any popup from overflowing viewport */
+.pop-over {
+  max-height: 90vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.pop-over .content-wrapper {
+  flex: 1 1 auto !important;
+  overflow-y: auto !important;
+  min-height: 0 !important;
+}
+
+.pop-over .content-container {
+  flex: 1 1 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+}
+
+.pop-over .content {
+  flex: 1 1 auto !important;
+  overflow-y: auto !important;
+  min-height: 0 !important;
+}
+
+/* Keep header fixed while content scrolls */
+.pop-over .header {
+  flex-shrink: 0 !important;
+}
+
+/* Mobile-specific adjustments */
+@media screen and (max-width: 800px) {
+  .pop-over[data-popup="listActionsPopup"] {
+    max-height: 100vh !important;
+  }
+
+  .pop-over[data-popup="listActionsPopup"] .content-wrapper {
+    max-height: calc(100vh - 48px) !important;
+  }
+}
+
+/* The heading over the starred PAGES in the star dropdown. The dropdown lists
+   two kinds of destination - boards and pages - and a flat list of both leaves
+   the reader working out which rows are which. Quiet: it is a label on a group,
+   not a row you can click. docs/Features/Board/Starred.md */
+.pop-over .pop-over-list-title {
+  padding: 4px 12px;
+  font-size: calc(12px * var(--wekan-ui-font-scale, 1));
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.6;
+}
+
+/* EVERY export popup - board, swimlane, list, card - two panes when the window
+   has room for them. They are one popup with one scope each (#1173), so the
+   layout is written once, against the `.export-board-panes` the shared body
+   draws, rather than against the board popup's name.
+   WHAT to include on one side, what to export TO on the other, so the whole
+   menu is visible at once instead of being a column somebody scrolls past
+   twenty entries of. The same idea as the language list - width buys layout -
+   taken one step further, because this menu has two different KINDS of thing in
+   it and they read better side by side than stacked.
+
+   They are grid COLUMNS, which is what makes the right-to-left case free: a
+   mirrored page puts the first column on the right, so the selection lands on
+   the right and the formats on the left with no second rule to write or forget.
+
+   Desktop only. Below 800px popup.css lays every popup out as a full-screen
+   sheet and the panes stack, which is what a phone should get anyway.
+
+   1100px is mirrored in client/lib/popupOffset.js, which clamps a popup into
+   the viewport using its width - computed for the default 380px, a wide popup
+   opened near the right edge lands most of the way off the screen. Change one
+   and change the other. */
+@media screen and (min-width: 801px) {
+  .pop-over[data-popup='exportBoardPopup'],
+  .pop-over[data-popup='exportSwimlanePopup'],
+  .pop-over[data-popup='exportListPopup'],
+  .pop-over[data-popup='exportCardPopup'] {
+    /* The FULL width of the window, less the 10px gutter every popup is kept
+       inside - not "up to 1100px". It is a panel with two panes, and anchored
+       to its button at 1100 its trailing edge went past the edge of the window,
+       taking the pop-over's own X with it. client/lib/popupOffset.js pins it to
+       that same gutter at the top of the viewport, so the whole panel - header,
+       X and both panes - is always on screen. The 20px is the 10px inset on
+       each side; keep it in step with `viewportPadding` there. */
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+  }
+  .pop-over .export-board-panes {
+    display: grid;
+    /* The selection is a checkbox list and stays narrower than the formats,
+       which are three groups under three headings. */
+    grid-template-columns: minmax(260px, 0.8fr) minmax(340px, 1.2fr);
+    column-gap: 18px;
+    align-items: start;
+  }
+  /* A rule between the panes rather than under each section: the two sides are
+     one menu, and the line says where one ends. `border-inline-start` mirrors
+     itself, like everything else here. */
+  .pop-over .export-board-pane-formats {
+    border-inline-start: 1px solid rgba(0, 0, 0, 0.12);
+    padding-inline-start: 18px;
+  }
+  /* Inside a pane, lists still fill their width with as many columns as fit -
+     so a very wide window gives the formats two columns rather than one long
+     one, and the checkboxes two or three. */
+  .pop-over .export-board-pane .pop-over-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    align-content: start;
+    column-gap: 4px;
+  }
+  .pop-over .export-board-pane .pop-over-list li {
+    min-width: 0;
+  }
+}
+
+/* A row in "select what to include": the box, then the label, with the box
+   against the FIRST line when the label wraps.
+
+   These labels are long and several of them wrap in any language with compound
+   words - "Board-Informationen (Board, Liste, Swimlane)", "Daten (Erstellt,
+   Empfangen, Start, Fällig, Ende)" - and a box that centres itself against two
+   lines of text reads as belonging to neither of them. Aligning to the start
+   puts it where a checkbox belongs, beside the first line, and `fa-fw` keeps
+   every box the same width so the labels line up down the column. */
+.pop-over .export-board-pane .pop-over-list.export-scope-select a {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+/* THE BOX KEEPS ITS SHAPE next to a long label.
+   `.materialCheckBox` is 13x13, but as a flex item it may be SHRUNK, and these
+   labels are long enough to do it - "Kortin tiedot (jokainen kortti kuten kortin
+   viennissä)" squeezed the unchecked square into a thin vertical sliver while
+   "Taulu" beside it stayed square. `flex: 0 0 auto` takes it out of the
+   shrinking, and the explicit box-sizing keeps the 2px border inside the 13px
+   rather than adding to it.
+   The CHECKED state is deliberately a different shape - forms.css turns the
+   square into a rotated tick - so this fixes the size of the box, not of the
+   mark inside it. */
+.pop-over .export-board-pane .pop-over-list.export-scope-select a > .materialCheckBox {
+  /* Only the optical nudge that puts the box on the FIRST line of a label that
+     wraps - the shape is forms.css's business (`flex: none` there), and a
+     `box-sizing` here would have made these boxes smaller than every other
+     checkbox in WeKan, since box-sizing is not global in this app. */
+  margin-top: 3px;
+}
+
+/* The rule above each subheading in the Export board menu. Tighter than the
+   default so a group's heading stays visually attached to the list under it
+   rather than floating between two gaps. */
+.pop-over .export-board-pane hr {
+  margin: 10px 0 0 0;
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}

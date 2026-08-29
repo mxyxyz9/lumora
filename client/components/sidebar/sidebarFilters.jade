@@ -1,0 +1,299 @@
+//-
+  XXX There is a *lot* of code duplication in the below templates and in the
+  corresponding JavaScript components. We will probably need the upcoming #let
+  and #each x in y constructors to fix this.
+
+template(name="filterSidebar")
+  h3
+    i.fa.fa-list
+    | {{_ 'list-filter-label'}}
+  ul.sidebar-list
+    form.js-list-filter
+      input(type="text")
+  hr
+  h3
+    i.fa.fa-list
+    | {{_ 'filter-card-title-label'}}
+  input.js-field-card-filter(type="text")
+  hr
+  h3
+    i.fa.fa-tag
+    | {{_ 'filter-labels-label'}}
+  ul.sidebar-list
+    li(class="{{#if Filter.labelIds.isSelected undefined}}active{{/if}}")
+          a.name.js-toggle-label-filter(data-filter-id="__none__")
+            span.sidebar-list-item-description
+              | {{_ 'filter-no-label'}}
+            if Filter.labelIds.isSelected undefined
+              i.fa.fa-check
+    each currentBoard.labels
+      li
+        a.name.js-toggle-label-filter(data-filter-id="{{_id}}")
+          span.card-label.square(class="{{labelColorClass color}}" style="{{labelColorStyle color}}")
+          span.sidebar-list-item-description
+            if name
+              = name
+            else
+              span.quiet {{_ "label-default" (_ (concat "color-" color))}}
+          if Filter.labelIds.isSelected _id
+            i.fa.fa-check
+  hr
+  h3
+    i.fa.fa-users
+    | {{_ 'filter-member-label'}}
+  ul.sidebar-list
+    li(class="{{#if Filter.members.isSelected undefined}}active{{/if}}")
+          a.name.js-toggle-member-filter(data-filter-id="__none__")
+            span.sidebar-list-item-description
+              | {{_ 'filter-no-member'}}
+            if Filter.members.isSelected undefined
+              i.fa.fa-check
+    each currentBoard.activeMembers
+      with getUser userId
+        li(class="{{#if Filter.members.isSelected _id}}active{{/if}}")
+          a.name.js-toggle-member-filter(data-filter-id="{{_id}}")
+            +userAvatar(userId=this._id)
+            span.sidebar-list-item-description
+              = profile.fullname
+              | (<span class="username">{{ username }}</span>)
+            if Filter.members.isSelected _id
+              i.fa.fa-check
+  hr
+  h3
+    i.fa.fa-user
+    | {{_ 'filter-assignee-label'}}
+  ul.sidebar-list
+    li(class="{{#if Filter.assignees.isSelected undefined}}active{{/if}}")
+      a.name.js-toggle-assignee-filter(data-filter-id="__none__")
+        span.sidebar-list-item-description
+          | {{_ 'filter-no-assignee'}}
+        if Filter.assignees.isSelected undefined
+          i.fa.fa-check
+    each currentBoard.activeMembers
+      with getUser userId
+        li(class="{{#if Filter.assignees.isSelected _id}}active{{/if}}")
+          a.name.js-toggle-assignee-filter(data-filter-id="{{_id}}")
+            +userAvatar(userId=this._id)
+            span.sidebar-list-item-description
+              = profile.fullname
+              | (<span class="username">{{ username }}</span>)
+            if Filter.assignees.isSelected _id
+              i.fa.fa-check
+  hr
+  h3
+    i.fa.fa-calendar
+    | {{_ 'filter-dates-label' }}
+  ul.sidebar-list
+    li(class="{{#if Filter.dueAt.isSelected 'noDate'}}active{{/if}}")
+      a.name.js-toggle-no-due-date-filter
+        span.sidebar-list-item-description
+          | {{_ 'filter-no-due-date' }}
+        if Filter.dueAt.isSelected 'noDate'
+          i.fa.fa-check
+    li(class="{{#if Filter.dueAt.isSelected 'past'}}active{{/if}}")
+      a.name.js-toggle-overdue-filter
+        span.sidebar-list-item-description
+          | {{_ 'filter-overdue' }}
+        if Filter.dueAt.isSelected 'past'
+          i.fa.fa-check
+    li(class="{{#if Filter.dueAt.isSelected 'today'}}active{{/if}}")
+      a.name.js-toggle-due-today-filter
+        span.sidebar-list-item-description
+          | {{_ 'filter-due-today' }}
+        if Filter.dueAt.isSelected 'today'
+          i.fa.fa-check
+    li(class="{{#if Filter.dueAt.isSelected 'tomorrow'}}active{{/if}}")
+      a.name.js-toggle-due-tomorrow-filter
+        span.sidebar-list-item-description
+          | {{_ 'filter-due-tomorrow' }}
+        if Filter.dueAt.isSelected 'tomorrow'
+          i.fa.fa-check
+    li(class="{{#if Filter.dueAt.isSelected 'thisweek'}}active{{/if}}")
+      a.name.js-toggle-due-this-week-filter
+        span.sidebar-list-item-description
+          | {{_ 'filter-due-this-week' }}
+        if Filter.dueAt.isSelected 'thisweek'
+          i.fa.fa-check
+    li(class="{{#if Filter.dueAt.isSelected 'nextweek'}}active{{/if}}")
+      a.name.js-toggle-due-next-week-filter
+        span.sidebar-list-item-description
+          | {{_ 'filter-due-next-week' }}
+        if Filter.dueAt.isSelected 'nextweek'
+          i.fa.fa-check
+  hr
+  h3
+    i.fa.fa-list
+    | {{_ 'filter-custom-fields-label'}}
+  ul.sidebar-list
+    li(class="{{#if Filter.customFields.isSelected undefined}}active{{/if}}")
+          a.name.js-toggle-custom-fields-filter(data-filter-id="__none__")
+            span.sidebar-list-item-description
+              | {{_ 'filter-no-custom-fields'}}
+            if Filter.customFields.isSelected undefined
+              i.fa.fa-check
+    each currentBoard.customFields
+      li(class="{{#if Filter.customFields.isSelected _id}}active{{/if}}")
+        a.name.js-toggle-custom-fields-filter(data-filter-id="{{_id}}")
+          span.sidebar-list-item-description
+            | {{ name }}
+          if Filter.customFields.isSelected _id
+            i.fa.fa-check
+  hr
+  h3
+    i.fa.fa-link
+    | {{_ 'filter-dependencies-label'}}
+  ul.sidebar-list
+    each dependencyTypes
+      li(class="{{#if Filter.cardDependencies.isSelected id}}active{{/if}}")
+        a.name.js-toggle-dependency-filter(data-filter-id="{{id}}")
+          span.sidebar-list-item-description
+            | {{_ label}}
+          if Filter.cardDependencies.isSelected id
+            i.fa.fa-check
+  hr
+  h3
+    | {{_ 'other-filters-label'}}
+  ul.sidebar-list
+    li(class="{{#if Filter.archive.isSelected _id}}active{{/if}}")
+      a.name.js-toggle-archive-filter
+        span.sidebar-list-item-description
+          | {{_ 'filter-show-archive'}}
+        if Filter.archive.isSelected _id
+          i.fa.fa-check
+  ul.sidebar-list
+    li(class="{{#if Filter.hideEmpty.isSelected _id}}active{{/if}}")
+      a.name.js-toggle-hideEmpty-filter
+        span.sidebar-list-item-description
+          | {{_ 'filter-hide-empty'}}
+        if Filter.hideEmpty.isSelected _id
+          i.fa.fa-check
+  hr
+  h3 {{_ 'advanced-filter-label'}}
+  input.js-field-advanced-filter(type="text")
+  span {{_ 'advanced-filter-description'}}
+  if Filter.isActive
+    hr
+    a.sidebar-btn.js-clear-all
+      i.fa.fa-search
+      span {{_ 'filter-clear'}}
+    a.sidebar-btn.js-filter-to-selection
+      i.fa.fa-check
+      span {{_ 'filter-to-selection'}}
+
+template(name="multiselectionSidebar")
+  h3
+    i.fa.fa-tag
+    | {{_ 'multi-selection-label'}}
+  ul.sidebar-list
+    each currentBoard.labels
+      li
+        a.name.js-toggle-label-multiselection
+          span.card-label.square(class="{{labelColorClass color}}" style="{{labelColorStyle color}}")
+          span.sidebar-list-item-description
+            if name
+              = name
+            else
+              span.quiet {{_ "label-default" (_ (concat "color-" color))}}
+          if allSelectedElementHave 'label' _id
+            i.fa.fa-check
+          else if someSelectedElementHave 'label' _id
+            | ⋯
+  hr
+  h3
+    i.fa.fa-users
+    | {{_ 'multi-selection-member'}}
+  ul.sidebar-list
+    each currentBoard.activeMembers
+      with getUser userId
+        li(class="{{#if Filter.members.isSelected _id}}active{{/if}}")
+          a.name.js-toggle-member-multiselection
+            +userAvatar(userId=this._id)
+            span.sidebar-list-item-description
+              = profile.fullname
+              | (<span class="username">{{ username }}</span>)
+            if allSelectedElementHave 'member' _id
+              i.fa.fa-check
+            else if someSelectedElementHave 'member' _id
+              | ⋯
+  if currentUser.isBoardAdmin
+    hr
+    a.sidebar-btn.js-selection-color
+      i.fa.fa-paint-brush
+      span {{_ 'selection-color'}}
+    a.sidebar-btn.js-copy-selection
+      i.fa.fa-clipboard
+      span {{_ 'copy-selection'}}
+    a.sidebar-btn.js-move-selection
+      i.fa.fa-upload
+      span {{_ 'move-selection'}}
+    a.sidebar-btn.js-archive-selection
+      i.fa.fa-archive
+      span {{_ 'archive-selection'}}
+
+template(name="disambiguateMultiLabelPopup")
+  p {{_ 'what-to-do'}}
+  button.wide.js-remove-label {{_ 'remove-label'}}
+  button.wide.js-add-label {{_ 'add-label'}}
+
+template(name="disambiguateMultiMemberPopup")
+  p {{_ 'what-to-do'}}
+  button.wide.js-unassign-member {{_ 'unassign-member'}}
+  button.wide.js-assign-member {{_ 'assign-member'}}
+
+//- WHERE THE SELECTED CARDS GO: board, swimlane, list, above or below which
+  card, and Done. Move selection and Copy selection asked it with the same
+  form; only the heading above it and what happens on Done differ, and both of
+  those stay with the popups (sidebarFilters.js).
+//-
+//- `idSuffix` is the one thing the two copies really did differ in: the radio
+  buttons' ids, so a label clicks its OWN radio. The name stays `position` in
+  both, which is what the handler reads.
+template(name="selectionDestinationPicker")
+  label {{_ 'boards'}}:
+  select.js-select-boards
+    each boards
+      option(value="{{_id}}" selected="{{#if isDialogOptionBoardId _id}}selected{{/if}}") {{add @index 1}}. {{title}}
+
+  label {{_ 'swimlanes'}}:
+  select.js-select-swimlanes
+    each swimlanes
+      option(value="{{_id}}" selected="{{#if isDialogOptionSwimlaneId _id}}selected{{/if}}") {{add @index 1}}. {{isTitleDefault title}}
+
+  label {{_ 'lists'}}:
+  select.js-select-lists
+    each lists
+      option(value="{{_id}}" selected="{{#if isDialogOptionListId _id}}selected{{/if}}") {{add @index 1}}. {{title}}
+
+  label {{_ 'cards'}}:
+  select.js-select-cards
+    each cards
+      option(value="{{_id}}") {{add @index 1}}. {{title}}
+
+  div
+    input(type="radio" name="position" value="above" checked id="position-above-{{idSuffix}}" style="display: inline")
+    label(for="position-above-{{idSuffix}}") {{_ 'above-selected-card'}}
+  div
+    input(type="radio" name="position" value="below" id="position-below-{{idSuffix}}" style="display: inline")
+    label(for="position-below-{{idSuffix}}") {{_ 'below-selected-card'}}
+
+  .edit-controls.clearfix
+    button.primary.confirm.js-done {{_ 'done'}}
+
+template(name="moveSelectionPopup")
+  h3 {{_ 'moveSelectionPopup-title'}}
+  +selectionDestinationPicker(dialog=dialog idSuffix="move")
+
+template(name="copySelectionPopup")
+  h3 {{_ 'copySelectionPopup-title'}}
+  +selectionDestinationPicker(dialog=dialog idSuffix="copy")
+
+template(name="setSelectionColorPopup")
+  h3 {{_ 'setSelectionColorPopup-title'}}
+  form.edit-label
+    .palette-colors: each colors
+      unless $eq color 'white'
+        span.card-label.palette-color.js-palette-color(class="card-details-{{color}}")
+          if(isSelected color)
+            i.fa.fa-check
+    button.primary.confirm.js-submit {{_ 'save'}}
+    button.js-remove-color.negate.wide.right {{_ 'unset-color'}}

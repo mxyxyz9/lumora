@@ -1,0 +1,29 @@
+# Caddy 2 configuration for Wekan
+
+:8080 {
+  # Reverse proxy to Wekan
+  reverse_proxy localhost:3001 {
+    # Enable WebSocket support
+    header_up Connection {>Connection}
+    header_up Upgrade {>Upgrade}
+  }
+}
+
+# SSL/TLS example with HTTP/2 disabled for Firefox WebSocket compatibility
+# Uncomment and customize for your domain
+#{$DOMAIN:wekan.example.com} {
+#  # Enable TLS but use HTTP/1.1 protocol
+#  tls {
+#    protocols tls1.2 tls1.3
+#  }
+#  # Force HTTP/1.1
+#  protocols h1
+#
+#  # Reverse proxy to Wekan
+#  reverse_proxy localhost:3001 {
+#    # Enable WebSocket support
+#    header_up Connection {>Connection}
+#    header_up Upgrade {>Upgrade}
+#  }
+#}
+#}

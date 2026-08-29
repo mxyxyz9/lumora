@@ -1,0 +1,36 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#141722" />
+      <stop offset="50%" stop-color="#0b0d13" />
+      <stop offset="100%" stop-color="#040507" />
+    </linearGradient>
+    <linearGradient id="whitePillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#e2e8f0" />
+    </linearGradient>
+    <linearGradient id="bluePillGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+    <linearGradient id="blueDotGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa" />
+      <stop offset="100%" stop-color="#3b82f6" />
+    </linearGradient>
+  </defs>
+
+  <!-- macOS App Squircle Base -->
+  <rect x="32" y="32" width="960" height="960" rx="224" fill="url(#bgGrad)" stroke="#232838" stroke-width="8" />
+
+  <!-- Inner Soft Bevel Highlight -->
+  <rect x="36" y="36" width="952" height="952" rx="220" fill="none" stroke="rgba(255, 255, 255, 0.08)" stroke-width="4" />
+
+  <!-- Left White Luminous Pill -->
+  <rect x="274" y="270" width="180" height="484" rx="90" fill="url(#whitePillGrad)" />
+
+  <!-- Right Blue Harmonic Dot -->
+  <circle cx="684" cy="270" r="70" fill="url(#blueDotGrad)" />
+
+  <!-- Right Blue Pill -->
+  <rect x="594" y="384" width="180" height="370" rx="90" fill="url(#bluePillGrad)" />
+</svg>

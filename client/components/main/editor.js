@@ -1,0 +1,529 @@
+import { ReactiveCache } from '/imports/reactiveCache';
+import { findWhere } from '/imports/lib/collectionHelpers';
+import { TAPi18n } from '/imports/i18n';
+import Attachments from '/models/attachments';
+import { Utils } from '/client/lib/utils';
+import { memberMatchesTerm } from '/models/lib/memberAutocomplete';
+import autosize from 'autosize';
+var converter = require('@wekanteam/html-to-markdown');
+
+const specialHandles = [
+  {userId: 'board_members', username: 'board_members'},
+  {userId: 'card_members', username: 'card_members'},
+  {userId: 'board_assignees', username: 'board_assignees'},
+  {userId: 'card_assignees', username: 'card_assignees'}
+];
+const cardSpecialHandles = [
+  {userId: 'card_members', username: 'card_members'},
+  {userId: 'card_assignees', username: 'card_assignees'}
+];
+const boardSpecialHandles = [
+  {userId: 'board_members', username: 'board_members'},
+  {userId: 'board_assignees', username: 'board_assignees'}
+];
+const specialHandleNames = specialHandles.map(m => m.username);
+
+
+Template.editor.onRendered(function () {
+    const tpl = this;
+    const textareaSelector = 'textarea';
+    const mentions = [
+      // User mentions
+      {
+        match: /\B@([\w.-]*)$/,
+        search(term, callback) {
+          const currentBoard = Utils.getCurrentBoard();
+          // Shared with the add-card '@' mention (models/lib/memberAutocomplete):
+          // case-insensitive substring match on username OR full name, and safe
+          // when getUser() returns null (previously threw on user.username).
+          const users = currentBoard
+            .activeMembers()
+            .map(member => {
+              const user = ReactiveCache.getUser(member.userId);
+              return memberMatchesTerm(user, term) ? user : null;
+            })
+            .filter(Boolean);
+          // Order: 1. Users, 2. Card-specific options, 3. Board-wide options
+          callback([...new Set([...users, ...cardSpecialHandles, ...boardSpecialHandles])]);
+        },
+        template(user) {
+          if (user.profile && user.profile.fullname) {
+            return (user.profile.fullname + " (" + user.username + ")");
+          }
+          // Translate special group mentions
+          if (specialHandleNames.includes(user.username)) {
+            return TAPi18n.__(user.username);
+          }
+          return user.username;
+        },
+        replace(user) {
+          if (user.profile && user.profile.fullname) {
+            return `@${user.username} (${user.profile.fullname}) `;
+          }
+          return `@${user.username} `;
+        },
+        index: 1,
+      },
+    ];
+
+    const enableTextarea = function() {
+      const $textarea = tpl.$(textareaSelector);
+      autosize($textarea);
+      $textarea.escapeableTextComplete(mentions);
+    };
+    if (Meteor.settings.public.RICHER_CARD_COMMENT_EDITOR === true || Meteor.settings.public.RICHER_CARD_COMMENT_EDITOR === 'true') {
+      const isSmall = Utils.isMiniScreen();
+      const toolbar = isSmall
+        ? [
+            ['view', ['fullscreen']],
+            ['table', ['table']],
+            ['font', ['bold', 'underline']],
+            //['fontsize', ['fontsize']],
+            ['color', ['color']],
+          ]
+        : [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['fontname', ['fontname']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            //['insert', ['link', 'picture', 'video']], // iframe tag will be sanitized TODO if iframe[class=note-video-clip] can be added into safe list, insert video can be enabled
+            ['insert', ['link']], //, 'picture']], // modal popup has issue somehow :(
+            ['view', ['fullscreen', 'codeview', 'help']],
+          ];
+      const cleanPastedHTML = function(input) {
+        const badTags = [
+          'style',
+          'script',
+          'applet',
+          'embed',
+          'noframes',
+          'noscript',
+          'meta',
+          'link',
+          'button',
+          'form',
+        ].join('|');
+        const badPatterns = new RegExp(
+          `(?:${[
+            `<(${badTags})\\s*[^>][\\s\\S]*?<\\/\\1>`,
+            `<(${badTags})[^>]*?\\/>`,
+          ].join('|')})`,
+          'gi',
+        );
+        let output = input;
+        // remove bad Tags
+        output = output.replace(badPatterns, '');
+        // remove attributes ' style="..."'
+        const badAttributes = new RegExp(
+          `(?:${[
+            'on\\S+=([\'\"]?).*?\\1',
+            'href=([\'\"]?)javascript:.*?\\2',
+            'style=([\'\"]?).*?\\3',
+            'target=\\S+',
+          ].join('|')})`,
+          'gi',
+        );
+        output = output.replace(badAttributes, '');
+        output = output.replace(/(<a )/gi, '$1target=_ '); // always to new target
+        return output;
+      };
+      const editor = '.editor';
+      const selectors = [
+        `.js-new-description-form ${editor}`,
+        `.js-new-comment-form ${editor}`,
+        `.js-edit-comment ${editor}`,
+      ].join(','); // only new comment and edit comment
+      const inputs = $(selectors);
+      if (inputs.length === 0) {
+        // only enable richereditor to new comment or edit comment no others
+        enableTextarea();
+      } else {
+        const placeholder = inputs.attr('placeholder') || '';
+        const mSummernotes = [];
+        const getSummernote = function(input) {
+          const idx = inputs.index(input);
+          if (idx > -1) {
+            return mSummernotes[idx];
+          }
+          return undefined;
+        };
+        inputs.each(function(idx, input) {
+          mSummernotes[idx] = $(input).summernote({
+            placeholder,
+            callbacks: {
+              onInit(object) {
+                const originalInput = this;
+                $(originalInput).on('submitted', function() {
+                  // when comment is submitted, the original textarea will be set to '', so shall we
+                  if (!this.value) {
+                    const sn = getSummernote(this);
+                    sn && sn.summernote('code', '');
+                  }
+                });
+                const jEditor = object && object.editable;
+                const toolbar = object && object.toolbar;
+                if (jEditor !== undefined) {
+                  jEditor.escapeableTextComplete(mentions);
+                }
+                if (toolbar !== undefined) {
+                  const fBtn = toolbar.find('.btn-fullscreen');
+                  fBtn.on('click', function() {
+                    const $this = $(this),
+                      isActive = $this.hasClass('active');
+                    $('.minicards,#header-quick-access').toggle(!isActive); // mini card is still showing when editor is in fullscreen mode, we hide here manually
+                  });
+                }
+              },
+              onImageUpload(files) {
+                const $summernote = getSummernote(this);
+                if (files && files.length > 0) {
+                  const image = files[0];
+                  const currentCard = Utils.getCurrentCard();
+                  const MAX_IMAGE_PIXEL = Utils.MAX_IMAGE_PIXEL;
+                  const COMPRESS_RATIO = Utils.IMAGE_COMPRESS_RATIO;
+                  const processUpload = async function(file) {
+                    const uploader = await Attachments.insertAsync(
+                      {
+                        file,
+                        meta: Utils.getCommonAttachmentMetaFrom(currentCard),
+                        chunkSize: 'dynamic',
+                      },
+                      false,
+                    );
+                    uploader.on('uploaded', (error, fileRef) => {
+                      if (!error) {
+                        if (fileRef.isImage) {
+                          const img = document.createElement('img');
+                          img.src = fileRef.link();
+                          img.setAttribute('width', '100%');
+                          $summernote.summernote('insertNode', img);
+                        }
+                      }
+                    });
+                    uploader.start();
+                  };
+                  if (MAX_IMAGE_PIXEL) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                      const dataurl = e && e.target && e.target.result;
+                      if (dataurl !== undefined) {
+                        // need to shrink image
+                        Utils.shrinkImage({
+                          dataurl,
+                          maxSize: MAX_IMAGE_PIXEL,
+                          ratio: COMPRESS_RATIO,
+                          toBlob: true,
+                          callback(blob) {
+                            if (blob !== false) {
+                              blob.name = image.name;
+                              processUpload(blob);
+                            }
+                          },
+                        });
+                      }
+                    };
+                    reader.readAsDataURL(image);
+                  } else {
+                    processUpload(image);
+                  }
+                }
+              },
+              onPaste(e) {
+                var clipboardData = e.clipboardData;
+                var pastedData = clipboardData.getData('Text');
+
+                //if pasted data is an image, exit
+                if (!pastedData.length) {
+                  e.preventDefault();
+                  return;
+                }
+
+                // clear up unwanted tag info when user pasted in text
+                const thisNote = this;
+                const updatePastedText = function(object) {
+                  const someNote = getSummernote(object);
+                  // Fix Pasting text into a card is adding a line before and after
+                  // (and multiplies by pasting more) by changing paste "p" to "br".
+                  // Fixes https://github.com/wekan/wekan/2890 .
+                  // == Fix Start ==
+                  someNote.execCommand('defaultParagraphSeparator', false, 'br');
+                  // == Fix End ==
+                  const original = someNote.summernote('code');
+                  const cleaned = cleanPastedHTML(original); //this is where to call whatever clean function you want. I have mine in a different file, called CleanPastedHTML.
+                  someNote.summernote('code', ''); //clear original
+                  someNote.summernote('pasteHTML', cleaned); //this sets the displayed content editor to the cleaned pasted code.
+                };
+                setTimeout(function() {
+                  //this kinda sucks, but if you don't do a setTimeout,
+                  //the function is called before the text is really pasted.
+                  updatePastedText(thisNote);
+                }, 10);
+              },
+            },
+            dialogsInBody: true,
+            spellCheck: true,
+            disableGrammar: false,
+            disableDragAndDrop: false,
+            toolbar,
+            popover: {
+              image: [
+                ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+                ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                ['remove', ['removeMedia']],
+              ],
+              link: [['link', ['linkDialogShow', 'unlink']]],
+              table: [
+                ['add', ['addRowDown', 'addRowUp', 'addColLeft', 'addColRight']],
+                ['delete', ['deleteRow', 'deleteCol', 'deleteTable']],
+              ],
+              air: [
+                ['color', ['color']],
+                ['font', ['bold', 'underline', 'clear']],
+              ],
+            },
+            height: 200,
+          });
+        });
+      }
+    } else {
+      enableTextarea();
+    }
+    enableTextarea();
+});
+
+Template.editor.events({
+    'click a.fa.fa-copy'(event, tpl) {
+      const $editor = tpl.$('textarea.editor');
+      const promise = Utils.copyTextToClipboard($editor[0].value);
+
+      const $tooltip = tpl.$('.copied-tooltip');
+      Utils.showCopied(promise, $tooltip);
+    },
+    'click a.fa.fa-brands.fa-markdown'(event, tpl) {
+      const $editor = tpl.$('textarea.editor');
+      $editor[0].value = converter.convert($editor[0].value);
+    },
+    // #5149: the code-block copy button is now (re)added by Template.viewer
+    // .onRendered for every viewer render, so it no longer needs to be poked
+    // after closing the inline editor.
+});
+
+import DOMPurify from 'dompurify';
+import { sanitizeHTML } from '/imports/lib/secureDOMPurify';
+
+// Additional  safeAttrValue function to allow for other specific protocols
+// See https://github.com/leizongmin/js-xss/issues/52#issuecomment-241354114
+
+/*
+function mySafeAttrValue(tag, name, value, cssFilter) {
+  // only when the tag is 'a' and attribute is 'href'
+  // then use your custom function
+  if (tag === 'a' && name === 'href') {
+    // only filter the value if starts with 'cbthunderlink:' or 'aodroplink'
+    if (
+      /^thunderlink:/gi.test(value) ||
+      /^cbthunderlink:/gi.test(value) ||
+      /^aodroplink:/gi.test(value) ||
+      /^onenote:/gi.test(value) ||
+      /^file:/gi.test(value) ||
+      /^abasurl:/gi.test(value) ||
+      /^conisio:/gi.test(value) ||
+      /^mailspring:/gi.test(value)
+    ) {
+      return value;
+    } else {
+      // use the default safeAttrValue function to process all non cbthunderlinks
+      return sanitizeXss.safeAttrValue(tag, name, value, cssFilter);
+    }
+  } else {
+    // use the default safeAttrValue function to process it
+    return sanitizeXss.safeAttrValue(tag, name, value, cssFilter);
+  }
+}
+*/
+
+// XXX I believe we should compute a HTML rendered field on the server that
+// would handle markdown and user mentions. We can simply have two
+// fields, one source, and one compiled version (in HTML) and send only the
+// compiled version to most users -- who don't need to edit.
+// In the meantime, all the transformation are done on the client using the
+// Blaze API.
+const at = HTML.CharRef({ html: '&commat;', str: '@' });
+Blaze.Template.registerHelper(
+  'mentions',
+  new Template('mentions', function() {
+    const view = this;
+    // Admin Panel / Features / Security: read the setting FIRST (a reactive dependency
+    // of this viewer) and push the "always show all code as plain text" flag into the
+    // wekan-markdown package BEFORE rendering the inner markdown below. Doing it here —
+    // not only in the separate startup autorun — removes a re-render race: this viewer
+    // already re-renders whenever the setting doc changes (it reads it for stripLinks),
+    // and the inner markdown helper then reads the up-to-date flag in the SAME
+    // synchronous render, so toggling "always show all code as plain text" takes effect
+    // immediately. Without this the viewer could re-render (setting changed) BEFORE the
+    // startup autorun updated the flag, read the stale value, and never re-render again
+    // since it does not itself depend on that ReactiveVar.
+    const setting = ReactiveCache.getCurrentSetting();
+    if (typeof Markdown !== 'undefined' && Markdown.alwaysShowCodeAsText) {
+      Markdown.alwaysShowCodeAsText.set(!!(setting && setting.alwaysShowCodeAsText));
+    }
+    let content = Blaze.toHTML(view.templateContentBlock);
+    // Admin Panel / Features: when "render links as plain text" is enabled, every
+    // link (markdown [label](url) and raw HTML <a href>) is stripped to plain,
+    // non-clickable text everywhere rich text is shown. Reactive: toggling the
+    // setting re-renders viewers.
+    const stripLinks = !!(setting && setting.renderLinksAsPlainText);
+    const currentBoard = Utils.getCurrentBoard();
+    if (!currentBoard)
+      return HTML.Raw(sanitizeHTML(content, { stripLinks }));
+    const knowedUsers = [...new Set([...currentBoard.members
+      .filter(member => member.isActive)
+      .map(member => {
+        const u = ReactiveCache.getUser(member.userId);
+        if (u) {
+          member.username = u.username;
+        }
+        return member;
+      }), ...specialHandles])];
+    const mentionRegex = /\B@([\w.-]*)/gi;
+
+    let currentMention;
+    while ((currentMention = mentionRegex.exec(content)) !== null) {
+      const [fullMention, quoteduser, simple] = currentMention;
+      const username = quoteduser || simple;
+      const knowedUser = findWhere(knowedUsers, { username });
+      if (!knowedUser) {
+        continue;
+      }
+
+      const linkValue = [' ', at, knowedUser.username];
+      let linkClass = 'atMention js-open-member';
+      if (knowedUser.userId === Meteor.userId()) {
+        linkClass += ' me';
+      }
+
+      // For special group mentions, display translated text
+      let displayText = knowedUser.username;
+      if (specialHandleNames.includes(knowedUser.username)) {
+        displayText = TAPi18n.__(knowedUser.username);
+        linkClass = 'atMention'; // Remove js-open-member for special handles
+      }
+
+      // This @user mention link generation did open same Wekan
+      // window in new tab, so now A is changed to U so it's
+      // underlined and there is no link popup. This way also
+      // text can be selected more easily.
+      //const link = HTML.A(
+      const link = HTML.U(
+        {
+          class: linkClass,
+          // XXX Hack. Since we stringify this render function result below with
+          // `Blaze.toHTML` we can't rely on blaze data contexts to pass the
+          // `userId` to the popup as usual, and we need to store it in the DOM
+          // using a data attribute.
+          'data-userId': knowedUser.userId,
+        },
+        [' ', at, displayText],
+      );
+
+      content = content.replace(fullMention, Blaze.toHTML(link));
+    }
+
+    return HTML.Raw(sanitizeHTML(content, { stripLinks }));
+  }),
+);
+
+// #5149: copy a code block to the clipboard from the read-only card viewer.
+// Copy the RAW text (textContent) of the <pre> — the previous version copied the
+// HTML-escaped innerHTML of the first child node (often the wrong content or
+// undefined) via a one-time global `document.querySelectorAll('.viewer > pre')`
+// in Template.editor.onRendered, which decorated only whichever viewers happened
+// to be on the page at that instant ("works sporadically") and lost the button
+// after editing. Decorating in Template.viewer.onRendered runs for EVERY viewer
+// (description, checklist item, comment) and again on every re-render, and is
+// de-duplicated so re-renders never stack multiple buttons.
+function copyCodeBlockText(text) {
+  const value = typeof text === 'string' ? text : '';
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(value).catch(() => fallbackCopyText(value));
+  } else {
+    fallbackCopyText(value);
+  }
+}
+function fallbackCopyText(value) {
+  const textArea = document.createElement('textarea');
+  textArea.setAttribute('style', 'position:fixed;top:0;left:0;width:1px;height:1px;border:0;opacity:0;');
+  textArea.value = value;
+  document.body.appendChild(textArea);
+  textArea.select();
+  try { document.execCommand('copy'); } catch (e) { /* clipboard unavailable */ }
+  document.body.removeChild(textArea);
+}
+
+Template.viewer.onRendered(function () {
+  const title = TAPi18n.__('copy-text-to-clipboard');
+  this.$('pre').each(function () {
+    const pre = this;
+    // De-dup: skip a <pre> that already has its copy button in front of it.
+    const prev = pre.previousElementSibling;
+    if (prev && prev.classList && prev.classList.contains('js-copy-code')) {
+      return;
+    }
+    const button = document.createElement('a');
+    button.className = 'fa fa-copy btn btn-sm right js-copy-code';
+    button.setAttribute('href', '#');
+    button.setAttribute('title', title);
+    pre.parentNode.insertBefore(button, pre);
+    button.addEventListener('click', function (e) {
+      e.preventDefault();
+      copyCodeBlockText(pre.textContent);
+    });
+  });
+});
+
+Template.viewer.events({
+  // Viewer sometimes have click-able wrapper around them (for instance to edit
+  // the corresponding text). Clicking a link shouldn't fire these actions, stop
+  // we stop these event at the viewer component level.
+  'click a'(event, templateInstance) {
+    const prevent = true;
+    const userId = event.currentTarget.dataset.userid;
+    if (userId) {
+      Popup.open('member').call({ userId }, event, templateInstance);
+    } else {
+      const href = event.currentTarget.href;
+      if (href) {
+        // Open links in current browser tab, changed from _blank to _self, and back to _blank:
+        // https://github.com/wekan/wekan/discussions/3534
+        //window.open(href, '_self');
+        window.open(href, '_blank');
+      }
+    }
+    if (prevent) {
+      event.stopPropagation();
+
+      // XXX We hijack the build-in browser action because we currently don't have
+      // `_blank` attributes in viewer links, and the transformer function is
+      // handled by a third party package that we can't configure easily. Fix that
+      // by using directly `_blank` attribute in the rendered HTML.
+      event.preventDefault();
+    }
+  },
+});
+
+// Admin Panel / Features / Security: keep the wekan-markdown package's
+// "show all code as plain text" flag in sync with the alwaysShowCodeAsText setting.
+// The package cannot import app code, so we push the setting into the reactive flag
+// it exposes on the exported Markdown object; the markdown helper reads it reactively
+// and shows the raw source (escaped, non-clickable, non-running) when enabled.
+Meteor.startup(() => {
+  Tracker.autorun(() => {
+    const setting = ReactiveCache.getCurrentSetting();
+    if (typeof Markdown !== 'undefined' && Markdown.alwaysShowCodeAsText) {
+      Markdown.alwaysShowCodeAsText.set(!!(setting && setting.alwaysShowCodeAsText));
+    }
+  });
+});

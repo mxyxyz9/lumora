@@ -1,0 +1,251 @@
+template(name="checklists")
+  //- The NAME of this section is drawn by +cardSectionHeader in cardDetails.jade,
+    with the caret that collapses it and the rule above it. What stays here is
+    the control that belongs to the list itself: add a checklist.
+  .checklists-title
+    h3.card-details-item-title
+      if canModifyCard
+        +inlinedForm(autoclose=false classNames="js-add-checklist" cardId = cardId
+          position="top")
+          +addChecklistItemForm
+        else
+          a.add-checklist-top.js-open-inlined-form(title="{{_ 'add-checklist'}}")
+            i.fa.fa-plus
+    if currentUser.isBoardMember
+      .material-toggle-switch(title="{{_ 'hide-finished-checklist'}}")
+        //span.toggle-switch-title
+        if card.hideFinishedChecklistIfItemsAreHidden
+          input.toggle-switch(type="checkbox" id="toggleHideFinishedChecklist" checked="checked")
+        else
+          input.toggle-switch(type="checkbox" id="toggleHideFinishedChecklist")
+        label.toggle-label(for="toggleHideFinishedChecklist")
+
+  .card-checklist-items
+    each checklist in checklists
+      if checklist.showChecklist card.hideFinishedChecklistIfItemsAreHidden
+        +checklistDetail(checklist = checklist card = card)
+
+  if canModifyCard
+    +inlinedForm(autoclose=false classNames="js-add-checklist" cardId = cardId)
+      +addChecklistItemForm(checklist=checklist showNewlineBecomesNewChecklistItem=false)
+    else
+      a.add-checklist.js-open-inlined-form(title="{{_ 'add-checklist'}}")
+        i.fa.fa-plus
+
+template(name="checklistDetail")
+  .js-checklist.checklist.nodragscroll
+    +inlinedForm(classNames="js-edit-checklist-title" checklist = checklist)
+      +editChecklistForm(checklist = checklist)
+    else
+      .checklist-title
+        span
+        //- #1591: fold a long checklist out of the way. A caret rather than
+          another entry in the actions menu, because the whole point is to do it
+          at a glance while reading the card - and it is a view preference of
+          this user, so it does not touch the card.
+        a.fa.checklist-collapse.js-collapse-checklist(
+          class="{{#if checklistCollapsed}}fa-caret-right{{else}}fa-caret-down{{/if}}"
+          title="{{#if checklistCollapsed}}{{_ 'expand-checklist'}}{{else}}{{_ 'collapse-checklist'}}{{/if}}"
+          role="button" tabindex="0"
+          aria-expanded="{{#if checklistCollapsed}}false{{else}}true{{/if}}")
+        if canModifyCard
+          a.fa.fa-navicon.checklist-details-menu.js-open-checklist-details-menu(title="{{_ 'checklistActionsPopup-title'}}")
+
+        if canModifyCard
+          h4.title.js-open-inlined-form.is-editable
+            if isTouchScreenOrShowDesktopDragHandles
+              span.fa.checklist-handle(class="fa-arrows" title="{{_ 'dragChecklist'}}")
+            +viewer
+              = checklist.title
+        else
+          h4.title
+            +viewer
+                = checklist.title
+
+    //- The progress bar stays visible when folded: it is the summary of what was
+      folded away, so hiding it too would leave a title that says nothing.
+    if $gt finishedPercent 0
+      .checklist-progress-bar-container
+        .checklist-progress-text {{finishedPercent}}%
+        .checklist-progress-bar
+          .checklist-progress(style="width:{{finishedPercent}}%")
+    unless checklistCollapsed
+      +checklistItems(checklist = checklist card = card)
+
+template(name="checklistDeletePopup")
+  p {{_ 'confirm-checklist-delete-popup'}}
+  button.js-confirm.negate.full(type="submit") {{_ 'delete'}}
+
+template(name="checklistItemDeletePopup")
+  p {{_ 'confirm-checklist-item-delete-popup'}}
+  button.js-confirm.negate.full(type="submit") {{_ 'delete'}}
+
+template(name="addChecklistItemForm")
+  a.fa.fa-copy(title="{{_ 'copy-text-to-clipboard'}}")
+  span.copied-tooltip {{_ 'copied'}}
+  textarea.js-add-checklist-item(rows='1' autofocus)
+  .edit-controls.clearfix
+    button.primary.confirm.js-submit-add-checklist-item-form(type="submit") {{_ 'save'}}
+    a.fa.fa-times-thin.js-close-inlined-form(title="{{_ 'close-add-checklist-item'}}")
+    if showNewlineBecomesNewChecklistItem
+      .material-toggle-switch(title="{{_ 'newlineBecomesNewChecklistItem'}}")
+        input.toggle-switch(type="checkbox" id="toggleNewlineBecomesNewChecklistItem")
+        label.toggle-label(for="toggleNewlineBecomesNewChecklistItem")
+        | {{_ 'newLineNewItem'}}
+      if $eq position 'top'
+        .material-toggle-switch(title="{{_ 'newlineBecomesNewChecklistItemOriginOrder'}}")
+          input.toggle-switch(type="checkbox" id="toggleNewlineBecomesNewChecklistItemOriginOrder")
+          label.toggle-label(for="toggleNewlineBecomesNewChecklistItemOriginOrder")
+          | {{_ 'originOrder'}}
+
+template(name="editChecklistForm")
+  a.fa.fa-copy(title="{{_ 'copy-text-to-clipboard'}}")
+  span.copied-tooltip {{_ 'copied'}}
+  textarea.js-edit-checklist-item(rows='1' autofocus dir="auto")
+    if $eq type 'item'
+      = item.title
+    else
+      = checklist.title
+  .edit-controls.clearfix
+    button.primary.confirm.js-submit-edit-checklist-item-form(type="submit") {{_ 'save'}}
+    a.fa.fa-times-thin.js-close-inlined-form(title="{{_ 'close-edit-checklist-item'}}")
+    span(title=createdAt) {{ displayDate createdAt }}
+
+template(name="editChecklistItemForm")
+  a.fa.fa-copy(title="{{_ 'copy-text-to-clipboard'}}")
+  span.copied-tooltip {{_ 'copied'}}
+  textarea.js-edit-checklist-item(rows='1' autofocus dir="auto")
+    if $eq type 'item'
+      = item.title
+    else
+      = checklist.title
+  .edit-controls.clearfix
+    button.primary.confirm.js-submit-edit-checklist-item-form(type="submit") {{_ 'save'}}
+    a.fa.fa-times-thin.js-close-inlined-form(title="{{_ 'close-edit-checklist-item'}}")
+    span(title=createdAt) {{ displayDate createdAt }}
+    if canModifyCard
+      a.js-delete-checklist-item {{_ "delete"}}...
+      a.js-convert-checklist-item-to-card
+        i.fa.fa-copy
+        | {{_ 'convertChecklistItemToCardPopup-title'}}
+
+template(name="checklistItems")
+  if checklist.items.length
+    if canModifyCard
+      +inlinedForm(autoclose=false classNames="js-add-checklist-item" checklist = checklist position="top")
+        +addChecklistItemForm(checklist=checklist showNewlineBecomesNewChecklistItem=true position="top")
+      else
+        a.add-checklist-item.js-open-inlined-form(title="{{_ 'add-checklist-item'}}")
+          i.fa.fa-plus
+  .checklist-items.js-checklist-items
+    each item in checklist.items
+      +inlinedForm(classNames="js-edit-checklist-item" item = item checklist = checklist)
+        +editChecklistItemForm(type = 'item' item = item checklist = checklist)
+      else
+        +checklistItemDetail(item = item checklist = checklist card = card)
+    if canModifyCard
+      +inlinedForm(autoclose=false classNames="js-add-checklist-item" checklist = checklist)
+        +addChecklistItemForm(checklist=checklist showNewlineBecomesNewChecklistItem=true)
+      else
+        a.add-checklist-item.js-open-inlined-form(title="{{_ 'add-checklist-item'}}")
+          i.fa.fa-plus
+
+template(name='checklistItemDetail')
+  .js-checklist-item.checklist-item(class="{{#if item.isFinished }}is-checked{{#if checklist.isItemHidden item.isFinished}} invisible{{/if}}{{/if}}{{#if checklist.hideAllChecklistItems}} is-checked invisible{{/if}}"
+    role="checkbox" aria-checked="{{#if item.isFinished }}true{{else}}false{{/if}}" tabindex="0")
+    if canModifyCard
+      .check-box-container
+        .check-box.materialCheckBox(class="{{#if item.isFinished }}is-checked{{/if}}")
+      if isTouchScreenOrShowDesktopDragHandles
+        span.fa.checklistitem-handle(class="fa-arrows" title="{{_ 'dragChecklistItem'}}")
+      .item-title.js-open-inlined-form.is-editable(class="{{#if item.isFinished }}is-checked{{/if}}")
+        +viewer
+          = item.title
+    else
+      .materialCheckBox(class="{{#if item.isFinished }}is-checked{{/if}}")
+      .item-title(class="{{#if item.isFinished }}is-checked{{/if}}")
+        +viewer
+          = item.title
+
+template(name="checklistActionsPopup")
+  //- #1173: a checklist exports like everything else - the same popup body, with
+    the checklist as its scope. Reading, so it is above the rows that change it.
+  ul.pop-over-list
+    li
+      a.js-export-checklist
+        i.fa.fa-exchange
+        | {{_ 'export'}} / {{_ 'import'}} ...
+  hr
+  ul.pop-over-list
+    li
+      a.js-delete-checklist.delete-checklist
+        i.fa.fa-trash
+        | {{_ "delete"}} ...
+      a.js-move-checklist.move-checklist
+        i.fa.fa-arrow-right
+        | {{_ "moveChecklist"}} ...
+      a.js-copy-checklist.copy-checklist
+        i.fa.fa-copy
+        | {{_ "copyChecklist"}} ...
+      a.js-hide-checked-checklist-items
+        i.fa.fa-eye-slash
+        | {{_ "hideCheckedChecklistItems"}} ...
+        .material-toggle-switch(title="{{_ 'hide-checked-items'}}")
+          if checklist.hideCheckedState
+            input.toggle-switch(type="checkbox" id="toggleHideCheckedChecklistItems_{{checklist._id}}" checked="checked")
+          else
+            input.toggle-switch(type="checkbox" id="toggleHideCheckedChecklistItems_{{checklist._id}}")
+          label.toggle-label(for="toggleHideCheckedChecklistItems_{{checklist._id}}")
+      a.js-hide-all-checklist-items
+        i.fa.fa-ban
+        | {{_ "hideAllChecklistItems"}} ...
+        .material-toggle-switch(title="{{_ 'hideAllChecklistItems'}}")
+          if checklist.hideAllChecklistItems
+            input.toggle-switch(type="checkbox" id="toggleHideAllChecklistItems_{{checklist._id}}" checked="checked")
+          else
+            input.toggle-switch(type="checkbox" id="toggleHideAllChecklistItems_{{checklist._id}}")
+          label.toggle-label(for="toggleHideAllChecklistItems_{{checklist._id}}")
+      a.js-show-checklist-at-minicard
+        i.fa.fa-th-list
+        | {{_ "show-on-minicard"}} ...
+        .material-toggle-switch(title="{{_ 'show-on-minicard'}}")
+          //- The switch shows what is ON THE MINICARD, not the raw field. Drawn
+            from the field it read OFF beside a checklist that was plainly showing,
+            because the board default (allowsChecklistsOnMinicard, on out of the
+            box) put it there - reported by email.
+          if shownAtMinicard
+            input.toggle-switch(type="checkbox" id="toggleShowChecklistAtMinicard_{{checklist._id}}" checked="checked")
+          else
+            input.toggle-switch(type="checkbox" id="toggleShowChecklistAtMinicard_{{checklist._id}}")
+          label.toggle-label(for="toggleShowChecklistAtMinicard_{{checklist._id}}")
+
+template(name="copyChecklistPopup")
+  +copyAndMoveChecklist
+
+template(name="moveChecklistPopup")
+  +copyAndMoveChecklist
+
+template(name="copyAndMoveChecklist")
+  unless currentUser.isWorker
+    label {{_ 'boards'}}:
+    select.js-select-boards(autofocus)
+      each boards
+        option(value="{{_id}}" selected="{{#if isDialogOptionBoardId _id}}selected{{/if}}") {{title}}
+
+  label {{_ 'swimlanes'}}:
+  select.js-select-swimlanes
+    each swimlanes
+      option(value="{{_id}}" selected="{{#if isDialogOptionSwimlaneId _id}}selected{{/if}}") {{title}}
+
+  label {{_ 'lists'}}:
+  select.js-select-lists
+    each lists
+      option(value="{{_id}}" selected="{{#if isDialogOptionListId _id}}selected{{/if}}") {{title}}
+
+  label {{_ 'cards'}}:
+  select.js-select-cards
+    each cards
+      option(value="{{_id}}" selected="{{#if isDialogOptionCardId _id}}selected{{/if}}") {{title}}
+
+  .edit-controls.clearfix
+    button.primary.confirm.js-done {{_ 'done'}}

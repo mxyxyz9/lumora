@@ -1,0 +1,54 @@
+{
+  "name": "lumora-kanban",
+  "productName": "Lumora",
+  "version": "1.0.0",
+  "description": "Minimalist, distraction-free desktop Kanban client with live DDP sync",
+
+  "main": "dist-electron/main/main.js",
+  "scripts": {
+    "dev": "vite",
+    "dev:desktop": "node scripts/patch-electron-dev.cjs && npm run build:electron && concurrently -k -s first \"npm run dev\" \"node scripts/wait-and-electron.cjs\"",
+    "build": "tsc && vite build",
+
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "start": "npm run build:electron && electron .",
+    "pack": "npm run build && npm run build:electron && electron-builder --dir --config electron-builder.yml",
+    "dist": "npm run build && npm run build:electron && electron-builder --config electron-builder.yml",
+    "dist:mac": "npm run build && npm run build:electron && electron-builder --mac --config electron-builder.yml",
+    "dist:win": "npm run build && npm run build:electron && electron-builder --win --config electron-builder.yml",
+    "dist:linux": "npm run build && npm run build:electron && electron-builder --linux --config electron-builder.yml",
+    "test": "vitest run --fileParallelism=false",
+    "bun:dev": "bun --bun vite",
+    "bun:dev:desktop": "bun run build:electron && concurrently -k -s first \"bun run dev\" \"node scripts/wait-and-electron.cjs\"",
+    "bun:build": "bun run build",
+    "bun:test": "bun vitest run --fileParallelism=false"
+  },
+  "dependencies": {
+    "@atlaskit/pragmatic-drag-and-drop": "^1.5.1",
+    "@atlaskit/pragmatic-drag-and-drop-flourish": "^1.0.3",
+    "@atlaskit/pragmatic-drag-and-drop-hitbox": "^1.0.3",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.475.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.1",
+    "xlsx": "^0.18.5",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@types/ws": "^8.5.14",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "^34.2.0",
+    "electron-builder": "^26.15.3",
+    "playwright": "^1.62.1",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vitest": "^3.0.0",
+    "ws": "^8.18.0"
+  }
+}
