@@ -759,10 +759,10 @@ export const BoardView: React.FC = () => {
               style={{ gap: '6px', fontSize: '12.5px', height: '30px' }}
               title="View & restore archived tasks"
             >
-              <Archive size={13} style={{ color: '#7c5ce5' }} />
+              <Archive size={13} style={{ color: 'var(--accent-primary)' }} />
               <span>Archived</span>
               {archivedCount > 0 && (
-                <span style={{ fontSize: '10px', background: '#e0d4ff', color: '#3b2a59', padding: '1px 6px', borderRadius: '100px', fontWeight: 800 }}>
+                <span style={{ fontSize: '10px', background: 'var(--bg-badge)', color: 'var(--accent-primary)', padding: '1px 6px', borderRadius: '100px', fontWeight: 800 }}>
                   {archivedCount}
                 </span>
               )}

@@ -26,14 +26,134 @@ interface KanbanCardProps {
 
 // Pastel & Theme-Aware Color Palette for Playful Cards
 export const PASTEL_PALETTES = [
-  { id: 'yellow', name: 'Yellow', bg: '#ffeaa7', text: '#b28900', title: '#382800', tagBg: 'rgba(255,255,255,0.7)', tagColor: '#8a6a00', darkBg: '#272015', darkText: '#fde68a', darkTitle: '#fef3c7', darkBorder: 'rgba(245, 158, 11, 0.35)', darkTagBg: 'rgba(245, 158, 11, 0.15)', darkTagColor: '#fbbf24' },
-  { id: 'purple', name: 'Purple', bg: '#e0d4ff', text: '#493396', title: '#24143a', tagBg: 'rgba(255,255,255,0.7)', tagColor: '#493396', darkBg: '#251e3e', darkText: '#e9d5ff', darkTitle: '#f5f3ff', darkBorder: 'rgba(168, 85, 247, 0.35)', darkTagBg: 'rgba(168, 85, 247, 0.15)', darkTagColor: '#c084fc' },
-  { id: 'sky', name: 'Sky Blue', bg: '#c7ecee', text: '#1e7075', title: '#0c383b', tagBg: 'rgba(255,255,255,0.7)', tagColor: '#1e7075', darkBg: '#142538', darkText: '#bae6fd', darkTitle: '#f0f9ff', darkBorder: 'rgba(56, 189, 248, 0.35)', darkTagBg: 'rgba(56, 189, 248, 0.15)', darkTagColor: '#38bdf8' },
-  { id: 'coral', name: 'Coral Red', bg: '#ffb8b8', text: '#a62a2a', title: '#4d0f0f', tagBg: 'rgba(255,255,255,0.7)', tagColor: '#a62a2a', darkBg: '#331722', darkText: '#fecdd3', darkTitle: '#fff1f2', darkBorder: 'rgba(244, 63, 94, 0.35)', darkTagBg: 'rgba(244, 63, 94, 0.15)', darkTagColor: '#fb7185' },
-  { id: 'green', name: 'Sage Green', bg: '#d4f1dd', text: '#1f8b4d', title: '#0a3d20', tagBg: 'rgba(255,255,255,0.7)', tagColor: '#1f8b4d', darkBg: '#132c22', darkText: '#a7f3d0', darkTitle: '#ecfdf5', darkBorder: 'rgba(52, 211, 153, 0.35)', darkTagBg: 'rgba(52, 211, 153, 0.15)', darkTagColor: '#34d399' },
-  { id: 'peach', name: 'Peach', bg: '#ffe5d9', text: '#c45b38', title: '#52200f', tagBg: 'rgba(255,255,255,0.7)', tagColor: '#c45b38', darkBg: '#321c13', darkText: '#fed7aa', darkTitle: '#fff7ed', darkBorder: 'rgba(249, 115, 22, 0.35)', darkTagBg: 'rgba(249, 115, 22, 0.15)', darkTagColor: '#fb923c' },
-  { id: 'pink', name: 'Blush Pink', bg: '#ffccdf', text: '#a62a6e', title: '#4a0f30', tagBg: 'rgba(255,255,255,0.7)', tagColor: '#a62a6e', darkBg: '#32152e', darkText: '#fbcfe8', darkTitle: '#fdf2f8', darkBorder: 'rgba(236, 72, 153, 0.35)', darkTagBg: 'rgba(236, 72, 153, 0.15)', darkTagColor: '#f472b6' },
-  { id: 'slate', name: 'Cool Slate', bg: '#f1f2f6', text: '#57606f', title: '#2f3542', tagBg: 'rgba(255,255,255,0.7)', tagColor: '#57606f', darkBg: '#1c283e', darkText: '#cbd5e1', darkTitle: '#f8fafc', darkBorder: 'rgba(148, 163, 184, 0.35)', darkTagBg: 'rgba(148, 163, 184, 0.15)', darkTagColor: '#94a3b8' },
+  {
+    id: 'yellow',
+    name: 'Yellow',
+    bg: '#ffeaa7',
+    text: '#b28900',
+    title: '#382800',
+    tagBg: 'rgba(255,255,255,0.7)',
+    tagColor: '#8a6a00',
+    darkBg: 'linear-gradient(145deg, rgba(245, 158, 11, 0.18) 0%, rgba(36, 26, 14, 0.95) 100%)',
+    darkText: '#fcd34d',
+    darkTitle: '#ffffff',
+    darkBorder: '1.5px solid rgba(245, 158, 11, 0.38)',
+    darkTagBg: 'rgba(245, 158, 11, 0.22)',
+    darkTagColor: '#fef08a',
+    darkGlow: 'rgba(245, 158, 11, 0.2)',
+  },
+  {
+    id: 'purple',
+    name: 'Purple',
+    bg: '#e0d4ff',
+    text: '#493396',
+    title: '#24143a',
+    tagBg: 'rgba(255,255,255,0.7)',
+    tagColor: '#493396',
+    darkBg: 'linear-gradient(145deg, rgba(168, 85, 247, 0.2) 0%, rgba(28, 18, 50, 0.95) 100%)',
+    darkText: '#d8b4fe',
+    darkTitle: '#ffffff',
+    darkBorder: '1.5px solid rgba(168, 85, 247, 0.38)',
+    darkTagBg: 'rgba(168, 85, 247, 0.22)',
+    darkTagColor: '#e9d5ff',
+    darkGlow: 'rgba(168, 85, 247, 0.2)',
+  },
+  {
+    id: 'sky',
+    name: 'Sky Blue',
+    bg: '#c7ecee',
+    text: '#1e7075',
+    title: '#0c383b',
+    tagBg: 'rgba(255,255,255,0.7)',
+    tagColor: '#1e7075',
+    darkBg: 'linear-gradient(145deg, rgba(56, 189, 248, 0.18) 0%, rgba(14, 26, 44, 0.95) 100%)',
+    darkText: '#7dd3fc',
+    darkTitle: '#ffffff',
+    darkBorder: '1.5px solid rgba(56, 189, 248, 0.38)',
+    darkTagBg: 'rgba(56, 189, 248, 0.22)',
+    darkTagColor: '#bae6fd',
+    darkGlow: 'rgba(56, 189, 248, 0.2)',
+  },
+  {
+    id: 'coral',
+    name: 'Coral Red',
+    bg: '#ffb8b8',
+    text: '#a62a2a',
+    title: '#4d0f0f',
+    tagBg: 'rgba(255,255,255,0.7)',
+    tagColor: '#a62a2a',
+    darkBg: 'linear-gradient(145deg, rgba(244, 63, 94, 0.18) 0%, rgba(38, 16, 26, 0.95) 100%)',
+    darkText: '#fda4af',
+    darkTitle: '#ffffff',
+    darkBorder: '1.5px solid rgba(244, 63, 94, 0.38)',
+    darkTagBg: 'rgba(244, 63, 94, 0.22)',
+    darkTagColor: '#fecdd3',
+    darkGlow: 'rgba(244, 63, 94, 0.2)',
+  },
+  {
+    id: 'green',
+    name: 'Sage Green',
+    bg: '#d4f1dd',
+    text: '#1f8b4d',
+    title: '#0a3d20',
+    tagBg: 'rgba(255,255,255,0.7)',
+    tagColor: '#1f8b4d',
+    darkBg: 'linear-gradient(145deg, rgba(52, 211, 153, 0.18) 0%, rgba(12, 34, 26, 0.95) 100%)',
+    darkText: '#6ee7b7',
+    darkTitle: '#ffffff',
+    darkBorder: '1.5px solid rgba(52, 211, 153, 0.38)',
+    darkTagBg: 'rgba(52, 211, 153, 0.22)',
+    darkTagColor: '#a7f3d0',
+    darkGlow: 'rgba(52, 211, 153, 0.2)',
+  },
+  {
+    id: 'peach',
+    name: 'Peach',
+    bg: '#ffe5d9',
+    text: '#c45b38',
+    title: '#52200f',
+    tagBg: 'rgba(255,255,255,0.7)',
+    tagColor: '#c45b38',
+    darkBg: 'linear-gradient(145deg, rgba(249, 115, 22, 0.18) 0%, rgba(38, 20, 16, 0.95) 100%)',
+    darkText: '#fdba74',
+    darkTitle: '#ffffff',
+    darkBorder: '1.5px solid rgba(249, 115, 22, 0.38)',
+    darkTagBg: 'rgba(249, 115, 22, 0.22)',
+    darkTagColor: '#fed7aa',
+    darkGlow: 'rgba(249, 115, 22, 0.2)',
+  },
+  {
+    id: 'pink',
+    name: 'Blush Pink',
+    bg: '#ffccdf',
+    text: '#a62a6e',
+    title: '#4a0f30',
+    tagBg: 'rgba(255,255,255,0.7)',
+    tagColor: '#a62a6e',
+    darkBg: 'linear-gradient(145deg, rgba(236, 72, 153, 0.2) 0%, rgba(42, 16, 36, 0.95) 100%)',
+    darkText: '#f472b6',
+    darkTitle: '#ffffff',
+    darkBorder: '1.5px solid rgba(236, 72, 153, 0.38)',
+    darkTagBg: 'rgba(236, 72, 153, 0.22)',
+    darkTagColor: '#fbcfe8',
+    darkGlow: 'rgba(236, 72, 153, 0.2)',
+  },
+  {
+    id: 'slate',
+    name: 'Cool Slate',
+    bg: '#f1f2f6',
+    text: '#57606f',
+    title: '#2f3542',
+    tagBg: 'rgba(255,255,255,0.7)',
+    tagColor: '#57606f',
+    darkBg: 'linear-gradient(145deg, rgba(148, 163, 184, 0.15) 0%, rgba(22, 28, 42, 0.95) 100%)',
+    darkText: '#cbd5e1',
+    darkTitle: '#ffffff',
+    darkBorder: '1.5px solid rgba(148, 163, 184, 0.32)',
+    darkTagBg: 'rgba(148, 163, 184, 0.2)',
+    darkTagColor: '#e2e8f0',
+    darkGlow: 'rgba(148, 163, 184, 0.15)',
+  },
 ];
 
 export function getCardPalette(card: Card, _index?: number) {
@@ -91,8 +211,8 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ card, index }) => {
   const cardBg = isDarkTheme ? (palette.darkBg || 'var(--bg-card)') : palette.bg;
   const cardText = isDarkTheme ? (palette.darkText || 'var(--text-secondary)') : palette.text;
   const cardTitle = isDarkTheme ? (palette.darkTitle || 'var(--text-primary)') : palette.title;
-  const cardBorder = isDarkTheme ? (palette.darkBorder || '1px solid var(--border-subtle)') : '1px solid rgba(0,0,0,0.04)';
-  const tagBg = isDarkTheme ? (palette.darkTagBg || 'rgba(255,255,255,0.08)') : palette.tagBg;
+  const cardBorder = isDarkTheme ? (palette.darkBorder || '1.5px solid var(--border-subtle)') : '1px solid rgba(0,0,0,0.06)';
+  const tagBg = isDarkTheme ? (palette.darkTagBg || 'rgba(255,255,255,0.12)') : palette.tagBg;
   const tagColor = isDarkTheme ? (palette.darkTagColor || palette.text) : palette.tagColor;
 
   useEffect(() => {
@@ -209,10 +329,11 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ card, index }) => {
         onClick={() => setActiveCardId(card._id)}
         className={`kanban-card ${isDragging ? 'is-dragging' : ''}`}
         style={{
-          backgroundColor: cardBg,
+          background: cardBg,
           color: cardText,
           border: cardBorder,
           transform: isDraggedOver ? 'translateY(4px)' : undefined,
+          boxShadow: isDarkTheme ? `0 4px 16px rgba(0,0,0,0.4), 0 0 14px ${palette.darkGlow || 'rgba(0,0,0,0)'}` : undefined,
           transition: 'transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease',
         }}
       >
@@ -244,7 +365,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ card, index }) => {
                 border: '1.5px solid var(--border-medium)',
                 borderRadius: '16px',
                 padding: '8px',
-                boxShadow: '0 12px 30px rgba(0, 0, 0, 0.35)',
+                boxShadow: 'var(--shadow-modal)',
                 zIndex: 60,
                 display: 'grid',
                 gridTemplateColumns: 'repeat(4, 1fr)',
@@ -261,13 +382,13 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ card, index }) => {
                     setIsColorPickerOpen(false);
                   }}
                   style={{
-                    width: '26px',
-                    height: '26px',
-                    borderRadius: '8px',
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
                     background: isDarkTheme ? p.darkBg : p.bg,
-                    border: (card.color === p.id || (!card.color && palette.id === p.id))
-                      ? '2px solid var(--accent-primary)'
-                      : `1px solid ${isDarkTheme ? p.darkBorder : 'rgba(0,0,0,0.1)'}`,
+                    border: (card.color === p.id || (!card.color && p.id === palette.id))
+                      ? `2px solid var(--accent-primary)`
+                      : `1.5px solid ${isDarkTheme ? p.darkBorder : 'rgba(0,0,0,0.1)'}`,
                     cursor: 'pointer',
                   }}
                   title={p.name}

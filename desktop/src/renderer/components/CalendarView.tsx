@@ -348,7 +348,7 @@ export const CalendarView: React.FC = () => {
                     >
                       <ChevronLeft size={14} />
                     </button>
-                    <span style={{ fontSize: '15px', fontWeight: 800, color: '#201435' }}>
+                    <span style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
                       {pickerYear}
                     </span>
                     <button
@@ -374,9 +374,9 @@ export const CalendarView: React.FC = () => {
                             fontSize: '12px',
                             fontWeight: isSelected ? 800 : 600,
                             borderRadius: '14px',
-                            border: isSelected ? 'none' : '1px solid #ede8f9',
-                            background: isSelected ? '#7c5ce5' : '#fbf9ff',
-                            color: isSelected ? '#ffffff' : '#3b2a59',
+                            border: isSelected ? 'none' : '1.5px solid var(--border-subtle)',
+                            background: isSelected ? 'var(--accent-primary)' : 'var(--bg-input)',
+                            color: isSelected ? 'var(--accent-primary-text)' : 'var(--text-primary)',
                             cursor: 'pointer',
                             transition: 'all 0.15s ease',
                           }}
@@ -522,8 +522,8 @@ export const CalendarView: React.FC = () => {
                       padding: '8px 12px',
                       borderRadius: '12px',
                       border: 'none',
-                      background: activeSwimlaneId === 'all' ? '#f4f0ff' : 'transparent',
-                      color: activeSwimlaneId === 'all' ? '#7c5ce5' : '#3b2a59',
+                      background: activeSwimlaneId === 'all' ? 'var(--bg-button-hover)' : 'transparent',
+                      color: activeSwimlaneId === 'all' ? 'var(--accent-primary)' : 'var(--text-primary)',
                       fontSize: '12px',
                       fontWeight: 700,
                       cursor: 'pointer',
@@ -541,8 +541,8 @@ export const CalendarView: React.FC = () => {
                         padding: '8px 12px',
                         borderRadius: '12px',
                         border: 'none',
-                        background: activeSwimlaneId === sw._id ? '#f4f0ff' : 'transparent',
-                        color: activeSwimlaneId === sw._id ? '#7c5ce5' : '#3b2a59',
+                        background: activeSwimlaneId === sw._id ? 'var(--bg-button-hover)' : 'transparent',
+                        color: activeSwimlaneId === sw._id ? 'var(--accent-primary)' : 'var(--text-primary)',
                         fontSize: '12px',
                         fontWeight: 700,
                         cursor: 'pointer',
@@ -1014,8 +1014,8 @@ export const CalendarView: React.FC = () => {
                           height: '28px',
                           border: 'none',
                           borderRadius: '100px',
-                          background: '#f4f0ff',
-                          color: '#7c5ce5',
+                          background: 'var(--bg-button-subtle)',
+                          color: 'var(--accent-primary)',
                           fontSize: '11px',
                           fontWeight: 800,
                           cursor: 'pointer',
@@ -1026,12 +1026,12 @@ export const CalendarView: React.FC = () => {
                           transition: 'all 0.15s ease',
                         }}
                         onMouseEnter={e => {
-                          (e.currentTarget as HTMLElement).style.background = '#e0d4ff';
-                          (e.currentTarget as HTMLElement).style.color = '#3b2a59';
+                          (e.currentTarget as HTMLElement).style.background = 'var(--bg-button-hover)';
+                          (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
                         }}
                         onMouseLeave={e => {
-                          (e.currentTarget as HTMLElement).style.background = '#f4f0ff';
-                          (e.currentTarget as HTMLElement).style.color = '#7c5ce5';
+                          (e.currentTarget as HTMLElement).style.background = 'var(--bg-button-subtle)';
+                          (e.currentTarget as HTMLElement).style.color = 'var(--accent-primary)';
                         }}
                       >
                         <Plus size={12} />

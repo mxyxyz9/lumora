@@ -32,6 +32,7 @@ import { VoiceStructureService, VoiceAiConfig } from '../lib/voiceStructureServi
 import { AiConfig } from '../lib/aiService';
 import { VoiceHistoryManager, VoiceHistorySession } from '../lib/voiceHistoryManager';
 import { useBoardStore } from '../store/boardStore';
+import { CustomDropdown } from './CustomDropdown';
 
 interface VoicePanelProps {
   isOpen: boolean;
@@ -842,31 +843,21 @@ export const VoicePanel: React.FC<VoicePanelProps> = ({
               />
 
               {/* Kokoro TTS Voice Selection Bar */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2px' }}>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', marginTop: '4px' }}>
+                <span style={{ fontSize: '11.5px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
                   <Volume2 size={12} /> TTS Voice:
                 </span>
-                <select
-                  value={selectedKokoroVoice}
-                  onChange={e => {
-                    setSelectedKokoroVoice(e.target.value);
-                    window.electronAPI?.ttsSetVoice?.(e.target.value);
-                  }}
-                  style={{
-                    background: 'var(--bg-input)',
-                    border: '1px solid var(--border-subtle)',
-                    borderRadius: 'var(--r-xs)',
-                    color: 'var(--text-secondary)',
-                    fontSize: '11px',
-                    padding: '2px 6px',
-                  }}
-                >
-                  {availableKokoroVoices.map(v => (
-                    <option key={v.id} value={v.id}>
-                      {v.name}
-                    </option>
-                  ))}
-                </select>
+                <div style={{ width: '170px' }}>
+                  <CustomDropdown
+                    value={selectedKokoroVoice}
+                    options={availableKokoroVoices.map(v => ({ value: v.id, label: v.name }))}
+                    onChange={val => {
+                      setSelectedKokoroVoice(val);
+                      window.electronAPI?.ttsSetVoice?.(val);
+                    }}
+                    size="sm"
+                  />
+                </div>
               </div>
             </div>
 
@@ -943,15 +934,30 @@ export const VoicePanel: React.FC<VoicePanelProps> = ({
                             <textarea value={editingDesc} onChange={e => setEditingDesc(e.target.value)} placeholder="Description…" rows={2}
                               style={{ width: '100%', background: 'var(--bg-input)', border: '1px solid var(--border-medium)', borderRadius: 'var(--r-sm)', padding: '6px 10px', color: 'var(--text-secondary)', fontSize: '12px', resize: 'vertical' }} />
                             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                              <select value={editingList} onChange={e => setEditingList(e.target.value)} className="form-input" style={{ height: '28px', fontSize: '12px', padding: '0 8px', flex: 1 }}>
-                                {(availableListTitles.length > 0 ? availableListTitles : ['To Do', 'In Progress', 'Done']).map(t => <option key={t} value={t}>{t}</option>)}
-                              </select>
-                              <select value={editingUrgency} onChange={e => setEditingUrgency(e.target.value as any)} className="form-input" style={{ height: '28px', fontSize: '12px', padding: '0 8px', flex: 1 }}>
-                                <option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option>
-                              </select>
+                              <div style={{ flex: 1, minWidth: '120px' }}>
+                                <CustomDropdown
+                                  value={editingList}
+                                  options={(availableListTitles.length > 0 ? availableListTitles : ['To Do', 'In Progress', 'Done']).map(t => ({ value: t, label: t }))}
+                                  onChange={setEditingList}
+                                  size="sm"
+                                />
+                              </div>
+                              <div style={{ flex: 1, minWidth: '100px' }}>
+                                <CustomDropdown
+                                  value={editingUrgency}
+                                  options={[
+                                    { value: 'low', label: 'Low Urgency' },
+                                    { value: 'medium', label: 'Medium Urgency' },
+                                    { value: 'high', label: 'High Urgency' },
+                                    { value: 'critical', label: 'Critical' },
+                                  ]}
+                                  onChange={v => setEditingUrgency(v as any)}
+                                  size="sm"
+                                />
+                              </div>
                               <div style={{ marginLeft: 'auto', display: 'flex', gap: '6px' }}>
-                                <button onClick={() => handleSaveEditNote(note.id)} className="btn-primary" style={{ fontSize: '11px', height: '28px', padding: '0 12px' }}>Save</button>
-                                <button onClick={() => setEditingNoteId(null)} className="btn-subtle" style={{ fontSize: '11px', height: '28px', padding: '0 10px' }}>Cancel</button>
+                                <button onClick={() => handleSaveEditNote(note.id)} className="btn-primary" style={{ fontSize: '11px', height: '32px', padding: '0 12px' }}>Save</button>
+                                <button onClick={() => setEditingNoteId(null)} className="btn-subtle" style={{ fontSize: '11px', height: '32px', padding: '0 10px' }}>Cancel</button>
                               </div>
                             </div>
                           </div>

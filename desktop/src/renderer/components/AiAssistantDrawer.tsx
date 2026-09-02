@@ -858,7 +858,7 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
               <button
                 onClick={onClose}
                 className="btn-icon"
-                style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#f4f0ff', border: '1px solid #ede8f9', color: '#7c5ce5' }}
+                style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-button-subtle)', border: '1px solid var(--border-subtle)', color: 'var(--accent-primary)' }}
                 title="Close"
               >
                 <X size={14} />
@@ -867,13 +867,13 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
           </div>
 
           {/* ── Context bar ────────────────────────────────────────────── */}
-          <div style={{ padding: '6px 18px', background: '#fbf9ff', borderBottom: '1.5px solid #ede8f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', color: '#8c7ba8', flexShrink: 0, fontWeight: 600 }}>
+          <div style={{ padding: '6px 18px', background: 'var(--bg-input)', borderBottom: '1.5px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', flexShrink: 0, fontWeight: 600 }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-              <FolderKanban size={11} style={{ color: '#7c5ce5' }} />
-              <span><strong style={{ color: '#201435' }}>{activeBoard?.title || 'Workspace'}</strong> — {cards.length} cards · {lists.length} cols · {swimlanes.length} subfolders</span>
+              <FolderKanban size={11} style={{ color: 'var(--accent-primary)' }} />
+              <span><strong style={{ color: 'var(--text-primary)' }}>{activeBoard?.title || 'Workspace'}</strong> — {cards.length} cards · {lists.length} cols · {swimlanes.length} subfolders</span>
             </span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#2ecc71', fontWeight: 700, fontSize: '10.5px' }}>
-              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#2ecc71' }} />
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--accent-green)', fontWeight: 700, fontSize: '10.5px' }}>
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--accent-green)' }} />
               <span>Board edits active</span>
             </span>
           </div>

@@ -857,17 +857,19 @@ export const SettingsView: React.FC = () => {
                             <span style={{ fontSize: '11.5px', color: isCodexEnabled ? 'var(--accent-green)' : 'var(--text-muted)', fontWeight: 500 }}>
                               {isCodexEnabled ? 'Autonomous Dev Enabled' : 'Disabled (Task Only)'}
                             </span>
-                            <input
-                              type="checkbox"
-                              checked={isCodexEnabled}
-                              onChange={e => {
-                                updateBoard(b._id, {
-                                  enableCodexAgent: e.target.checked,
-                                  projectType: e.target.checked ? 'engineering' : 'general',
-                                });
-                              }}
-                              style={{ width: '16px', height: '16px', cursor: 'pointer' }}
-                            />
+                            <label className="toggle-switch">
+                              <input
+                                type="checkbox"
+                                checked={isCodexEnabled}
+                                onChange={e => {
+                                  updateBoard(b._id, {
+                                    enableCodexAgent: e.target.checked,
+                                    projectType: e.target.checked ? 'engineering' : 'general',
+                                  });
+                                }}
+                              />
+                              <span className="toggle-slider" />
+                            </label>
                           </div>
                         </div>
                       </div>
@@ -1417,12 +1419,12 @@ export const SettingsView: React.FC = () => {
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <h2 className="settings-section-title">AI Copilot & Engine</h2>
-                  <span style={{ background: '#f4f0ff', color: '#7c5ce5', fontSize: '11px', fontWeight: 800, padding: '3px 10px', borderRadius: '100px', display: 'flex', alignItems: 'center', gap: '4px', border: '1px solid #ede8f9' }}>
+                  <span style={{ background: 'var(--bg-badge)', color: 'var(--accent-primary)', fontSize: '11px', fontWeight: 800, padding: '3px 10px', borderRadius: '100px', display: 'flex', alignItems: 'center', gap: '4px', border: '1px solid var(--border-subtle)' }}>
                     <Cpu size={12} />
                     <span>Gemini 3.7 / 2.5 Active</span>
                   </span>
                 </div>
-                <p style={{ fontSize: '13px', color: '#8c7ba8', marginTop: '4px', fontWeight: 600 }}>
+                <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px', fontWeight: 600 }}>
                   Choose and configure your AI engine for planning and automated coding.
                 </p>
               </div>
@@ -1435,35 +1437,35 @@ export const SettingsView: React.FC = () => {
                   onClick={() => setAiProvider('codex')}
                   className={`provider-card ${aiProvider === 'codex' ? 'active' : ''}`}
                   style={{
-                    borderColor: aiProvider === 'codex' ? '#7c5ce5' : '#ede8f9',
+                    borderColor: aiProvider === 'codex' ? 'var(--accent-primary)' : 'var(--border-subtle)',
                     borderRadius: '24px',
                     padding: '16px',
-                    background: '#ffffff',
-                    boxShadow: aiProvider === 'codex' ? '0 4px 16px rgba(124, 92, 229, 0.15)' : '0 2px 8px rgba(100, 80, 200, 0.04)',
+                    background: 'var(--bg-card)',
+                    boxShadow: aiProvider === 'codex' ? '0 4px 16px var(--border-card)' : 'var(--shadow-xs)',
                     cursor: 'pointer',
                   }}
                 >
-                  <div className="provider-card-icon" style={{ background: '#f4f0ff', width: '38px', height: '38px', borderRadius: '12px' }}>
-                    <Cpu size={18} style={{ color: '#7c5ce5' }} />
+                  <div className="provider-card-icon" style={{ background: 'var(--bg-button-hover)', width: '38px', height: '38px', borderRadius: '12px' }}>
+                    <Cpu size={18} style={{ color: 'var(--accent-primary)' }} />
                   </div>
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%', marginTop: '6px' }}>
                     <div>
-                      <div className="provider-card-name" style={{ fontSize: '14px', fontWeight: 800, color: '#201435' }}>OpenAI Codex ACP</div>
+                      <div className="provider-card-name" style={{ fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)' }}>OpenAI Codex ACP</div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#2ecc71' }} />
-                        <span style={{ fontSize: '11px', color: '#8c7ba8', fontWeight: 700 }}>ACP JSON-RPC Stdio</span>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-green)' }} />
+                        <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 700 }}>ACP JSON-RPC Stdio</span>
                       </div>
                     </div>
-                    <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: aiProvider === 'codex' ? 'none' : '1.5px solid #ede8f9', background: aiProvider === 'codex' ? '#7c5ce5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      {aiProvider === 'codex' && <Check size={11} strokeWidth={3} style={{ color: '#fff' }} />}
+                    <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: aiProvider === 'codex' ? 'none' : '1.5px solid var(--border-subtle)', background: aiProvider === 'codex' ? 'var(--accent-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      {aiProvider === 'codex' && <Check size={11} strokeWidth={3} style={{ color: 'var(--accent-primary-text)' }} />}
                     </div>
                   </div>
-                  <p className="provider-card-desc" style={{ fontSize: '12px', color: '#635280', margin: '8px 0 10px', lineHeight: 1.4 }}>
+                  <p className="provider-card-desc" style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '8px 0 10px', lineHeight: 1.4 }}>
                     Autonomous agent with direct codebase execution.
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: 'auto' }}>
-                    <span className="notion-prop-pill" style={{ fontSize: '10.5px', padding: '2px 8px', borderRadius: '100px', background: '#f4f0ff', color: '#7c5ce5', border: 'none', fontWeight: 700 }}>Subscription Auth</span>
-                    <span className="notion-prop-pill" style={{ fontSize: '10.5px', padding: '2px 8px', borderRadius: '100px', background: '#f4f0ff', color: '#7c5ce5', border: 'none', fontWeight: 700 }}>Quality Gates</span>
+                    <span className="notion-prop-pill" style={{ fontSize: '10.5px', padding: '2px 8px', borderRadius: '100px', background: 'var(--bg-badge)', color: 'var(--accent-primary)', border: 'none', fontWeight: 700 }}>Subscription Auth</span>
+                    <span className="notion-prop-pill" style={{ fontSize: '10.5px', padding: '2px 8px', borderRadius: '100px', background: 'var(--bg-badge)', color: 'var(--accent-primary)', border: 'none', fontWeight: 700 }}>Quality Gates</span>
                   </div>
                 </div>
 
@@ -1472,35 +1474,35 @@ export const SettingsView: React.FC = () => {
                   onClick={() => setAiProvider('gemini')}
                   className={`provider-card ${aiProvider === 'gemini' ? 'active' : ''}`}
                   style={{
-                    borderColor: aiProvider === 'gemini' ? '#7c5ce5' : '#ede8f9',
+                    borderColor: aiProvider === 'gemini' ? 'var(--accent-primary)' : 'var(--border-subtle)',
                     borderRadius: '24px',
                     padding: '16px',
-                    background: '#ffffff',
-                    boxShadow: aiProvider === 'gemini' ? '0 4px 16px rgba(124, 92, 229, 0.15)' : '0 2px 8px rgba(100, 80, 200, 0.04)',
+                    background: 'var(--bg-card)',
+                    boxShadow: aiProvider === 'gemini' ? '0 4px 16px var(--border-card)' : 'var(--shadow-xs)',
                     cursor: 'pointer',
                   }}
                 >
-                  <div className="provider-card-icon" style={{ background: '#f4f0ff', width: '38px', height: '38px', borderRadius: '12px' }}>
+                  <div className="provider-card-icon" style={{ background: 'var(--bg-button-hover)', width: '38px', height: '38px', borderRadius: '12px' }}>
                     <LumoraLogo size={18} showText={false} />
                   </div>
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%', marginTop: '6px' }}>
                     <div>
-                      <div className="provider-card-name" style={{ fontSize: '14px', fontWeight: 800, color: '#201435' }}>Google Gemini Cloud</div>
+                      <div className="provider-card-name" style={{ fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)' }}>Google Gemini Cloud</div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#2ecc71' }} />
-                        <span style={{ fontSize: '11px', color: '#8c7ba8', fontWeight: 700 }}>Gemini 3.7 / 2.5 Active</span>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-green)' }} />
+                        <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 700 }}>Gemini 3.7 / 2.5 Active</span>
                       </div>
                     </div>
-                    <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: aiProvider === 'gemini' ? 'none' : '1.5px solid #ede8f9', background: aiProvider === 'gemini' ? '#7c5ce5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      {aiProvider === 'gemini' && <Check size={11} strokeWidth={3} style={{ color: '#fff' }} />}
+                    <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: aiProvider === 'gemini' ? 'none' : '1.5px solid var(--border-subtle)', background: aiProvider === 'gemini' ? 'var(--accent-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      {aiProvider === 'gemini' && <Check size={11} strokeWidth={3} style={{ color: 'var(--accent-primary-text)' }} />}
                     </div>
                   </div>
-                  <p className="provider-card-desc" style={{ fontSize: '12px', color: '#635280', margin: '8px 0 10px', lineHeight: 1.4 }}>
+                  <p className="provider-card-desc" style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '8px 0 10px', lineHeight: 1.4 }}>
                     Fast Google AI models with web reasoning.
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: 'auto' }}>
-                    <span className="notion-prop-pill" style={{ fontSize: '10.5px', padding: '2px 8px', borderRadius: '100px', background: '#f4f0ff', color: '#7c5ce5', border: 'none', fontWeight: 700 }}>Fast Latency</span>
-                    <span className="notion-prop-pill" style={{ fontSize: '10.5px', padding: '2px 8px', borderRadius: '100px', background: '#f4f0ff', color: '#7c5ce5', border: 'none', fontWeight: 700 }}>Free Tier Key</span>
+                    <span className="notion-prop-pill" style={{ fontSize: '10.5px', padding: '2px 8px', borderRadius: '100px', background: 'var(--bg-badge)', color: 'var(--accent-primary)', border: 'none', fontWeight: 700 }}>Fast Latency</span>
+                    <span className="notion-prop-pill" style={{ fontSize: '10.5px', padding: '2px 8px', borderRadius: '100px', background: 'var(--bg-badge)', color: 'var(--accent-primary)', border: 'none', fontWeight: 700 }}>Free Tier Key</span>
                   </div>
                 </div>
 
@@ -1509,44 +1511,44 @@ export const SettingsView: React.FC = () => {
                   onClick={() => setAiProvider('ollama')}
                   className={`provider-card ${aiProvider === 'ollama' ? 'active' : ''}`}
                   style={{
-                    borderColor: aiProvider === 'ollama' ? '#7c5ce5' : '#ede8f9',
+                    borderColor: aiProvider === 'ollama' ? 'var(--accent-primary)' : 'var(--border-subtle)',
                     borderRadius: '24px',
                     padding: '16px',
-                    background: '#ffffff',
-                    boxShadow: aiProvider === 'ollama' ? '0 4px 16px rgba(124, 92, 229, 0.15)' : '0 2px 8px rgba(100, 80, 200, 0.04)',
+                    background: 'var(--bg-card)',
+                    boxShadow: aiProvider === 'ollama' ? '0 4px 16px var(--border-card)' : 'var(--shadow-xs)',
                     cursor: 'pointer',
                   }}
                 >
-                  <div className="provider-card-icon" style={{ background: '#f4f0ff', width: '38px', height: '38px', borderRadius: '12px' }}>
-                    <Server size={18} style={{ color: '#7c5ce5' }} />
+                  <div className="provider-card-icon" style={{ background: 'var(--bg-button-hover)', width: '38px', height: '38px', borderRadius: '12px' }}>
+                    <Server size={18} style={{ color: 'var(--accent-primary)' }} />
                   </div>
                   <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', width: '100%', marginTop: '6px' }}>
                     <div>
-                      <div className="provider-card-name" style={{ fontSize: '14px', fontWeight: 800, color: '#201435' }}>Local Ollama</div>
+                      <div className="provider-card-name" style={{ fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)' }}>Local Ollama</div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
-                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#2ecc71' }} />
-                        <span style={{ fontSize: '11px', color: '#8c7ba8', fontWeight: 700 }}>100% Offline / Private</span>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-green)' }} />
+                        <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 700 }}>100% Offline / Private</span>
                       </div>
                     </div>
-                    <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: aiProvider === 'ollama' ? 'none' : '1.5px solid #ede8f9', background: aiProvider === 'ollama' ? '#7c5ce5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      {aiProvider === 'ollama' && <Check size={11} strokeWidth={3} style={{ color: '#fff' }} />}
+                    <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: aiProvider === 'ollama' ? 'none' : '1.5px solid var(--border-subtle)', background: aiProvider === 'ollama' ? 'var(--accent-primary)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      {aiProvider === 'ollama' && <Check size={11} strokeWidth={3} style={{ color: 'var(--accent-primary-text)' }} />}
                     </div>
                   </div>
-                  <p className="provider-card-desc" style={{ fontSize: '12px', color: '#635280', margin: '8px 0 10px', lineHeight: 1.4 }}>
+                  <p className="provider-card-desc" style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: '8px 0 10px', lineHeight: 1.4 }}>
                     100% private, runs offline on your machine.
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: 'auto' }}>
-                    <span className="notion-prop-pill" style={{ fontSize: '10.5px', padding: '2px 8px', borderRadius: '100px', background: '#f4f0ff', color: '#7c5ce5', border: 'none', fontWeight: 700 }}>Private</span>
-                    <span className="notion-prop-pill" style={{ fontSize: '10.5px', padding: '2px 8px', borderRadius: '100px', background: '#f4f0ff', color: '#7c5ce5', border: 'none', fontWeight: 700 }}>Offline</span>
+                    <span className="notion-prop-pill" style={{ fontSize: '10.5px', padding: '2px 8px', borderRadius: '100px', background: 'var(--bg-badge)', color: 'var(--accent-primary)', border: 'none', fontWeight: 700 }}>Private</span>
+                    <span className="notion-prop-pill" style={{ fontSize: '10.5px', padding: '2px 8px', borderRadius: '100px', background: 'var(--bg-badge)', color: 'var(--accent-primary)', border: 'none', fontWeight: 700 }}>Offline</span>
                   </div>
                 </div>
               </div>
 
               {/* 2. Credentials & Models Card */}
-              <div style={{ background: '#ffffff', border: '1.5px solid #ede8f9', borderRadius: '28px', padding: '22px', display: 'flex', flexDirection: 'column', gap: '20px', boxShadow: '0 8px 24px rgba(100, 80, 200, 0.05)' }}>
+              <div style={{ background: 'var(--bg-card)', border: '1.5px solid var(--border-subtle)', borderRadius: '28px', padding: '22px', display: 'flex', flexDirection: 'column', gap: '20px', boxShadow: 'var(--shadow-xs)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span style={{ fontSize: '14px', fontWeight: 800, color: '#201435', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Lock size={15} style={{ color: '#7c5ce5' }} />
+                  <span style={{ fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Lock size={15} style={{ color: 'var(--accent-primary)' }} />
                     <span>Engine Credentials & Model Version</span>
                   </span>
 
@@ -1555,7 +1557,7 @@ export const SettingsView: React.FC = () => {
                     onClick={handleTestAiConnection}
                     disabled={isTestingAi || (aiProvider === 'gemini' && !geminiKey.trim())}
                     className="btn-subtle"
-                    style={{ height: '30px', fontSize: '12px', gap: '5px', padding: '0 12px', color: '#7c5ce5', borderRadius: '100px', background: '#f4f0ff', border: '1px solid #ede8f9', fontWeight: 800 }}
+                    style={{ height: '30px', fontSize: '12px', gap: '5px', padding: '0 12px', color: 'var(--accent-primary)', borderRadius: '100px', fontWeight: 800 }}
                   >
                     {isTestingAi ? <Loader2 size={12} className="animate-spin" /> : <Zap size={12} />}
                     <span>Test {aiProvider === 'codex' ? 'Codex ACP' : aiProvider === 'gemini' ? 'Gemini API' : 'Ollama'}</span>
@@ -1566,7 +1568,7 @@ export const SettingsView: React.FC = () => {
                 {aiProvider === 'codex' && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      <label className="form-label" style={{ fontSize: '12.5px', fontWeight: 800, color: '#3b2a59' }}>Codex Transport Mode</label>
+                      <label className="form-label" style={{ fontSize: '12.5px', fontWeight: 800, color: 'var(--text-primary)' }}>Codex Transport Mode</label>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
                         {[
                           { id: 'builtin', label: 'Local Adapter', desc: '~/.codex/auth.json' },
@@ -1580,8 +1582,8 @@ export const SettingsView: React.FC = () => {
                             style={{
                               padding: '10px 14px',
                               borderRadius: '16px',
-                              border: codexMode === m.id ? '2px solid #7c5ce5' : '1.5px solid #ede8f9',
-                              background: codexMode === m.id ? '#f4f0ff' : '#ffffff',
+                              border: codexMode === m.id ? '2px solid var(--accent-primary)' : '1.5px solid var(--border-subtle)',
+                              background: codexMode === m.id ? 'var(--bg-button-hover)' : 'var(--bg-card)',
                               cursor: 'pointer',
                               display: 'flex',
                               flexDirection: 'column',
@@ -1590,10 +1592,10 @@ export const SettingsView: React.FC = () => {
                               transition: 'all 0.15s ease',
                             }}
                           >
-                            <span style={{ fontSize: '12.5px', fontWeight: 800, color: codexMode === m.id ? '#7c5ce5' : '#3b2a59' }}>
+                            <span style={{ fontSize: '12.5px', fontWeight: 800, color: codexMode === m.id ? 'var(--accent-primary)' : 'var(--text-primary)' }}>
                               {m.label}
                             </span>
-                            <span style={{ fontSize: '11px', color: '#8c7ba8', fontWeight: 600 }}>
+                            <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>
                               {m.desc}
                             </span>
                           </button>
@@ -1635,7 +1637,7 @@ export const SettingsView: React.FC = () => {
                       {/* Dropdown 1: Model Selection */}
                       <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '26px' }}>
-                          <label className="form-label" style={{ fontSize: '12px', fontWeight: 800, color: '#3b2a59', margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                          <label className="form-label" style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-primary)', margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                             1. Active Codex Model
                           </label>
                           <button
@@ -1643,7 +1645,7 @@ export const SettingsView: React.FC = () => {
                             onClick={fetchCodexModels}
                             disabled={isLoadingCodexModels}
                             className="btn-subtle"
-                            style={{ fontSize: '11px', height: '24px', padding: '0 10px', color: '#7c5ce5', display: 'flex', alignItems: 'center', gap: '4px', borderRadius: '100px', background: '#f4f0ff', border: '1px solid #ede8f9', fontWeight: 800 }}
+                            style={{ fontSize: '11px', height: '24px', padding: '0 10px', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '4px', borderRadius: '100px', background: 'var(--bg-badge)', border: '1px solid var(--border-subtle)', fontWeight: 800 }}
                             title="Query live models advertised by ACP subprocess"
                           >
                             {isLoadingCodexModels ? <Loader2 size={11} className="animate-spin" /> : <RefreshCw size={11} />}
@@ -1698,7 +1700,7 @@ export const SettingsView: React.FC = () => {
                           </div>
                         )}
 
-                        <span style={{ fontSize: '11px', color: '#8c7ba8', fontWeight: 600, minHeight: '16px', lineHeight: 1.35 }}>
+                        <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600, minHeight: '16px', lineHeight: 1.35 }}>
                           {activeAcpBaseModel?.description || 'Dynamic model advertised by local Codex ACP subprocess.'}
                         </span>
                       </div>
@@ -1706,7 +1708,7 @@ export const SettingsView: React.FC = () => {
                       {/* Dropdown 2: Reasoning Effort / Thinking Level */}
                       <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', height: '26px' }}>
-                          <label className="form-label" style={{ fontSize: '12px', fontWeight: 800, color: '#3b2a59', margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                          <label className="form-label" style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-primary)', margin: 0, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                             2. Thinking Level & Reasoning Budget
                           </label>
                         </div>
@@ -1732,8 +1734,8 @@ export const SettingsView: React.FC = () => {
                             }
                           }}
                         />
-                        <span style={{ fontSize: '11px', color: '#8c7ba8', fontWeight: 600, minHeight: '16px', lineHeight: 1.35 }}>
-                          Target ID: <code style={{ color: '#7c5ce5', fontWeight: 800, background: '#f4f0ff', padding: '1px 6px', borderRadius: '6px' }}>{codexModel || resolveTargetAcpModelId(activeAcpBaseModel?.baseId || 'gpt-5.6-sol', activeThinkingTier, parsedAcpModels)}</code>
+                        <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600, minHeight: '16px', lineHeight: 1.35 }}>
+                          Target ID: <code style={{ color: 'var(--accent-primary)', fontWeight: 800, background: 'var(--bg-badge)', padding: '1px 6px', borderRadius: '6px' }}>{codexModel || resolveTargetAcpModelId(activeAcpBaseModel?.baseId || 'gpt-5.6-sol', activeThinkingTier, parsedAcpModels)}</code>
                         </span>
                       </div>
                     </div>
@@ -2134,12 +2136,14 @@ export const SettingsView: React.FC = () => {
                         Automatically transition remote Jira tickets when cards move columns in Lumora.
                       </p>
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={jiraAutoSync}
-                      onChange={e => setJiraAutoSync(e.target.checked)}
-                      style={{ width: '17px', height: '17px', cursor: 'pointer' }}
-                    />
+                    <label className="toggle-switch">
+                      <input
+                        type="checkbox"
+                        checked={jiraAutoSync}
+                        onChange={e => setJiraAutoSync(e.target.checked)}
+                      />
+                      <span className="toggle-slider" />
+                    </label>
                   </div>
                 </div>
               )}
@@ -2168,7 +2172,7 @@ export const SettingsView: React.FC = () => {
                       }}
                       disabled={isTestingPm}
                       className="btn-subtle"
-                      style={{ fontSize: '11.5px', height: '26px', padding: '0 10px', color: '#818cf8', display: 'flex', alignItems: 'center', gap: '4px' }}
+                      style={{ fontSize: '11.5px', height: '26px', padding: '0 10px', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}
                     >
                       {isTestingPm ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
                       <span>Test Linear Connection</span>
@@ -2207,12 +2211,14 @@ export const SettingsView: React.FC = () => {
                         Updates Linear issue status when cards are moved across Backlog, In Progress, and Done.
                       </p>
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={linearAutoSync}
-                      onChange={e => setLinearAutoSync(e.target.checked)}
-                      style={{ width: '17px', height: '17px', cursor: 'pointer' }}
-                    />
+                    <label className="toggle-switch">
+                      <input
+                        type="checkbox"
+                        checked={linearAutoSync}
+                        onChange={e => setLinearAutoSync(e.target.checked)}
+                      />
+                      <span className="toggle-slider" />
+                    </label>
                   </div>
                 </div>
               )}
@@ -2241,7 +2247,7 @@ export const SettingsView: React.FC = () => {
                       }}
                       disabled={isTestingPm}
                       className="btn-subtle"
-                      style={{ fontSize: '11.5px', height: '26px', padding: '0 10px', color: '#818cf8', display: 'flex', alignItems: 'center', gap: '4px' }}
+                      style={{ fontSize: '11.5px', height: '26px', padding: '0 10px', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}
                     >
                       {isTestingPm ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
                       <span>Test Asana Connection</span>
@@ -2280,12 +2286,14 @@ export const SettingsView: React.FC = () => {
                         Moves tasks between Asana sections as cards progress in Lumora.
                       </p>
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={asanaAutoSync}
-                      onChange={e => setAsanaAutoSync(e.target.checked)}
-                      style={{ width: '17px', height: '17px', cursor: 'pointer' }}
-                    />
+                    <label className="toggle-switch">
+                      <input
+                        type="checkbox"
+                        checked={asanaAutoSync}
+                        onChange={e => setAsanaAutoSync(e.target.checked)}
+                      />
+                      <span className="toggle-slider" />
+                    </label>
                   </div>
                 </div>
               )}
@@ -2314,7 +2322,7 @@ export const SettingsView: React.FC = () => {
                       }}
                       disabled={isTestingPm}
                       className="btn-subtle"
-                      style={{ fontSize: '11.5px', height: '26px', padding: '0 10px', color: '#818cf8', display: 'flex', alignItems: 'center', gap: '4px' }}
+                      style={{ fontSize: '11.5px', height: '26px', padding: '0 10px', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '4px' }}
                     >
                       {isTestingPm ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
                       <span>Test GitHub Connection</span>
@@ -2353,12 +2361,14 @@ export const SettingsView: React.FC = () => {
                         Polls repository every {syncInterval} seconds for external changes.
                       </p>
                     </div>
-                    <input
-                      type="checkbox"
-                      checked={autoSync}
-                      onChange={e => setAutoSync(e.target.checked)}
-                      style={{ width: '17px', height: '17px', cursor: 'pointer' }}
-                    />
+                    <label className="toggle-switch">
+                      <input
+                        type="checkbox"
+                        checked={autoSync}
+                        onChange={e => setAutoSync(e.target.checked)}
+                      />
+                      <span className="toggle-slider" />
+                    </label>
                   </div>
                 </div>
               )}

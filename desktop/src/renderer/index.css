@@ -13,7 +13,7 @@
   --bg-sidebar:          #ffffff;
   --bg-header:           #ffffff;
   --bg-card:             #ffffff;
-  --bg-card-hover:       #ffffff;
+  --bg-card-hover:       #faf8ff;
   --bg-column:           #ffffff;
   --bg-modal:            #ffffff;
   --bg-input:            #fbf9ff;
@@ -53,6 +53,7 @@
   --accent-green:         #1f8b4d;
   --accent-amber:         #b28900;
   --accent-red:           #a62a2a;
+  --accent-rose:          #ec4899;
 
   /* State */
   --success:  #1f8b4d;
@@ -135,13 +136,25 @@
   --bg-modal:      #ffffff;
   --bg-input:      #fbf9ff;
   --bg-input-focus:#ffffff;
+  --bg-button-subtle: #f4f0ff;
+  --bg-button-hover:  #ede8f9;
+  --bg-badge:         #ede8f9;
   --border-subtle: #ede8f9;
   --border-medium: #e2d9fa;
   --border-strong: #c8bbf7;
   --border-card:   rgba(100, 80, 200, 0.08);
+  --border-sidebar:#ede8f9;
+  --shadow-xs:   0 1px 3px rgba(100,80,200,0.06);
+  --shadow-sm:   0 2px 8px rgba(100,80,200,0.08);
+  --shadow-md:   0 8px 24px rgba(100,80,200,0.12);
+  --shadow-lg:   0 16px 40px rgba(100,80,200,0.14);
+  --shadow-card: 0 4px 0px rgba(100,80,200,0.06), 0 2px 8px rgba(100,80,200,0.04);
+  --shadow-modal:0 24px 60px rgba(59,42,89,0.2), 0 0 0 1px rgba(166,140,255,0.15);
   --text-primary:  #201435;
   --text-secondary:#4a3b68;
   --text-muted:    #8c7ba8;
+  --text-subtle:   #b3a7cc;
+  --text-inverse:  #ffffff;
   --accent-blue:   #7c5ce5;
   --accent-primary:#7c5ce5;
   --accent-primary-text: #ffffff;
@@ -164,13 +177,25 @@
   --bg-modal:      #ffffff;
   --bg-input:      #fdf4f9;
   --bg-input-focus:#ffffff;
+  --bg-button-subtle: #fce7f3;
+  --bg-button-hover:  #fbcfe8;
+  --bg-badge:         #fce7f3;
   --border-subtle: #fce7f3;
   --border-medium: #fbcfe8;
   --border-strong: #f472b6;
   --border-card:   rgba(236, 72, 153, 0.08);
+  --border-sidebar:#fce7f3;
+  --shadow-xs:   0 1px 3px rgba(236,72,153,0.06);
+  --shadow-sm:   0 2px 8px rgba(236,72,153,0.08);
+  --shadow-md:   0 8px 24px rgba(236,72,153,0.12);
+  --shadow-lg:   0 16px 40px rgba(236,72,153,0.14);
+  --shadow-card: 0 4px 0px rgba(236,72,153,0.06), 0 2px 8px rgba(236,72,153,0.04);
+  --shadow-modal:0 24px 60px rgba(74,15,48,0.2), 0 0 0 1px rgba(244,114,182,0.15);
   --text-primary:  #371b2d;
   --text-secondary:#6b2d56;
   --text-muted:    #a3678b;
+  --text-subtle:   #c998b5;
+  --text-inverse:  #ffffff;
   --accent-blue:   #ec4899;
   --accent-primary:#ec4899;
   --accent-primary-text: #ffffff;
@@ -193,13 +218,25 @@
   --bg-modal:      #ffffff;
   --bg-input:      #fdfbf2;
   --bg-input-focus:#ffffff;
+  --bg-button-subtle: #fef3c7;
+  --bg-button-hover:  #fde68a;
+  --bg-badge:         #fef3c7;
   --border-subtle: #fef3c7;
   --border-medium: #fde68a;
   --border-strong: #f59e0b;
   --border-card:   rgba(217, 119, 6, 0.08);
+  --border-sidebar:#fef3c7;
+  --shadow-xs:   0 1px 3px rgba(217,119,6,0.06);
+  --shadow-sm:   0 2px 8px rgba(217,119,6,0.08);
+  --shadow-md:   0 8px 24px rgba(217,119,6,0.12);
+  --shadow-lg:   0 16px 40px rgba(217,119,6,0.14);
+  --shadow-card: 0 4px 0px rgba(217,119,6,0.06), 0 2px 8px rgba(217,119,6,0.04);
+  --shadow-modal:0 24px 60px rgba(69,26,3,0.2), 0 0 0 1px rgba(245,158,11,0.15);
   --text-primary:  #451a03;
   --text-secondary:#78350f;
   --text-muted:    #b45309;
+  --text-subtle:   #d97706;
+  --text-inverse:  #ffffff;
   --accent-blue:   #f59e0b;
   --accent-primary:#d97706;
   --accent-primary-text: #ffffff;
@@ -222,16 +259,37 @@
   --bg-modal:      #16132a;
   --bg-input:      #110e20;
   --bg-input-focus:#231d42;
-  --border-subtle: rgba(162, 155, 254, 0.18);
-  --border-medium: rgba(162, 155, 254, 0.32);
-  --border-strong: rgba(162, 155, 254, 0.55);
+  --bg-button-subtle: #1e1938;
+  --bg-button-hover:  #2d2452;
+  --bg-badge:         #231d42;
+  --border-subtle: rgba(162, 155, 254, 0.16);
+  --border-medium: rgba(162, 155, 254, 0.28);
+  --border-strong: rgba(162, 155, 254, 0.5);
   --border-card:   rgba(0, 0, 0, 0.45);
+  --border-sidebar:rgba(162, 155, 254, 0.14);
+  --shadow-xs:   0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md:   0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg:   0 16px 40px rgba(0, 0, 0, 0.7);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-modal:0 24px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(162, 155, 254, 0.2);
   --text-primary:  #f8f6ff;
   --text-secondary:#ded7ff;
   --text-muted:    #a69ccf;
+  --text-subtle:   #796e9e;
+  --text-inverse:  #0d0b18;
   --accent-blue:   #00cec9;
+  --accent-purple: #c084fc;
+  --accent-green:  #34d399;
+  --accent-amber:  #fbbf24;
+  --accent-red:    #f87171;
+  --accent-rose:   #f472b6;
   --accent-primary:#a29bfe;
   --accent-primary-text: #0d0b18;
+  --success:       #34d399;
+  --warning:       #fbbf24;
+  --danger:        #f87171;
+  --info:          #a29bfe;
   --logo-left-pill:        #a29bfe;
   --logo-left-pill-bottom: #6c5ce7;
   --logo-right-pill:       #00cec9;
@@ -251,16 +309,37 @@
   --bg-modal:      #101726;
   --bg-input:      #0b101c;
   --bg-input-focus:#1c283e;
-  --border-subtle: rgba(56, 189, 248, 0.18);
-  --border-medium: rgba(56, 189, 248, 0.32);
-  --border-strong: rgba(56, 189, 248, 0.55);
+  --bg-button-subtle: #141d2e;
+  --bg-button-hover:  #1e2b44;
+  --bg-badge:         #1c283e;
+  --border-subtle: rgba(56, 189, 248, 0.16);
+  --border-medium: rgba(56, 189, 248, 0.28);
+  --border-strong: rgba(56, 189, 248, 0.5);
   --border-card:   rgba(0, 0, 0, 0.5);
+  --border-sidebar:rgba(56, 189, 248, 0.14);
+  --shadow-xs:   0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md:   0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg:   0 16px 40px rgba(0, 0, 0, 0.7);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-modal:0 24px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(56, 189, 248, 0.2);
   --text-primary:  #f8fafc;
   --text-secondary:#d1dbe8;
   --text-muted:    #94a7c0;
+  --text-subtle:   #627794;
+  --text-inverse:  #080c14;
   --accent-blue:   #38bdf8;
+  --accent-purple: #818cf8;
+  --accent-green:  #34d399;
+  --accent-amber:  #fbbf24;
+  --accent-red:    #f87171;
+  --accent-rose:   #f472b6;
   --accent-primary:#38bdf8;
   --accent-primary-text: #080c14;
+  --success:       #34d399;
+  --warning:       #fbbf24;
+  --danger:        #f87171;
+  --info:          #38bdf8;
   --logo-left-pill:        #6366f1;
   --logo-left-pill-bottom: #4f46e5;
   --logo-right-pill:       #38bdf8;
@@ -280,16 +359,37 @@
   --bg-modal:      #0c241e;
   --bg-input:      #061612;
   --bg-input-focus:#163c32;
-  --border-subtle: rgba(52, 211, 153, 0.18);
-  --border-medium: rgba(52, 211, 153, 0.32);
-  --border-strong: rgba(52, 211, 153, 0.55);
+  --bg-button-subtle: #0f2b23;
+  --bg-button-hover:  #174236;
+  --bg-badge:         #163c32;
+  --border-subtle: rgba(52, 211, 153, 0.16);
+  --border-medium: rgba(52, 211, 153, 0.28);
+  --border-strong: rgba(52, 211, 153, 0.5);
   --border-card:   rgba(0, 0, 0, 0.5);
+  --border-sidebar:rgba(52, 211, 153, 0.14);
+  --shadow-xs:   0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md:   0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg:   0 16px 40px rgba(0, 0, 0, 0.7);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-modal:0 24px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(52, 211, 153, 0.2);
   --text-primary:  #f0fdf8;
   --text-secondary:#bbf7dd;
   --text-muted:    #7adcb5;
+  --text-subtle:   #51967d;
+  --text-inverse:  #05120f;
   --accent-blue:   #2dd4bf;
+  --accent-purple: #a78bfa;
+  --accent-green:  #34d399;
+  --accent-amber:  #fbbf24;
+  --accent-red:    #f87171;
+  --accent-rose:   #f472b6;
   --accent-primary:#34d399;
   --accent-primary-text: #05120f;
+  --success:       #34d399;
+  --warning:       #fbbf24;
+  --danger:        #f87171;
+  --info:          #34d399;
   --logo-left-pill:        #34d399;
   --logo-left-pill-bottom: #059669;
   --logo-right-pill:       #2dd4bf;
@@ -1003,8 +1103,8 @@ html, body, #root {
   gap: 4px;
   padding: 14px 16px;
   border-radius: 20px;
-  border: 2px solid #ede8f9;
-  background: #ffffff;
+  border: 2px solid var(--border-subtle);
+  background: var(--bg-card);
   color: var(--text-primary);
   cursor: pointer;
   text-align: left;
@@ -1014,16 +1114,16 @@ html, body, #root {
 }
 
 .selector-card-btn:hover {
-  background: #f4f0ff;
-  border-color: #a68cff;
+  background: var(--bg-button-hover);
+  border-color: var(--accent-primary);
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(100, 80, 200, 0.1);
+  box-shadow: 0 6px 18px var(--border-card);
 }
 
 .selector-card-btn.active {
   border-color: var(--accent-primary);
-  background: #f4f0ff;
-  box-shadow: 0 0 0 3px rgba(166, 140, 255, 0.2), 0 6px 18px rgba(100, 80, 200, 0.12);
+  background: var(--bg-button-hover);
+  box-shadow: 0 0 0 3px rgba(166, 140, 255, 0.2), 0 6px 18px var(--border-card);
 }
 
 .btn-destructive {
@@ -1206,7 +1306,7 @@ html, body, #root {
 .column-title {
   font-weight: 800;
   font-size: 1.3rem;
-  color: #3b2a59;
+  color: var(--text-primary);
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
@@ -1222,8 +1322,8 @@ html, body, #root {
 }
 
 .column-title:hover {
-  background: #f4f0ff;
-  color: #201435;
+  background: var(--bg-button-hover);
+  color: var(--text-primary);
 }
 
 .column-title .column-title-edit-icon {
@@ -1627,10 +1727,10 @@ html, body, #root {
 }
 
 .confirm-modal-dialog {
-  background: #ffffff;
+  background: var(--bg-modal);
   border: 1.5px solid var(--border-medium);
   border-radius: 32px;
-  box-shadow: 0 24px 64px rgba(59, 42, 89, 0.25);
+  box-shadow: var(--shadow-modal);
   width: 440px;
   max-width: 92vw;
   overflow: hidden;
@@ -1900,7 +2000,7 @@ html, body, #root {
 
 .form-input:focus {
   border-color: var(--accent-primary);
-  background: #ffffff;
+  background: var(--bg-input-focus);
   box-shadow: 0 0 0 4px rgba(124, 92, 229, 0.15), inset 0 1px 2px rgba(100, 80, 200, 0.04);
 }
 
@@ -1908,14 +2008,14 @@ html, body, #root {
 
 /* ── Property Grid ─────────────────────────────────────────────────────── */
 .notion-props-container {
-  background: #ffffff;
+  background: var(--bg-card);
   border: 1.5px solid var(--border-subtle);
   border-radius: 24px;
   padding: 16px 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  box-shadow: 0 4px 16px rgba(100, 80, 200, 0.05);
+  box-shadow: var(--shadow-xs);
 }
 
 .notion-prop-row {
@@ -1947,8 +2047,8 @@ html, body, #root {
 .notion-prop-pill {
   appearance: none;
   -webkit-appearance: none;
-  background: #f4f0ff;
-  border: 1.5px solid #ede8f9;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border-subtle);
   border-radius: 100px;
   padding: 6px 14px;
   color: var(--text-primary);
@@ -1965,9 +2065,9 @@ html, body, #root {
 }
 
 .notion-prop-pill:hover {
-  background: #e0d4ff;
-  border-color: #a68cff;
-  color: #201435;
+  background: var(--bg-button-hover);
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
   transform: translateY(-1px);
 }
 
@@ -1980,7 +2080,7 @@ html, body, #root {
   position: absolute;
   top: calc(100% + 6px);
   left: 0;
-  background: #ffffff;
+  background: var(--bg-modal);
   border: 1.5px solid var(--border-medium);
   border-radius: 20px;
   box-shadow: var(--shadow-modal);
@@ -2665,17 +2765,17 @@ html, body, #root {
 }
 
 .copilot-bubble-assistant {
-  background: #ffffff;
-  border: 1.5px solid #ede8f9;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-medium);
   border-radius: 4px 20px 20px 20px;
   padding: 14px 18px;
   font-size: 13.5px;
-  color: #201435;
+  color: var(--text-primary);
   line-height: 1.6;
   word-break: break-word;
   width: 100%;
   position: relative;
-  box-shadow: 0 2px 8px rgba(100, 80, 200, 0.04);
+  box-shadow: var(--shadow-xs);
 }
 
 /* ── Copilot Slash Command Palette ──────────────────────────────────────── */
@@ -2684,10 +2784,10 @@ html, body, #root {
   bottom: calc(100% + 12px);
   left: 14px;
   right: 14px;
-  background: #ffffff;
-  border: 1.5px solid #ede8f9;
+  background: var(--bg-modal);
+  border: 1.5px solid var(--border-medium);
   border-radius: 28px;
-  box-shadow: 0 20px 50px rgba(59, 42, 89, 0.22);
+  box-shadow: var(--shadow-modal);
   overflow: hidden;
   z-index: 100;
   padding: 8px;
@@ -2698,10 +2798,10 @@ html, body, #root {
   padding: 8px 14px 6px;
   font-size: 11px;
   font-weight: 800;
-  color: #7c5ce5;
+  color: var(--accent-primary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  border-bottom: 1px solid #ede8f9;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .slash-cmd-row {
@@ -2716,15 +2816,15 @@ html, body, #root {
 
 .slash-cmd-row:hover,
 .slash-cmd-row.highlighted {
-  background: #f4f0ff;
+  background: var(--bg-button-hover);
 }
 
 .slash-cmd-icon {
   width: 32px;
   height: 32px;
   border-radius: 12px;
-  background: #f4f0ff;
-  border: 1px solid #ede8f9;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2733,19 +2833,19 @@ html, body, #root {
 
 /* ── Copilot Input Area ─────────────────────────────────────────────────── */
 .copilot-input-wrap {
-  background: #ffffff;
-  border: 1.5px solid #ede8f9;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border-subtle);
   border-radius: 28px;
   padding: 14px 18px 12px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  box-shadow: 0 4px 20px rgba(100, 80, 200, 0.05);
+  box-shadow: var(--shadow-xs);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .copilot-input-wrap:focus-within {
-  border-color: #7c5ce5;
+  border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px rgba(124, 92, 229, 0.15);
 }
 
@@ -2838,13 +2938,104 @@ html, body, #root {
   bottom: 0;
   width: 480px;
   max-width: 100vw;
-  background: #ffffff;
-  border-left: 1.5px solid #ede8f9;
-  box-shadow: -12px 0 60px rgba(59, 42, 89, 0.18);
+  background: var(--bg-modal);
+  border-left: 1.5px solid var(--border-medium);
+  box-shadow: var(--shadow-modal);
   z-index: 100;
   display: flex;
   flex-direction: column;
   animation: slide-in-right 220ms cubic-bezier(0.16,1,0.3,1);
+}
+
+/* ── Custom Theme-Aware Checkbox ────────────────────────────────────────── */
+input[type="checkbox"]:not(.toggle-switch input) {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 17px;
+  height: 17px;
+  border: 1.5px solid var(--border-medium);
+  border-radius: 6px;
+  background: var(--bg-input);
+  cursor: pointer;
+  display: inline-grid;
+  place-content: center;
+  margin: 0;
+  vertical-align: middle;
+  transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  position: relative;
+  flex-shrink: 0;
+}
+
+input[type="checkbox"]:not(.toggle-switch input):hover {
+  border-color: var(--accent-primary);
+  background: var(--bg-button-hover);
+}
+
+input[type="checkbox"]:not(.toggle-switch input):checked {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  box-shadow: 0 2px 6px rgba(124, 92, 229, 0.3);
+}
+
+input[type="checkbox"]:not(.toggle-switch input):checked::after {
+  content: "";
+  width: 9px;
+  height: 5px;
+  border-left: 2px solid var(--accent-primary-text, #ffffff);
+  border-bottom: 2px solid var(--accent-primary-text, #ffffff);
+  transform: rotate(-45deg) translate(0.5px, -0.5px);
+  display: block;
+}
+
+input[type="checkbox"]:not(.toggle-switch input):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(124, 92, 229, 0.25);
+}
+
+/* ── Custom Theme-Aware Range Slider ────────────────────────────────────── */
+input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--bg-badge);
+  border-radius: 100px;
+  outline: none;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  border: 2px solid var(--bg-modal);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.15s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.18);
+  box-shadow: 0 3px 12px rgba(124, 92, 229, 0.4);
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  border: 2px solid var(--bg-modal);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 }
 
 @keyframes slide-in-right {

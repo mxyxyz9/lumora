@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useBoardStore } from '../store/boardStore';
 import { Archive, RotateCcw, Trash2, X, Search, Calendar, Folder, Layers } from 'lucide-react';
+import { CustomDropdown } from './CustomDropdown';
 
 export const ArchivedCardsModal: React.FC = () => {
   const {
@@ -20,6 +21,15 @@ export const ArchivedCardsModal: React.FC = () => {
   if (!isArchivedCardsModalOpen) return null;
 
   const archivedCards = cards.filter(c => !!c.archived);
+
+  const columnOptions = [
+    { value: 'all', label: `All Columns (${archivedCards.length})` },
+    ...lists.map(l => ({
+      value: l._id,
+      label: l.title,
+      badge: `${archivedCards.filter(c => c.listId === l._id).length}`,
+    })),
+  ];
 
   const filteredCards = archivedCards.filter(c => {
     const matchesSearch = !searchQuery.trim() ||
@@ -142,32 +152,14 @@ export const ArchivedCardsModal: React.FC = () => {
             </div>
 
             {/* List Column Filter */}
-            <select
-              value={selectedListId}
-              onChange={e => setSelectedListId(e.target.value)}
-              style={{
-                height: '36px',
-                padding: '0 14px',
-                borderRadius: '100px',
-                fontWeight: 700,
-                fontSize: '12px',
-                background: 'var(--bg-input)',
-                border: '1.5px solid var(--border-subtle)',
-                color: 'var(--text-primary)',
-                outline: 'none',
-                cursor: 'pointer',
-              }}
-            >
-              <option value="all">All Columns ({archivedCards.length})</option>
-              {lists.map(l => {
-                const count = archivedCards.filter(c => c.listId === l._id).length;
-                return (
-                  <option key={l._id} value={l._id}>
-                    {l.title} ({count})
-                  </option>
-                );
-              })}
-            </select>
+            <div style={{ width: '190px', flexShrink: 0 }}>
+              <CustomDropdown
+                value={selectedListId}
+                options={columnOptions}
+                onChange={setSelectedListId}
+                size="sm"
+              />
+            </div>
           </div>
         </div>
 
