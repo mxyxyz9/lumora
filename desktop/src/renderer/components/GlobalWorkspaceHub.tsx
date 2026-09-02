@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useBoardStore } from '../store/boardStore';
 import {
   Plus,
-  ArrowUpRight,
+  ArrowRight,
   CheckCircle2,
   Clock,
   AlertCircle,
@@ -387,18 +387,20 @@ export const GlobalWorkspaceHub: React.FC = () => {
                     className="btn-subtle"
                     style={{
                       fontSize: '12px',
-                      color: isSelected ? 'var(--accent-blue)' : 'var(--text-secondary)',
-                      fontWeight: 600,
+                      color: isSelected ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                      fontWeight: 700,
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '4px',
+                      gap: '5px',
                       height: '28px',
-                      padding: '0 10px',
-                      borderRadius: 'var(--r-sm)',
+                      padding: '0 12px',
+                      borderRadius: '100px',
+                      background: 'var(--bg-input)',
+                      border: '1px solid var(--border-subtle)',
                     }}
                   >
                     <span>Open Board</span>
-                    <ArrowUpRight size={14} />
+                    <ArrowRight size={13} style={{ color: 'var(--accent-primary)' }} />
                   </button>
                 </div>
               </div>

@@ -80,6 +80,7 @@ export interface Card {
   swimlaneId: string;
   userId?: string;
   sort?: number;
+  color?: string;
   archived?: boolean;
   labelIds?: string[];
   dueAt?: string | Date;
@@ -193,7 +194,7 @@ export interface Activity {
 }
 
 export interface AppSettings {
-  theme: 'obsidian' | 'dark' | 'light' | 'oled';
+  theme: 'lavender' | 'ocean' | 'peach' | 'matcha' | 'bubblegum' | 'midnight' | 'dark' | 'light' | 'obsidian' | 'oled' | string;
   fontScale: 'compact' | 'normal' | 'spacious';
   listWidth: number; // 260 - 360 px
   appMode: 'team' | 'solo';
@@ -207,6 +208,7 @@ export interface AppSettings {
   watchLevel?: 'muted' | 'tracking' | 'watching';
   confirmBeforeQuit?: boolean;
   appIcon?: 'dark' | 'light' | 'liquid_glass';
+  customBackground?: string;
 }
 
 export interface AuthSession {
@@ -289,6 +291,47 @@ export interface CodexDiscoveredConfigOption {
   options?: Array<{ value: string; name: string; description?: string }>;
 }
 
+// ──────────────────────────────────────────────────────────────────────────────
+// Lumora Voice & Speech-To-Text (OpenWhispr Base) Types
+// ──────────────────────────────────────────────────────────────────────────────
+export interface VoiceCandidateNote {
+  id: string;
+  title: string;
+  description?: string;
+  suggestedList?: string;
+  urgency?: 'low' | 'medium' | 'high' | 'critical';
+  tags?: string[];
+  status: 'candidate' | 'accepted' | 'discarded';
+  acceptedAt?: string;
+  discardedAt?: string;
+}
+
+export interface VoiceSessionStatus {
+  isRecording: boolean;
+  isTranscribing: boolean;
+  activeHotkey: string;
+  localWhisperAvailable: boolean;
+  whisperCliPath?: string;
+  modelsFound: string[];
+  supportedWhisperModels?: Array<{ id: string; name: string; size: string; fileName: string; downloadUrl?: string }>;
+  lastTranscript?: string;
+  lastError?: string;
+}
+
+export interface VoiceTranscribeOptions {
+  mimeType?: string;
+  engine?: 'local' | 'gemini' | 'openai' | 'groq' | 'auto';
+  apiKey?: string;
+  model?: string;
+  prompt?: string;
+}
+
+export interface VoiceStructureResult {
+  transcript: string;
+  notes: VoiceCandidateNote[];
+  rawAiOutput?: string;
+}
+
 declare global {
   interface Window {
     electronAPI?: {
@@ -321,6 +364,56 @@ declare global {
       codexCancelSession?: (cardId: string) => Promise<boolean>;
       onCodexUpdate?: (callback: (update: CodexSessionUpdatePayload) => void) => () => void;
 
+      // Lumora Voice / OpenWhispr STT
+      voiceGetStatus?: () => Promise<VoiceSessionStatus>;
+      voiceSetRecording?: (isRecording: boolean) => Promise<boolean>;
+      voiceSetHotkey?: (hotkey: string) => Promise<boolean>;
+      voiceTranscribeAudio?: (audioBase64: string, options?: VoiceTranscribeOptions) => Promise<{ success: boolean; text?: string; duration?: number; error?: string }>;
+      voiceCheckWhisperInstalled?: () => Promise<{ installed: boolean; path?: string; models: string[] }>;
+      voiceCheckPermissions?: () => Promise<{ mic: string; accessibility: boolean }>;
+      voiceRequestMicPermission?: () => Promise<boolean>;
+      voiceInjectText?: (text: string) => Promise<{ success: boolean; error?: string }>;
+      onVoiceStatusChange?: (callback: (status: VoiceSessionStatus) => void) => () => void;
+      onVoiceHotkeyTriggered?: (callback: (data: { action: 'start' | 'stop' | 'toggle'; timestamp: number }) => void) => () => void;
+
+      // Kokoro-82M Text-To-Speech (TTS)
+      ttsGetStatus?: () => Promise<{
+        isReady: boolean;
+        modelsDir: string;
+        modelFound: boolean;
+        voicesBinFound: boolean;
+        activeVoice: string;
+        voices: Array<{ id: string; name: string; gender: 'female' | 'male'; language: string; languageCode: string; isDefault?: boolean }>;
+        downloadUrlModel: string;
+        downloadUrlVoices: string;
+      }>;
+      ttsSetVoice?: (voiceId: string) => Promise<boolean>;
+      ttsSynthesize?: (text: string, options?: { voice?: string; speed?: number }) => Promise<{ success: boolean; audioBase64?: string; mimeType?: string; error?: string; fallback?: boolean }>;
+
+      // Upstream Companion Git Tracking & Model Checkpoint Feed
+      upstreamCheckStatus?: (repoKey: 'openwhispr' | 'kokoro') => Promise<{
+        name: string;
+        localPath: string;
+        upstreamUrl: string;
+        hasUpstreamRemote: boolean;
+        commitsBehind: number;
+        commitsAhead: number;
+        incomingCommits: Array<{ hash: string; message: string; date?: string; author?: string }>;
+        diffStat?: string;
+        lastChecked?: string;
+        error?: string;
+      }>;
+      upstreamCheckModelCheckpoints?: () => Promise<Array<{
+        modelId: string;
+        name: string;
+        category: 'STT' | 'TTS';
+        currentVersion: string;
+        latestVersion: string;
+        isUpdateAvailable: boolean;
+        downloadUrl: string;
+        size: string;
+        releaseNotesUrl?: string;
+      }>>;
 
       // Worktree / Git / CLI utilities
       gitCreateBranch?: (repoPath: string, branchName: string) => Promise<{ success: boolean; branch?: string; error?: string }>;

@@ -81,43 +81,81 @@ export const CustomFieldsModal: React.FC = () => {
   };
 
   return (
-    <div className="modal-backdrop" onClick={() => setCustomFieldsModalOpen(false)}>
-      <div className="modal-content" style={{ maxWidth: '640px' }} onClick={(e) => e.stopPropagation()}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <div>
-            <h2 className="modal-title">Custom Fields Definition</h2>
-            <p className="modal-subtitle">Extend cards with custom attributes, dropdown tags, numbers and currencies</p>
+    <div className="confirm-modal-overlay" onClick={() => setCustomFieldsModalOpen(false)} style={{ zIndex: 110 }}>
+      <div
+        className="modal-dialog"
+        style={{
+          width: '640px',
+          maxWidth: '92vw',
+          maxHeight: '85vh',
+          background: 'var(--bg-modal)',
+          borderRadius: '36px',
+          border: '1.5px solid var(--border-medium)',
+          boxShadow: 'var(--shadow-modal)',
+          overflow: 'hidden',
+          padding: '24px 28px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Seamless Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Hash size={22} style={{ color: 'var(--accent-primary)', flexShrink: 0 }} />
+            <div>
+              <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                Custom Fields Definition
+              </h2>
+              <p style={{ margin: '2px 0 0', fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>
+                Extend cards with custom attributes, dropdown tags, numbers and currencies
+              </p>
+            </div>
           </div>
           <button
             onClick={() => setCustomFieldsModalOpen(false)}
-            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
+            className="btn-icon"
+            style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', color: 'var(--accent-primary)' }}
           >
-            <X size={18} />
+            <X size={15} />
           </button>
         </div>
 
         {error && (
-          <div style={{ background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.3)', padding: '10px 14px', borderRadius: 'var(--radius-md)', color: '#fda4af', fontSize: '0.85rem', marginBottom: '16px' }}>
+          <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1.5px solid rgba(239, 68, 68, 0.3)', padding: '10px 14px', borderRadius: '16px', color: 'var(--danger)', fontSize: '12px', fontWeight: 700 }}>
             {error}
           </div>
         )}
 
         {/* Creation Form */}
-        <form onSubmit={handleCreate} style={{ background: 'var(--bg-input)', padding: '18px', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)', marginBottom: '24px' }}>
-          <div className="form-group">
-            <label className="form-label">Field Name</label>
+        <form onSubmit={handleCreate} style={{ background: 'var(--bg-input)', padding: '18px', borderRadius: '24px', border: '1.5px solid var(--border-subtle)', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label style={{ fontSize: '11.5px', fontWeight: 800, color: 'var(--text-secondary)', marginBottom: '6px', display: 'block', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Field Name</label>
             <input
               type="text"
               required
               value={fieldName}
               onChange={(e) => setFieldName(e.target.value)}
               placeholder="e.g. Priority, Story Points, Budget, Sprint Target"
-              className="form-input"
+              style={{
+                width: '100%',
+                height: '36px',
+                borderRadius: '100px',
+                padding: '0 14px',
+                background: 'var(--bg-modal)',
+                border: '1.5px solid var(--border-subtle)',
+                color: 'var(--text-primary)',
+                fontSize: '12.5px',
+                fontWeight: 600,
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
             />
           </div>
 
-          <div className="form-group">
-            <label className="form-label">Field Type</label>
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label style={{ fontSize: '11.5px', fontWeight: 800, color: 'var(--text-secondary)', marginBottom: '6px', display: 'block', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Field Type</label>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
               {typeOptions.map(t => {
                 const Icon = t.icon;
@@ -128,16 +166,17 @@ export const CustomFieldsModal: React.FC = () => {
                     onClick={() => setFieldType(t.id)}
                     style={{
                       padding: '8px 12px',
-                      borderRadius: 'var(--radius-md)',
-                      background: isSelected ? 'rgba(99, 102, 241, 0.18)' : 'var(--bg-card)',
-                      border: `1px solid ${isSelected ? 'var(--accent-primary)' : 'var(--border-subtle)'}`,
-                      color: isSelected ? '#818cf8' : 'var(--text-secondary)',
+                      borderRadius: '14px',
+                      background: isSelected ? 'var(--accent-primary)' : 'var(--bg-modal)',
+                      border: `1.5px solid ${isSelected ? 'var(--accent-primary)' : 'var(--border-subtle)'}`,
+                      color: isSelected ? 'var(--accent-primary-text)' : 'var(--text-primary)',
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '8px',
-                      fontSize: '0.8rem',
-                      fontWeight: 600,
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      transition: 'all 0.18s ease',
                     }}
                   >
                     <Icon size={14} />
@@ -150,26 +189,28 @@ export const CustomFieldsModal: React.FC = () => {
 
           {fieldType === 'dropdown' && (
             <div className="form-group">
-              <label className="form-label">Dropdown Options (comma-separated)</label>
+              <label className="form-label" style={{ color: 'var(--text-secondary)' }}>Dropdown Options (comma-separated)</label>
               <input
                 type="text"
                 value={dropdownOptions}
                 onChange={(e) => setDropdownOptions(e.target.value)}
                 placeholder="High, Medium, Low, Critical"
                 className="form-input"
+                style={{ background: 'var(--bg-modal)', border: '1.5px solid var(--border-subtle)', color: 'var(--text-primary)' }}
               />
             </div>
           )}
 
           {fieldType === 'currency' && (
             <div className="form-group">
-              <label className="form-label">Currency Code</label>
+              <label className="form-label" style={{ color: 'var(--text-secondary)' }}>Currency Code</label>
               <input
                 type="text"
                 value={currencyCode}
                 onChange={(e) => setCurrencyCode(e.target.value)}
                 placeholder="USD, EUR, GBP, JPY"
                 className="form-input font-mono"
+                style={{ background: 'var(--bg-modal)', border: '1.5px solid var(--border-subtle)', color: 'var(--text-primary)' }}
               />
             </div>
           )}
@@ -189,7 +230,7 @@ export const CustomFieldsModal: React.FC = () => {
               type="submit"
               disabled={isSubmitting || !fieldName.trim()}
               className="btn-primary"
-              style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', fontSize: '0.82rem' }}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 16px', fontSize: '0.82rem', background: 'var(--accent-primary)', color: 'var(--accent-primary-text)' }}
             >
               {isSubmitting ? <Loader2 size={14} className="animate-spin" /> : <><Plus size={14} /><span>Add Field</span></>}
             </button>
@@ -203,7 +244,7 @@ export const CustomFieldsModal: React.FC = () => {
           </div>
 
           {customFields.length === 0 ? (
-            <div style={{ fontSize: '0.82rem', color: 'var(--text-subtle)', fontStyle: 'italic', padding: '12px', textAlign: 'center' }}>
+            <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', fontStyle: 'italic', padding: '12px', textAlign: 'center' }}>
               No custom fields configured for this workspace.
             </div>
           ) : (
@@ -218,7 +259,7 @@ export const CustomFieldsModal: React.FC = () => {
                     padding: '10px 14px',
                     background: 'var(--bg-card)',
                     border: '1px solid var(--border-subtle)',
-                    borderRadius: 'var(--radius-md)',
+                    borderRadius: 'var(--r-md)',
                   }}
                 >
                   <div>

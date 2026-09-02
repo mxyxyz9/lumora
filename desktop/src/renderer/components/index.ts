@@ -27,6 +27,7 @@ export { ConfirmModal } from './ConfirmModal';
 // ─── AI Intelligence & Drawers ───────────────────────────────────────────────
 export { AiAssistantDrawer } from './AiAssistantDrawer';
 export { ActivityLogDrawer } from './ActivityLogDrawer';
+export { VoicePanel } from './VoicePanel';
 
 // ─── Shared UI Controls & Branding ───────────────────────────────────────────
 export { LumoraLogo, KansoLogo } from './LumoraLogo';

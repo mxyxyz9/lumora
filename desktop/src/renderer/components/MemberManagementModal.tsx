@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useBoardStore } from '../store/boardStore';
-import { X, UserPlus, Shield, User, MessageSquare, Briefcase, Eye, Trash2, Loader2, Check, ChevronDown } from 'lucide-react';
+import { X, UserPlus, Shield, User, Users, MessageSquare, Briefcase, Eye, Trash2, Loader2, Check, ChevronDown } from 'lucide-react';
 
 export const MemberManagementModal: React.FC = () => {
   const { isMemberModalOpen, setMemberModalOpen, activeBoard, addBoardMember, removeBoardMember, showConfirm } = useBoardStore();
@@ -80,57 +80,92 @@ export const MemberManagementModal: React.FC = () => {
   };
 
   return (
-    <div className="modal-backdrop" onClick={() => setMemberModalOpen(false)}>
-      <div className="modal-content" style={{ maxWidth: '640px' }} onClick={(e) => e.stopPropagation()}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <div>
-            <h2 className="modal-title">Workspace Members & Permissions</h2>
-            <p className="modal-subtitle">Manage access, roles and card assignment permissions</p>
+    <div className="confirm-modal-overlay" onClick={() => setMemberModalOpen(false)} style={{ zIndex: 110 }}>
+      <div
+        className="modal-dialog"
+        style={{
+          width: '640px',
+          maxWidth: '92vw',
+          maxHeight: '85vh',
+          background: 'var(--bg-modal)',
+          borderRadius: '36px',
+          border: '1.5px solid var(--border-medium)',
+          boxShadow: 'var(--shadow-modal)',
+          overflow: 'hidden',
+          padding: '24px 28px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Seamless Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Users size={22} style={{ color: 'var(--accent-primary)', flexShrink: 0 }} />
+            <div>
+              <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                Workspace Members & Permissions
+              </h2>
+              <p style={{ margin: '2px 0 0', fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>
+                Manage access, roles and card assignment permissions
+              </p>
+            </div>
           </div>
           <button
             onClick={() => setMemberModalOpen(false)}
             className="btn-icon"
-            style={{ width: '28px', height: '28px' }}
+            style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', color: 'var(--accent-primary)' }}
           >
-            <X size={16} />
+            <X size={15} />
           </button>
         </div>
 
         {error && (
-          <div style={{ background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.3)', padding: '10px 14px', borderRadius: 'var(--r-md)', color: '#fda4af', fontSize: '12px', marginBottom: '16px' }}>
+          <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1.5px solid rgba(239, 68, 68, 0.3)', padding: '10px 14px', borderRadius: '16px', color: 'var(--danger)', fontSize: '12px', fontWeight: 700 }}>
             {error}
           </div>
         )}
 
         {success && (
-          <div style={{ background: 'rgba(52, 211, 153, 0.15)', border: '1px solid rgba(52, 211, 153, 0.3)', padding: '10px 14px', borderRadius: 'var(--r-md)', color: '#6ee7b7', fontSize: '12px', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div style={{ background: 'rgba(46, 204, 113, 0.15)', border: '1.5px solid rgba(46, 204, 113, 0.3)', padding: '10px 14px', borderRadius: '16px', color: 'var(--success)', fontSize: '12px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Check size={14} />
             <span>{success}</span>
           </div>
         )}
 
         {/* Add Member Form */}
-        <form onSubmit={handleAddMember} style={{ background: 'var(--bg-card)', padding: '16px', borderRadius: 'var(--r-lg)', border: '1px solid var(--border-subtle)', marginBottom: '24px' }}>
-          <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <UserPlus size={14} style={{ color: 'var(--accent-blue)' }} />
+        <form onSubmit={handleAddMember} style={{ background: 'var(--bg-input)', padding: '16px', borderRadius: '24px', border: '1.5px solid var(--border-subtle)' }}>
+          <div style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-secondary)', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <UserPlus size={14} style={{ color: 'var(--accent-primary)' }} />
             <span>Invite Member by User ID / Username</span>
           </div>
 
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '12px' }}>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
             <input
               type="text"
               required
               value={memberInput}
               onChange={(e) => setMemberInput(e.target.value)}
               placeholder="e.g. user ID or username"
-              className="form-input"
-              style={{ flex: 1 }}
+              style={{
+                flex: 1,
+                height: '36px',
+                borderRadius: '100px',
+                padding: '0 14px',
+                background: 'var(--bg-modal)',
+                border: '1.5px solid var(--border-subtle)',
+                color: 'var(--text-primary)',
+                fontSize: '12.5px',
+                fontWeight: 600,
+                outline: 'none',
+              }}
             />
             <button
               type="submit"
               disabled={isSubmitting || !memberInput.trim()}
               className="btn-primary"
-              style={{ display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
+              style={{ height: '36px', padding: '0 16px', borderRadius: '100px', background: 'var(--accent-primary)', color: 'var(--accent-primary-text)', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
             >
               {isSubmitting ? <Loader2 size={14} className="animate-spin" /> : <span>Add Member</span>}
             </button>

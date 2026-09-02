@@ -16,8 +16,9 @@
 
 #header {
   color: #fff;
-  transition: background-color 0.4s;
-  background: #2980b9;
+  transition: background-color 0.4s, background 0.4s;
+  background: var(--theme-accent, linear-gradient(135deg, #603bb8 0%, #7c5ce5 50%, #906efa 100%));
+  box-shadow: 0 4px 20px rgba(96, 59, 184, 0.15);
   z-index: 17;
 }
 #header #header-main-bar {
@@ -40,6 +41,8 @@
   row-gap: 4px;
 }
 #header #header-main-bar h1 {
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 800;
   font-size: calc(20px * var(--wekan-ui-font-scale, 1));
   /* A flex box with its own centred line, so the title sits on the bar's middle with
      everything else instead of on the middle of a line box far taller than its text. */
@@ -50,7 +53,7 @@
   margin: 0;
   margin-inline-end: 10px;
   float: inline-start;
-  border-radius: 3px;
+  border-radius: 12px;
   /* A title longer than the whole bar wraps inside the h1 instead of overflowing
      the viewport (flex items do not shrink below min-content without min-width:0). */
   min-width: 0;
@@ -93,12 +96,13 @@
 #header #header-main-bar .wekan-logo {
   margin: 3px auto auto;
   width: 97px;
-  opacity: 0.6;
-  transition: opacity 0.15s;
+  opacity: 0.85;
+  transition: opacity 0.15s, transform 0.2s;
   float: inline-end;
 }
 #header #header-main-bar .wekan-logo:hover {
-  opacity: 0.9;
+  opacity: 1;
+  transform: scale(1.05);
 }
 #header #header-main-bar .board-header-btns {
   /* Flex so the buttons inside each group lay out (their float is ignored inside a
@@ -123,20 +127,29 @@
    height and no line-height, so they rendered as cramped bare glyphs jammed
    against each other. Same look, stated for this bar too. */
 #header-quick-access .board-header-btn {
-  border-radius: 3px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #f2f2f2;
-  padding: 0 6px;
-  height: 28px;
+  padding: 0 10px;
+  height: 30px;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 700;
   font-size: calc(13px * var(--wekan-ui-font-scale, 1));
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  line-height: calc(28px * var(--wekan-ui-font-scale, 1));
+  line-height: calc(30px * var(--wekan-ui-font-scale, 1));
   margin: 0 4px;
   white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 #header-quick-access .board-header-btn:hover {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.28);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 /* The button of the page you are ON keeps that background, permanently and a
    shade darker, so the bar says which of the Admin Panel's four pages is open
@@ -150,14 +163,16 @@
    neighbour the pointer happens to be over. */
 #header-quick-access .board-header-btn.active,
 #header-quick-access .board-header-btn.active:hover {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.35);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 /* The divider before the hamburger, which the second bar draws its own way. */
 #header-quick-access .separator {
   width: 1px;
   height: 20px;
   margin: 0 6px;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.3);
 }
 /* The groups that hold MANY buttons generate no box, so their buttons are flex
    items of the bar and wrap one at a time.
@@ -205,15 +220,21 @@
 }
 
 #header #header-main-bar .board-header-btn {
-  border-radius: 3px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #f2f2f2;
-  padding: 0;
-  height: 28px;
+  padding: 0 4px;
+  height: 30px;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 700;
   font-size: calc(13px * var(--wekan-ui-font-scale, 1));
   float: inline-start;
   overflow: hidden;
-  line-height: calc(28px * var(--wekan-ui-font-scale, 1));
-  margin: 0 12px;
+  line-height: calc(30px * var(--wekan-ui-font-scale, 1));
+  margin: 0 6px;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 /* The sidebar hamburger sits at the far right; drop its wide 12px side margins so
    there is no button-sized empty space to its left or right. The cog before it also
@@ -228,9 +249,9 @@
 #header #header-main-bar .board-header-btn i.fa {
   float: inline-start;
   display: block;
-  line-height: calc(28px * var(--wekan-ui-font-scale, 1));
+  line-height: calc(30px * var(--wekan-ui-font-scale, 1));
   color: #f2f2f2;
-  margin: 0 10px;
+  margin: 0 8px;
 }
 #header #header-main-bar .board-header-btn i.fa + span {
   display: inline-block;
@@ -246,7 +267,7 @@
 #header #header-main-bar .board-header-btn .board-header-btn-icon {
   float: inline-start;
   display: block;
-  line-height: calc(28px * var(--wekan-ui-font-scale, 1));
+  line-height: calc(30px * var(--wekan-ui-font-scale, 1));
   color: #27ae60;
   margin: 0 10px;
   cursor: pointer;
@@ -255,13 +276,16 @@
 #header #header-main-bar h1.is-clickable.is-active,
 #header #header-main-bar .board-header-btn:hover:not(.is-disabled),
 #header #header-main-bar h1.is-clickable:hover:not(.is-disabled) {
-  background: rgba(0,0,0,0.15);
+  background: rgba(255, 255, 255, 0.28);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 #header #header-main-bar .board-header-btn.js-multiselection-active {
-  background: #1a5080;
+  background: #7c5ce5;
 }
 #header #header-main-bar .board-header-btn.js-multiselection-active:hover {
-  background: #0f3a5f;
+  background: #603bb8;
 }
 #header #header-main-bar .separator {
   margin: 2px 4px;
@@ -292,13 +316,8 @@ body:not(.board-view) #header #header-main-bar h1 {
 
 #header-quick-access {
   color: #fff;
-  transition: background-color 0.4s;
-  /* The SAME colour as the main bar below it, not a darker shade of it. Each
-     theme used to paint the two bars two tones apart; they are one bar's worth
-     of colour now, so the header reads as one header. The per-theme rules do
-     the same, by naming this bar in the selector list the main bar already has
-     (boardColors.css) rather than by restating each hex a second time. */
-  background: #2980b9;
+  transition: background-color 0.4s, background 0.4s;
+  background: var(--theme-accent, linear-gradient(135deg, #603bb8 0%, #7c5ce5 50%, #906efa 100%));
   font-size: calc(12px * var(--wekan-ui-font-scale, 1));
   display: flex;
   z-index: 1000;

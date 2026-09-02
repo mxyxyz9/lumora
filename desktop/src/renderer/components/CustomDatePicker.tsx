@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, X, Check, ChevronDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronLeft, ChevronRight, Clock, ChevronDown, Check } from 'lucide-react';
 
 interface CustomDatePickerProps {
   value?: string | Date; // ISO string, Date object, or undefined
@@ -9,12 +9,12 @@ interface CustomDatePickerProps {
 
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
+  'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
 const MONTH_SHORT = [
   'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
 ];
 
 const DAYS_OF_WEEK = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -29,12 +29,14 @@ const TIME_PRESETS = [
 
 export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onChange, onClose }) => {
   const currentDate = value ? new Date(value) : new Date();
-  
+
   // Navigation & View Mode: 'days' | 'months' | 'years'
   const [viewMode, setViewMode] = useState<'days' | 'months' | 'years'>('days');
   const [viewYear, setViewYear] = useState<number>(currentDate.getFullYear());
   const [viewMonth, setViewMonth] = useState<number>(currentDate.getMonth()); // 0-11
-  const [yearDecadeStart, setYearDecadeStart] = useState<number>(Math.floor(currentDate.getFullYear() / 12) * 12);
+  const [yearDecadeStart, setYearDecadeStart] = useState<number>(
+    Math.floor(currentDate.getFullYear() / 9) * 9
+  );
 
   // Selected date
   const [selectedDay, setSelectedDay] = useState<{ year: number; month: number; day: number } | null>(
@@ -51,13 +53,14 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
   const initialHours24 = value ? new Date(value).getHours() : 18;
   const initialMins = value ? new Date(value).getMinutes() : 0;
 
-  const [hour12, setHour12] = useState<number>(initialHours24 % 12 === 0 ? 12 : initialHours24 % 12);
+  const [hour12, setHour12] = useState<number>(
+    initialHours24 % 12 === 0 ? 12 : initialHours24 % 12
+  );
   const [minute, setMinute] = useState<number>(initialMins);
   const [ampm, setAmpm] = useState<'AM' | 'PM'>(initialHours24 >= 12 ? 'PM' : 'AM');
 
   const today = new Date();
 
-  // Convert 12-hour + AM/PM to 24-hour format
   const get24Hour = (h12: number, period: 'AM' | 'PM') => {
     if (period === 'AM') {
       return h12 === 12 ? 0 : h12;
@@ -84,10 +87,10 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
     }
   };
 
-  const handlePrevMonth = (e: React.MouseEvent) => {
+  const handlePrev = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (viewMode === 'years') {
-      setYearDecadeStart(s => s - 12);
+      setYearDecadeStart(s => s - 9);
     } else if (viewMode === 'months') {
       setViewYear(y => y - 1);
     } else {
@@ -100,10 +103,10 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
     }
   };
 
-  const handleNextMonth = (e: React.MouseEvent) => {
+  const handleNext = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (viewMode === 'years') {
-      setYearDecadeStart(s => s + 12);
+      setYearDecadeStart(s => s + 9);
     } else if (viewMode === 'months') {
       setViewYear(y => y + 1);
     } else {
@@ -116,8 +119,8 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
     }
   };
 
-  const handleSelectDay = (year: number, month: number, day: number) => {
-    const newDay = { year, month, day };
+  const handleSelectDay = (y: number, m: number, d: number) => {
+    const newDay = { year: y, month: m, day: d };
     setSelectedDay(newDay);
     syncChange(newDay, hour12, minute, ampm);
   };
@@ -199,44 +202,95 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
   return (
     <div
       style={{
-        width: '300px',
+        width: '310px',
         background: 'var(--bg-modal)',
-        border: '1px solid var(--border-medium)',
-        borderRadius: 'var(--r-lg)',
+        border: '1.5px solid var(--border-medium)',
+        borderRadius: '28px',
         boxShadow: 'var(--shadow-modal)',
-        padding: '14px',
+        padding: '16px',
         display: 'flex',
         flexDirection: 'column',
         gap: '12px',
-        zIndex: 100,
+        zIndex: 200,
         userSelect: 'none',
-        animation: 'fade-in var(--t-fast) var(--ease-out)',
+        animation: 'fade-in 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
       }}
       onClick={e => e.stopPropagation()}
     >
       {/* ── Quick Preset Chips ─────────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '4px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
         <button
           type="button"
           onClick={() => handleQuickPresetDate(0)}
-          className="btn-subtle"
-          style={{ height: '24px', fontSize: '11px', padding: '0 4px', fontWeight: 600 }}
+          style={{
+            height: '28px',
+            fontSize: '11px',
+            fontWeight: 800,
+            borderRadius: '100px',
+            border: '1px solid var(--border-subtle)',
+            background: 'var(--bg-input)',
+            color: 'var(--accent-primary)',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease',
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.background = 'var(--bg-button-hover)';
+            (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.background = 'var(--bg-input)';
+            (e.currentTarget as HTMLElement).style.color = 'var(--accent-primary)';
+          }}
         >
           Today
         </button>
         <button
           type="button"
           onClick={() => handleQuickPresetDate(1)}
-          className="btn-subtle"
-          style={{ height: '24px', fontSize: '11px', padding: '0 4px', fontWeight: 600 }}
+          style={{
+            height: '28px',
+            fontSize: '11px',
+            fontWeight: 800,
+            borderRadius: '100px',
+            border: '1px solid var(--border-subtle)',
+            background: 'var(--bg-input)',
+            color: 'var(--accent-primary)',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease',
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.background = 'var(--bg-button-hover)';
+            (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.background = 'var(--bg-input)';
+            (e.currentTarget as HTMLElement).style.color = 'var(--accent-primary)';
+          }}
         >
           Tomorrow
         </button>
         <button
           type="button"
           onClick={() => handleQuickPresetDate(7)}
-          className="btn-subtle"
-          style={{ height: '24px', fontSize: '11px', padding: '0 4px', fontWeight: 600 }}
+          style={{
+            height: '28px',
+            fontSize: '11px',
+            fontWeight: 800,
+            borderRadius: '100px',
+            border: '1px solid var(--border-subtle)',
+            background: 'var(--bg-input)',
+            color: 'var(--accent-primary)',
+            cursor: 'pointer',
+            transition: 'all 0.15s ease',
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.background = 'var(--bg-button-hover)';
+            (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)';
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.background = 'var(--bg-input)';
+            (e.currentTarget as HTMLElement).style.color = 'var(--accent-primary)';
+          }}
         >
           +1 Week
         </button>
@@ -246,67 +300,97 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
 
       {/* ── Month & Year Header with Click-to-Jump ──────────────────── */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           {/* Month Selector Button */}
           <button
             type="button"
             onClick={() => setViewMode(viewMode === 'months' ? 'days' : 'months')}
-            className="notion-prop-pill"
             style={{
-              padding: '3px 8px',
-              fontSize: '12.5px',
-              fontWeight: 700,
-              color: viewMode === 'months' ? 'var(--accent-blue)' : 'var(--text-primary)',
-              background: viewMode === 'months' ? 'var(--bg-button-hover)' : 'transparent',
-              border: 'none',
+              padding: '4px 10px',
+              fontSize: '13px',
+              fontWeight: 800,
+              color: viewMode === 'months' ? 'var(--accent-primary-text)' : 'var(--text-primary)',
+              background: viewMode === 'months' ? 'var(--accent-primary)' : 'var(--bg-input)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '100px',
+              display: 'flex',
+              alignItems: 'center',
               gap: '4px',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease',
             }}
             title="Click to choose month"
           >
             <span>{MONTH_NAMES[viewMonth]}</span>
-            <ChevronDown size={11} style={{ opacity: 0.7 }} />
+            <ChevronDown size={12} style={{ opacity: 0.8 }} />
           </button>
 
           {/* Year Selector Button */}
           <button
             type="button"
             onClick={() => {
-              setYearDecadeStart(Math.floor(viewYear / 12) * 12);
+              setYearDecadeStart(Math.floor(viewYear / 9) * 9);
               setViewMode(viewMode === 'years' ? 'days' : 'years');
             }}
-            className="notion-prop-pill"
             style={{
-              padding: '3px 8px',
-              fontSize: '12.5px',
-              fontWeight: 700,
-              color: viewMode === 'years' ? 'var(--accent-blue)' : 'var(--text-primary)',
-              background: viewMode === 'years' ? 'var(--bg-button-hover)' : 'transparent',
-              border: 'none',
+              padding: '4px 10px',
+              fontSize: '13px',
+              fontWeight: 800,
+              color: viewMode === 'years' ? 'var(--accent-primary-text)' : 'var(--text-primary)',
+              background: viewMode === 'years' ? 'var(--accent-primary)' : 'var(--bg-input)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: '100px',
+              display: 'flex',
+              alignItems: 'center',
               gap: '4px',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease',
             }}
             title="Click to jump to any year"
           >
             <span>{viewYear}</span>
-            <ChevronDown size={11} style={{ opacity: 0.7 }} />
+            <ChevronDown size={12} style={{ opacity: 0.8 }} />
           </button>
         </div>
 
         {/* Prev / Next Month or Year Range */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
           <button
             type="button"
-            onClick={handlePrevMonth}
-            className="btn-icon"
-            style={{ width: '24px', height: '24px', padding: 0 }}
+            onClick={handlePrev}
+            style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              border: '1px solid var(--border-subtle)',
+              background: 'var(--bg-input)',
+              color: 'var(--accent-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease',
+            }}
             title="Previous"
           >
             <ChevronLeft size={14} />
           </button>
           <button
             type="button"
-            onClick={handleNextMonth}
-            className="btn-icon"
-            style={{ width: '24px', height: '24px', padding: 0 }}
+            onClick={handleNext}
+            style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              border: '1px solid var(--border-subtle)',
+              background: 'var(--bg-input)',
+              color: 'var(--accent-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease',
+            }}
             title="Next"
           >
             <ChevronRight size={14} />
@@ -316,7 +400,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
 
       {/* ── 1. MONTH SELECTOR GRID (When viewMode === 'months') ─────── */}
       {viewMode === 'months' && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', padding: '6px 0' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', padding: '4px 0' }}>
           {MONTH_SHORT.map((mName, idx) => {
             const isCur = viewMonth === idx;
             return (
@@ -333,15 +417,16 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
                   }
                 }}
                 style={{
-                  height: '36px',
-                  borderRadius: 'var(--r-md)',
-                  border: isCur ? '1.5px solid var(--accent-blue)' : '1px solid var(--border-subtle)',
-                  background: isCur ? 'var(--accent-blue)' : 'var(--bg-card)',
-                  color: isCur ? '#ffffff' : 'var(--text-primary)',
+                  height: '34px',
+                  borderRadius: '14px',
+                  border: isCur ? 'none' : '1px solid var(--border-subtle)',
+                  background: isCur ? 'var(--accent-primary)' : 'var(--bg-input)',
+                  color: isCur ? 'var(--accent-primary-text)' : 'var(--text-primary)',
                   fontSize: '12px',
-                  fontWeight: isCur ? 700 : 500,
+                  fontWeight: 800,
                   cursor: 'pointer',
-                  transition: 'all var(--t-fast)',
+                  transition: 'all 0.15s ease',
+                  boxShadow: isCur ? '0 4px 12px rgba(124, 92, 229, 0.3)' : 'none',
                 }}
               >
                 {mName}
@@ -353,12 +438,12 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
 
       {/* ── 2. YEAR SELECTOR GRID (When viewMode === 'years') ───────── */}
       {viewMode === 'years' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <div style={{ fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center', fontWeight: 600 }}>
-            {yearDecadeStart} – {yearDecadeStart + 11}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '4px 0' }}>
+          <div style={{ fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            {yearDecadeStart} – {yearDecadeStart + 8}
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
-            {Array.from({ length: 12 }).map((_, idx) => {
+            {Array.from({ length: 9 }).map((_, idx) => {
               const y = yearDecadeStart + idx;
               const isCur = viewYear === y;
               return (
@@ -375,15 +460,16 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
                     }
                   }}
                   style={{
-                    height: '36px',
-                    borderRadius: 'var(--r-md)',
-                    border: isCur ? '1.5px solid var(--accent-blue)' : '1px solid var(--border-subtle)',
-                    background: isCur ? 'var(--accent-blue)' : 'var(--bg-card)',
-                    color: isCur ? '#ffffff' : 'var(--text-primary)',
+                    height: '34px',
+                    borderRadius: '14px',
+                    border: isCur ? 'none' : '1px solid var(--border-subtle)',
+                    background: isCur ? 'var(--accent-primary)' : 'var(--bg-input)',
+                    color: isCur ? 'var(--accent-primary-text)' : 'var(--text-primary)',
                     fontSize: '12px',
-                    fontWeight: isCur ? 700 : 500,
+                    fontWeight: 800,
                     cursor: 'pointer',
-                    transition: 'all var(--t-fast)',
+                    transition: 'all 0.15s ease',
+                    boxShadow: isCur ? '0 4px 12px rgba(124, 92, 229, 0.3)' : 'none',
                   }}
                 >
                   {y}
@@ -402,11 +488,11 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
               <span
                 key={idx}
                 style={{
-                  fontSize: '10.5px',
-                  fontWeight: 700,
-                  color: 'var(--text-muted)',
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  color: 'var(--accent-primary)',
                   textTransform: 'uppercase',
-                  padding: '2px 0',
+                  padding: '4px 0',
                 }}
               >
                 {dw}
@@ -414,7 +500,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
             ))}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '2px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px' }}>
             {calendarCells.map((cell, idx) => {
               const isSelected =
                 selectedDay &&
@@ -433,34 +519,36 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
                   type="button"
                   onClick={() => handleSelectDay(cell.year, cell.month, cell.day)}
                   style={{
-                    width: '36px',
-                    height: '28px',
+                    height: '32px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    borderRadius: 'var(--r-sm)',
-                    border: isToday && !isSelected ? '1.5px solid var(--accent-blue)' : '1px solid transparent',
-                    background: isSelected ? 'var(--accent-blue)' : 'transparent',
+                    borderRadius: '10px',
+                    border: isToday && !isSelected ? '1.5px solid var(--accent-primary)' : '1px solid transparent',
+                    background: isSelected ? 'var(--accent-primary)' : 'transparent',
                     color: isSelected
-                      ? '#ffffff'
+                      ? 'var(--accent-primary-text)'
                       : cell.isCurrentMonth
                       ? 'var(--text-primary)'
                       : 'var(--text-muted)',
-                    fontSize: '11.5px',
-                    fontWeight: isSelected || isToday ? 700 : 500,
-                    opacity: cell.isCurrentMonth ? 1 : 0.35,
+                    fontSize: '12px',
+                    fontWeight: isSelected || isToday ? 800 : 600,
+                    opacity: cell.isCurrentMonth ? 1 : 0.45,
                     cursor: 'pointer',
-                    transition: 'all var(--t-fast)',
+                    transition: 'all 0.15s ease',
                     outline: 'none',
+                    boxShadow: isSelected ? '0 3px 10px rgba(124, 92, 229, 0.35)' : 'none',
                   }}
                   onMouseEnter={e => {
                     if (!isSelected) {
                       e.currentTarget.style.background = 'var(--bg-button-hover)';
+                      e.currentTarget.style.color = 'var(--accent-primary)';
                     }
                   }}
                   onMouseLeave={e => {
                     if (!isSelected) {
                       e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.color = cell.isCurrentMonth ? 'var(--text-primary)' : 'var(--text-muted)';
                     }
                   }}
                 >
@@ -475,15 +563,15 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
       {/* ── Custom Time Picker (Direct Inputs & AM/PM Switcher) ─────── */}
       <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '10px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', fontWeight: 700, color: 'var(--text-secondary)' }}>
-            <Clock size={13} style={{ color: 'var(--accent-blue)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 800, color: 'var(--text-primary)' }}>
+            <Clock size={13} style={{ color: 'var(--accent-primary)' }} />
             <span>Time</span>
           </div>
 
           {/* Custom Time Spinner Boxes + AM/PM Pill */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            {/* Hour Input Box */}
-            <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-card)', border: '1px solid var(--border-medium)', borderRadius: 'var(--r-sm)', padding: '2px 6px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            {/* Hour & Min Input Container */}
+            <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-input)', border: '1.5px solid var(--border-subtle)', borderRadius: '100px', padding: '2px 8px' }}>
               <input
                 type="number"
                 min={1}
@@ -497,17 +585,11 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
                   outline: 'none',
                   color: 'var(--text-primary)',
                   fontSize: '12px',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   textAlign: 'center',
-                  fontFamily: 'var(--font)',
                 }}
               />
-            </div>
-
-            <span style={{ fontWeight: 700, color: 'var(--text-muted)' }}>:</span>
-
-            {/* Minute Input Box */}
-            <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-card)', border: '1px solid var(--border-medium)', borderRadius: 'var(--r-sm)', padding: '2px 6px' }}>
+              <span style={{ fontWeight: 800, color: 'var(--accent-primary)', margin: '0 1px' }}>:</span>
               <input
                 type="number"
                 min={0}
@@ -521,27 +603,27 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
                   outline: 'none',
                   color: 'var(--text-primary)',
                   fontSize: '12px',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   textAlign: 'center',
-                  fontFamily: 'var(--font)',
                 }}
               />
             </div>
 
             {/* AM / PM Segmented Button */}
-            <div style={{ display: 'flex', background: 'var(--bg-card)', border: '1px solid var(--border-medium)', borderRadius: 'var(--r-sm)', padding: '1px' }}>
+            <div style={{ display: 'flex', background: 'var(--bg-input)', border: '1.5px solid var(--border-subtle)', borderRadius: '100px', padding: '2px' }}>
               <button
                 type="button"
                 onClick={() => handleToggleAmpm('AM')}
                 style={{
-                  padding: '2px 6px',
+                  padding: '2px 8px',
                   fontSize: '10.5px',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   border: 'none',
-                  borderRadius: 'var(--r-xs)',
-                  background: ampm === 'AM' ? 'var(--accent-blue)' : 'transparent',
-                  color: ampm === 'AM' ? '#ffffff' : 'var(--text-muted)',
+                  borderRadius: '100px',
+                  background: ampm === 'AM' ? 'var(--accent-primary)' : 'transparent',
+                  color: ampm === 'AM' ? 'var(--accent-primary-text)' : 'var(--text-secondary)',
                   cursor: 'pointer',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 AM
@@ -550,14 +632,15 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
                 type="button"
                 onClick={() => handleToggleAmpm('PM')}
                 style={{
-                  padding: '2px 6px',
+                  padding: '2px 8px',
                   fontSize: '10.5px',
-                  fontWeight: 700,
+                  fontWeight: 800,
                   border: 'none',
-                  borderRadius: 'var(--r-xs)',
-                  background: ampm === 'PM' ? 'var(--accent-blue)' : 'transparent',
-                  color: ampm === 'PM' ? '#ffffff' : 'var(--text-muted)',
+                  borderRadius: '100px',
+                  background: ampm === 'PM' ? 'var(--accent-primary)' : 'transparent',
+                  color: ampm === 'PM' ? 'var(--accent-primary-text)' : 'var(--text-secondary)',
                   cursor: 'pointer',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 PM
@@ -576,15 +659,17 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
                 key={idx}
                 type="button"
                 onClick={() => handleQuickPresetTime(tp.hour, tp.min)}
-                className="btn-subtle"
                 style={{
-                  height: '22px',
+                  height: '24px',
                   fontSize: '10.5px',
-                  padding: '0 6px',
-                  fontWeight: isCur ? 700 : 500,
-                  background: isCur ? 'var(--bg-button-hover)' : 'transparent',
-                  color: isCur ? 'var(--accent-blue)' : 'var(--text-secondary)',
-                  border: isCur ? '1px solid var(--accent-blue)' : '1px solid var(--border-subtle)',
+                  padding: '0 8px',
+                  fontWeight: 800,
+                  borderRadius: '100px',
+                  background: isCur ? 'var(--accent-primary)' : 'var(--bg-input)',
+                  color: isCur ? 'var(--accent-primary-text)' : 'var(--text-secondary)',
+                  border: isCur ? 'none' : '1px solid var(--border-subtle)',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 {tp.label}
@@ -600,8 +685,18 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
           <button
             type="button"
             onClick={handleClear}
-            className="btn-subtle"
-            style={{ height: '26px', fontSize: '11.5px', color: 'var(--accent-red)', padding: '0 8px' }}
+            style={{
+              height: '28px',
+              fontSize: '11.5px',
+              fontWeight: 800,
+              color: 'var(--accent-red)',
+              background: 'rgba(239, 68, 68, 0.12)',
+              border: '1px solid rgba(239, 68, 68, 0.25)',
+              borderRadius: '100px',
+              padding: '0 12px',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease',
+            }}
           >
             Clear Date
           </button>
@@ -612,7 +707,16 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({ value, onCha
           type="button"
           onClick={onClose}
           className="btn-primary"
-          style={{ height: '26px', fontSize: '11.5px', padding: '0 14px' }}
+          style={{
+            height: '28px',
+            fontSize: '11.5px',
+            fontWeight: 800,
+            padding: '0 16px',
+            borderRadius: '100px',
+            background: 'var(--accent-primary)',
+            color: 'var(--accent-primary-text)',
+            boxShadow: '0 4px 12px rgba(124, 92, 229, 0.3)',
+          }}
         >
           Done
         </button>

@@ -16,7 +16,9 @@
 }
 .minicard-wrapper.ui-sortable-helper {
   cursor: grabbing;
-  transform: rotate(4deg);
+  transform: scale(1.05) rotate(-3deg);
+  box-shadow: 0 20px 30px rgba(100, 80, 200, 0.15);
+  opacity: 0.8 !important;
   display: block !important;
 }
 .minicard-wrapper.ui-sortable-helper .and-n-other {
@@ -47,17 +49,17 @@
 }
 @media only screen {
   .minicard {
-    padding: 8px 14px 3px;
+    padding: 16px 18px 12px;
     position: relative;
     flex: 1;
     flex-wrap: wrap;
     background-color: #fff;
     min-height: 25px;
-    box-shadow: 0 2px 3px rgba(0,0,0,0.15);
-    border-radius: 4px;
-    color: #4d4d4d;
+    box-shadow: 0 4px 0px rgba(100, 80, 200, 0.06), 0 2px 8px rgba(100, 80, 200, 0.04);
+    border-radius: 24px;
+    color: #3b2a59;
     overflow: hidden;
-    transition: transform 0.2s, border-radius 0.2s;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 }
 .minicard-details-menu-with-handle {
@@ -90,19 +92,19 @@
   color: #937760;
 }
 .is-selected .minicard {
-  transform: translateX(21px);
-  border-bottom-right-radius: 0;
-  border-top-right-radius: 0;
+  transform: translateX(12px) scale(1.02);
+  border-bottom-right-radius: 12px;
+  border-top-right-radius: 12px;
   z-index: 25;
-  box-shadow: -4px 2px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 16px rgba(100, 80, 200, 0.18);
 }
-.minicard:hover:not(.minicard-composer),
-.is-selected .minicard,
-.draggable-hover-card .minicard {
-  background: #f7f7f7;
+.minicard:hover:not(.minicard-composer) {
+  transform: translateY(-5px) scale(1.015);
+  box-shadow: 0 10px 0px rgba(100, 80, 200, 0.08), 0 6px 16px rgba(100, 80, 200, 0.06);
 }
 .draggable-hover-card .minicard {
-  background: #ededed;
+  background: #fbf9ff;
+  transform: scale(1.02);
 }
 .minicard .minicard-cover {
   background-position: center;
@@ -254,18 +256,13 @@
   text-align: center;
 }
 .minicard .minicard-title {
-  /* #6465: one step below the list heading above it (16px), and above the
-     "Add card" affordance below (13px). It used to inherit the 16px document
-     size, which made a card title exactly as loud as the heading of the column
-     holding it. See the note on .list-header-name in lists/list.css. */
-  font-size: 0.875rem;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: #24143a;
+  margin-bottom: 6px;
   margin-inline-end: 21px;
-  /* #6444: isolate each title's bidirectional context. The title is a
-     dir="auto" .viewer; under a global dir="rtl" document, non-isolated
-     dir="auto" runs share bidi state, so typing a strong RTL (e.g. Arabic)
-     character into another list's dir="auto" composer re-resolved the shared
-     context and visibly reflowed OTHER lists' minicard titles (no data change,
-     reverts on refresh). Isolation makes each title a self-contained run. */
   unicode-bidi: isolate;
 }
 /* #4990: the title text is the edit target. It is a block so that the whole
@@ -595,212 +592,166 @@
 }
 /* https://github.com/wekan/wekan/issues/4254#issuecomment-1037192960 */
 .minicard-green {
-  background-color: #3cb500 !important;
-  color: #fff !important;
+  background-color: #d4f1dd !important;
+  color: #1f8b4d !important;
 }
 .minicard-green:hover:not(.minicard-composer),
 .is-selected .minicard-green,
 .draggable-hover-card .minicard-green {
-  background: #3ab000;
-}
-.draggable-hover-card .minicard-green {
-  background: #38a800;
+  background: #c3ebd0 !important;
 }
 .minicard-yellow {
-  background-color: #fad900 !important;
+  background-color: #ffeaa7 !important;
+  color: #b28900 !important;
 }
 .minicard-yellow:hover:not(.minicard-composer),
 .is-selected .minicard-yellow,
 .draggable-hover-card .minicard-yellow {
-  background: #f3d200;
-}
-.draggable-hover-card .minicard-yellow {
-  background: #e9ca00;
+  background: #ffdf7a !important;
 }
 .minicard-orange {
-  background-color: #ff9f19 !important;
+  background-color: #ffe5d9 !important;
+  color: #c45b38 !important;
 }
 .minicard-orange:hover:not(.minicard-composer),
 .is-selected .minicard-orange,
 .draggable-hover-card .minicard-orange {
-  background: #ff9b11;
-}
-.draggable-hover-card .minicard-orange {
-  background: #ff9705;
+  background: #ffd5c2 !important;
 }
 .minicard-red {
-  background-color: #eb4646 !important;
-  color: #fff !important;
+  background-color: #ffb8b8 !important;
+  color: #a62a2a !important;
 }
 .minicard-red:hover:not(.minicard-composer),
 .is-selected .minicard-red,
 .draggable-hover-card .minicard-red {
-  background: #ea3e3e;
-}
-.draggable-hover-card .minicard-red {
-  background: #e93333;
+  background: #ffa1a1 !important;
 }
 .minicard-purple {
-  background-color: #a632db !important;
-  color: #fff !important;
+  background-color: #e0d4ff !important;
+  color: #493396 !important;
 }
 .minicard-purple:hover:not(.minicard-composer),
 .is-selected .minicard-purple,
 .draggable-hover-card .minicard-purple {
-  background: #a32bda;
-}
-.draggable-hover-card .minicard-purple {
-  background: #9e25d5;
+  background: #d1bfff !important;
 }
 .minicard-blue {
-  background-color: #0079bf !important;
-  color: #fff !important;
+  background-color: #c7ecee !important;
+  color: #1e7075 !important;
 }
 .minicard-blue:hover:not(.minicard-composer),
 .is-selected .minicard-blue,
 .draggable-hover-card .minicard-blue {
-  background: #0075b9;
-}
-.draggable-hover-card .minicard-blue {
-  background: #0071b2;
+  background: #b2e5e7 !important;
 }
 .minicard-pink {
-  background-color: #ff78cb !important;
+  background-color: #ffccdf !important;
+  color: #a62a6e !important;
 }
 .minicard-pink:hover:not(.minicard-composer),
 .is-selected .minicard-pink,
 .draggable-hover-card .minicard-pink {
-  background: #ff6dc7;
-}
-.draggable-hover-card .minicard-pink {
-  background: #ff5ec1;
+  background: #ffb5cf !important;
 }
 .minicard-sky {
-  background-color: #00c2e0 !important;
-  color: #fff !important;
+  background-color: #c7ecee !important;
+  color: #1e7075 !important;
 }
 .minicard-sky:hover:not(.minicard-composer),
 .is-selected .minicard-sky,
 .draggable-hover-card .minicard-sky {
-  background: #00bcd9;
-}
-.draggable-hover-card .minicard-sky {
-  background: #00b4d0;
+  background: #b2e5e7 !important;
 }
 .minicard-black {
-  background-color: #4d4d4d !important;
-  color: #fff !important;
+  background-color: #f1f2f6 !important;
+  color: #57606f !important;
 }
 .minicard-black:hover:not(.minicard-composer),
 .is-selected .minicard-black,
 .draggable-hover-card .minicard-black {
-  background: #4b4b4b;
-}
-.draggable-hover-card .minicard-black {
-  background: #484848;
+  background: #e4e7ed !important;
 }
 .minicard-lime {
-  background-color: #51e898 !important;
+  background-color: #e3f9e5 !important;
+  color: #1f8b4d !important;
 }
 .minicard-lime:hover:not(.minicard-composer),
 .is-selected .minicard-lime,
 .draggable-hover-card .minicard-lime {
-  background: #49e793;
-}
-.draggable-hover-card .minicard-lime {
-  background: #3ee58d;
+  background: #d4f1dd !important;
 }
 .minicard-silver {
-  background-color: #c0c0c0 !important;
+  background-color: #f1f2f6 !important;
+  color: #57606f !important;
 }
 .minicard-silver:hover:not(.minicard-composer),
 .is-selected .minicard-silver,
 .draggable-hover-card .minicard-silver {
-  background: #bababa;
-}
-.draggable-hover-card .minicard-silver {
-  background: #b3b3b3;
+  background: #e4e7ed !important;
 }
 .minicard-peachpuff {
-  background-color: #ffdab9 !important;
+  background-color: #ffe5d9 !important;
+  color: #c45b38 !important;
 }
 .minicard-peachpuff:hover:not(.minicard-composer),
 .is-selected .minicard-peachpuff,
 .draggable-hover-card .minicard-peachpuff {
-  background: #ffd3ac;
-}
-.draggable-hover-card .minicard-peachpuff {
-  background: #ffca9a;
+  background: #ffd5c2 !important;
 }
 .minicard-crimson {
-  background-color: #dc143c !important;
-  color: #fff !important;
+  background-color: #ffd1d1 !important;
+  color: #a62a2a !important;
 }
 .minicard-crimson:hover:not(.minicard-composer),
 .is-selected .minicard-crimson,
 .draggable-hover-card .minicard-crimson {
-  background: #d5133a;
-}
-.draggable-hover-card .minicard-crimson {
-  background: #cd1338;
+  background: #ffb8b8 !important;
 }
 .minicard-plum {
-  background-color: #dda0dd !important;
+  background-color: #eeddfa !important;
+  color: #582f7d !important;
 }
 .minicard-plum:hover:not(.minicard-composer),
 .is-selected .minicard-plum,
 .draggable-hover-card .minicard-plum {
-  background: #da98da;
-}
-.draggable-hover-card .minicard-plum {
-  background: #d68cd6;
+  background: #e5ccf5 !important;
 }
 .minicard-darkgreen {
-  background-color: #006400 !important;
-  color: #fff !important;
+  background-color: #d4f1dd !important;
+  color: #1f8b4d !important;
 }
 .minicard-darkgreen:hover:not(.minicard-composer),
 .is-selected .minicard-darkgreen,
 .draggable-hover-card .minicard-darkgreen {
-  background: #006100;
-}
-.draggable-hover-card .minicard-darkgreen {
-  background: #005d00;
+  background: #c3ebd0 !important;
 }
 .minicard-slateblue {
-  background-color: #6a5acd !important;
-  color: #fff !important;
+  background-color: #e0d4ff !important;
+  color: #493396 !important;
 }
 .minicard-slateblue:hover:not(.minicard-composer),
 .is-selected .minicard-slateblue,
 .draggable-hover-card .minicard-slateblue {
-  background: #6453cb;
-}
-.draggable-hover-card .minicard-slateblue {
-  background: #5c4ac8;
+  background: #d1bfff !important;
 }
 .minicard-magenta {
-  background-color: #f0f !important;
-  color: #fff !important;
+  background-color: #ffccdf !important;
+  color: #a62a6e !important;
 }
 .minicard-magenta:hover:not(.minicard-composer),
 .is-selected .minicard-magenta,
 .draggable-hover-card .minicard-magenta {
-  background: #f700f7;
-}
-.draggable-hover-card .minicard-magenta {
-  background: #ed00ed;
+  background: #ffb5cf !important;
 }
 .minicard-gold {
-  background-color: #ffd700 !important;
+  background-color: #ffeaa7 !important;
+  color: #b28900 !important;
 }
 .minicard-gold:hover:not(.minicard-composer),
 .is-selected .minicard-gold,
 .draggable-hover-card .minicard-gold {
-  background: #f7d100;
-}
-.draggable-hover-card .minicard-gold {
-  background: #edc800;
+  background: #ffdf7a !important;
 }
 .minicard-navy {
   background-color: #000080 !important;

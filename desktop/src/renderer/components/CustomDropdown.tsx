@@ -55,7 +55,7 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
   return (
     <div ref={dropdownRef} style={{ position: 'relative', width: '100%', ...style }}>
       {label && (
-        <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px', display: 'block' }}>
+        <label style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '6px', display: 'block' }}>
           {label}
         </label>
       )}
@@ -67,33 +67,35 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         style={{
           width: '100%',
-          height: '38px',
-          padding: '0 12px',
-          borderRadius: 'var(--r-md)',
+          height: '40px',
+          padding: '0 14px',
+          borderRadius: '16px',
           background: 'var(--bg-input)',
-          border: isOpen ? '1px solid var(--accent-blue)' : '1px solid var(--border-medium)',
+          border: isOpen ? '2px solid var(--accent-primary)' : '1.5px solid var(--border-subtle)',
           color: selectedOption ? 'var(--text-primary)' : 'var(--text-muted)',
           fontSize: '13px',
+          fontWeight: 700,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           cursor: disabled ? 'not-allowed' : 'pointer',
-          transition: 'all var(--t-fast)',
+          transition: 'all 0.15s ease',
           outline: 'none',
-          boxShadow: isOpen ? '0 0 0 2px rgba(79,142,247,0.15)' : 'none',
+          boxShadow: isOpen ? '0 0 0 3px rgba(124,92,229,0.15)' : 'none',
+          boxSizing: 'border-box',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>
-          <span style={{ fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <span style={{ fontWeight: 800, color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {selectedOption ? selectedOption.label : placeholder}
           </span>
           {selectedOption?.badge && (
-            <span style={{ fontSize: '10px', padding: '1px 6px', borderRadius: 'var(--r-xs)', background: 'rgba(79,142,247,0.15)', color: 'var(--accent-blue)', fontWeight: 600 }}>
+            <span style={{ fontSize: '10px', padding: '2px 8px', borderRadius: '100px', background: 'var(--border-medium)', color: 'var(--accent-primary)', fontWeight: 800 }}>
               {selectedOption.badge}
             </span>
           )}
         </div>
-        <ChevronDown size={14} style={{ opacity: 0.6, transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform var(--t-fast)', flexShrink: 0 }} />
+        <ChevronDown size={14} style={{ color: 'var(--accent-primary)', transform: isOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s ease', flexShrink: 0 }} />
       </button>
 
       {/* Popover Menu */}
@@ -101,41 +103,40 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
         <div
           style={{
             position: 'absolute',
-            top: 'calc(100% + 4px)',
+            top: 'calc(100% + 6px)',
             left: 0,
             right: 0,
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-medium)',
-            borderRadius: 'var(--r-md)',
+            background: 'var(--bg-modal)',
+            border: '1.5px solid var(--border-medium)',
+            borderRadius: '20px',
             boxShadow: 'var(--shadow-modal)',
             zIndex: 1000,
             maxHeight: '260px',
             overflowY: 'auto',
-            padding: '4px',
+            padding: '6px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '2px',
-            backdropFilter: 'blur(16px)',
+            gap: '3px',
           }}
         >
           {searchable && (
             <div style={{ padding: '4px', borderBottom: '1px solid var(--border-subtle)', marginBottom: '4px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0 8px', background: 'var(--bg-input)', borderRadius: 'var(--r-xs)', height: '28px' }}>
-                <Search size={12} style={{ color: 'var(--text-muted)' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0 10px', background: 'var(--bg-input)', borderRadius: '12px', height: '32px', border: '1px solid var(--border-subtle)' }}>
+                <Search size={12} style={{ color: 'var(--accent-primary)' }} />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  placeholder="Filter models..."
+                  placeholder="Filter options..."
                   autoFocus
-                  style={{ background: 'none', border: 'none', color: 'var(--text-primary)', fontSize: '12px', outline: 'none', width: '100%' }}
+                  style={{ background: 'none', border: 'none', color: 'var(--text-primary)', fontSize: '12px', fontWeight: 600, outline: 'none', width: '100%' }}
                 />
               </div>
             </div>
           )}
 
           {filteredOptions.length === 0 ? (
-            <div style={{ padding: '10px', fontSize: '12px', color: 'var(--text-muted)', textAlign: 'center' }}>
+            <div style={{ padding: '12px', fontSize: '12px', color: 'var(--text-muted)', textAlign: 'center', fontWeight: 600 }}>
               No options found
             </div>
           ) : (
@@ -153,18 +154,18 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '8px 10px',
-                    borderRadius: 'var(--r-sm)',
+                    padding: '8px 12px',
+                    borderRadius: '14px',
                     border: 'none',
-                    background: isSelected ? 'rgba(79,142,247,0.12)' : 'transparent',
-                    color: isSelected ? 'var(--accent-blue)' : 'var(--text-primary)',
+                    background: isSelected ? 'var(--bg-button-hover)' : 'transparent',
+                    color: isSelected ? 'var(--accent-primary)' : 'var(--text-primary)',
                     fontSize: '12.5px',
                     cursor: 'pointer',
                     textAlign: 'left',
-                    transition: 'background var(--t-fast)',
+                    transition: 'all 0.15s ease',
                   }}
                   onMouseEnter={e => {
-                    if (!isSelected) e.currentTarget.style.background = 'var(--bg-button-hover)';
+                    if (!isSelected) e.currentTarget.style.background = 'var(--bg-button-subtle)';
                   }}
                   onMouseLeave={e => {
                     if (!isSelected) e.currentTarget.style.background = 'transparent';
@@ -172,20 +173,20 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
                 >
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', overflow: 'hidden' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ fontWeight: isSelected ? 700 : 500 }}>{opt.label}</span>
+                      <span style={{ fontWeight: isSelected ? 800 : 700 }}>{opt.label}</span>
                       {opt.badge && (
-                        <span style={{ fontSize: '9.5px', padding: '1px 5px', borderRadius: 'var(--r-xs)', background: isSelected ? 'rgba(79,142,247,0.2)' : 'var(--bg-badge)', color: isSelected ? 'var(--accent-blue)' : 'var(--text-muted)', fontWeight: 600 }}>
+                        <span style={{ fontSize: '9.5px', padding: '1px 6px', borderRadius: '100px', background: isSelected ? 'var(--border-medium)' : 'var(--bg-input)', color: 'var(--accent-primary)', fontWeight: 800 }}>
                           {opt.badge}
                         </span>
                       )}
                     </div>
                     {opt.description && (
-                      <span style={{ fontSize: '11px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>
                         {opt.description}
                       </span>
                     )}
                   </div>
-                  {isSelected && <Check size={14} style={{ color: 'var(--accent-blue)', flexShrink: 0 }} />}
+                  {isSelected && <Check size={14} style={{ color: 'var(--accent-primary)', flexShrink: 0 }} />}
                 </button>
               );
             })

@@ -3,10 +3,14 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  background: #dedede;
-  border-inline-start: 1px solid #ccc;
-  padding: 0;
+  background: #ffffff;
+  border-radius: 36px;
+  box-shadow: 0 16px 40px rgba(100, 80, 200, 0.08), 0 4px 12px rgba(100, 80, 200, 0.04);
+  border-inline-start: none;
+  padding: 16px 14px;
+  margin: 0 10px;
   float: inline-start;
+  transition: box-shadow 0.3s ease;
 }
 
 /* List resize handle */
@@ -191,10 +195,10 @@ body.mobile-mode [id^="swimlane-"] .list[style*="--list-width"]:not(.list-collap
   /* Maintain consistent height and padding for all lists */
   min-height: 30px !important;
   height: auto !important;
-  padding: 28px 21px 6px !important;
-  /* Make sure the background covers the full height */
-  background-color: #e4e4e4 !important;
-  border-bottom: 8px solid #e4e4e4 !important;
+  padding: 12px 14px 8px !important;
+  /* Clean transparent background */
+  background-color: transparent !important;
+  border-bottom: none !important;
   /* Use original display for consistent button positioning */
   display: block !important;
   position: relative !important;
@@ -450,11 +454,11 @@ form.inlined-form .list-composer {
 }
 .list-header {
   flex: 0 0 auto;
-  padding: 28px 21px 6px;
+  padding: 12px 14px 8px;
   position: relative;
   min-height: 30px;
-  background-color: #e4e4e4;
-  border-bottom: 8px solid #e4e4e4;
+  background-color: transparent;
+  border-bottom: none;
 }
 .list-header.list-header-card-count {
   min-height: 45px;
@@ -468,23 +472,12 @@ form.inlined-form .list-composer {
 }
 .list-header .list-header-name {
   display: block;
-  /* #6465: the type scale of a list, from the outside in. A list heading is to
-     its cards what an h2 is to its paragraphs, and it had ended up SMALLER than
-     them: the heading was 14px while a minicard title and the "Add card" link
-     both inherited the 16px document size, so the column looked like it was
-     labelled in fine print and the affordance to add a card shouted louder than
-     the cards. The scale is now heading 16 > card title 14 >= add-card link 13,
-     kept in that order by tests/listTypeScale.test.cjs. Mobile keeps its own
-     larger sizes (the !important rules further down) - a phone is read at arm's
-     length.
-     #6587: written in rem, not px. The three sizes are the same as before at the
-     default root size (1rem = 16px), but a px size cannot follow Member Settings
-     / Font size, which sets the root font size - so a board's type was the one
-     part of the UI that ignored the setting entirely. */
-  font-size: 1rem;
-  line-height: 1.2;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.3;
   margin: 0;
-  font-weight: bold;
+  font-weight: 800;
+  color: #3b2a59;
   min-height: 16px;
   min-width: 56px;
   overflow-wrap: break-word;
@@ -777,15 +770,32 @@ form.inlined-form .list-composer {
 }
 
 .list-header .cardCount {
-  color: #8c8c8c;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #a68cff;
+  color: #ffffff;
   font-size: calc(12px * var(--wekan-ui-font-scale, 1));
-  font-weight: bold;
+  font-weight: 800;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  padding: 3px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(166, 140, 255, 0.35);
+  margin-inline-start: 6px;
+  vertical-align: middle;
 }
 .list-header .list-header-plus-top,
 .js-open-list-menu,
 .list-header-menu a {
-  color: #4d4d4d;
+  color: #7c5ce5;
   padding-inline-start: 4px;
+  transition: color 0.2s, transform 0.2s;
+}
+.list-header .list-header-plus-top:hover,
+.js-open-list-menu:hover,
+.list-header-menu a:hover {
+  color: #3b2a59;
+  transform: scale(1.1);
 }
 .js-open-list-menu {
   font-size: calc(18px * var(--wekan-ui-font-scale, 1));
@@ -802,21 +812,25 @@ form.inlined-form .list-composer {
      (alwaysVisibleScrollbarCss), which is unit tested. */
   overflow-y: scroll;
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.35) rgba(0, 0, 0, 0.08);
+  scrollbar-color: rgba(166, 140, 255, 0.4) rgba(244, 240, 255, 0.5);
   scrollbar-gutter: stable;
-  padding: 5px 11px;
+  padding: 4px 6px 12px;
 }
 .list-body::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   -webkit-appearance: none;
 }
 .list-body::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(244, 240, 255, 0.5);
+  border-radius: 8px;
 }
 .list-body::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.35);
-  border-radius: 5px;
+  background: rgba(166, 140, 255, 0.4);
+  border-radius: 8px;
+}
+.list-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 92, 229, 0.6);
 }
 .list-body .minicards {
   flex-grow: 1;
@@ -828,24 +842,29 @@ form.inlined-form .list-composer {
   margin-bottom: 9px;
 }
 .list-body .minicards .add-controls button {
-  /* Was min-height: 50px - taller than a minicard is for its title, so the
-     "Add" button was the biggest thing on the board while typing. 34px is a
-     comfortable touch target that still reads as a control rather than a slab. */
   min-height: 34px;
   font-size: calc(14px * var(--wekan-ui-font-scale, 1));
+  border-radius: 18px;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 800;
 }
 .list-body .open-minicard-composer {
-  border-radius: 2px;
-  color: #8c8c8c;
-  display: block;
-  /* Smaller than a card title, because it is not a card: it is the affordance
-     for making one. At the inherited 16px it was the largest text in the list
-     body, level with the board's real content. */
+  border-radius: 20px;
+  color: #7c5ce5;
+  background: #f4f0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 800;
   font-size: 0.8125rem;
-  padding: 7px 10px;
+  padding: 12px 16px;
+  margin-top: 10px;
+  border: 2px dashed rgba(166, 140, 255, 0.4);
   position: relative;
   text-decoration: none;
   animation: fadeIn 0.3s;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 @media print {
   .list-body .open-minicard-composer {
@@ -856,9 +875,11 @@ form.inlined-form .list-composer {
   margin-inline-end: 7px;
 }
 .list-body .open-minicard-composer:hover {
-  background: #fafafa;
-  color: #222;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  background: #e0d4ff;
+  color: #3b2a59;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(166, 140, 255, 0.25);
+  border-color: #a68cff;
 }
 #js-wip-limit-edit {
   padding-top: 2%;

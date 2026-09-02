@@ -6,6 +6,7 @@ import { pipelineOrchestrator } from '../lib/pipelineOrchestrator';
 import { CustomDatePicker } from './CustomDatePicker';
 import { renderMarkdown } from '../lib/markdownRenderer';
 import { LumoraLogo } from './LumoraLogo';
+import { PASTEL_PALETTES, getCardPalette } from './KanbanCard';
 import {
   X,
   AlignLeft,
@@ -43,6 +44,10 @@ import {
   UploadCloud,
   User,
   CheckCircle2,
+  Volume2,
+  VolumeX,
+  Archive,
+  Palette,
 } from 'lucide-react';
 
 const LABEL_COLORS = ['#4f8ef7', '#34d399', '#fbbf24', '#f87171', '#9b8af7', '#ec4899', '#22d3ee'];
@@ -63,6 +68,8 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
     attachments,
     updateCard,
     deleteCard,
+    archiveCard,
+    unarchiveCard,
     updateBoard,
     addComment,
     deleteComment,
@@ -104,6 +111,61 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const descTextareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // Kokoro-82M TTS Playback State
+  const [isSpeakingTts, setIsSpeakingTts] = useState(false);
+  const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
+
+  const handleSpeakCardDescription = async () => {
+    const textToSpeak = `${title}. ${description || 'No description provided.'}`;
+    if (isSpeakingTts) {
+      if (audioPlayerRef.current) {
+        audioPlayerRef.current.pause();
+        audioPlayerRef.current = null;
+      }
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      setIsSpeakingTts(false);
+      return;
+    }
+
+    setIsSpeakingTts(true);
+    try {
+      if (window.electronAPI?.ttsSynthesize) {
+        const res = await window.electronAPI.ttsSynthesize(textToSpeak);
+        if (res.audioBase64) {
+          const audio = new Audio(`data:audio/wav;base64,${res.audioBase64}`);
+          audioPlayerRef.current = audio;
+          audio.onended = () => setIsSpeakingTts(false);
+          audio.onerror = () => {
+            if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+              window.speechSynthesis.cancel();
+              const u = new SpeechSynthesisUtterance(textToSpeak);
+              u.onend = () => setIsSpeakingTts(false);
+              u.onerror = () => setIsSpeakingTts(false);
+              window.speechSynthesis.speak(u);
+            } else {
+              setIsSpeakingTts(false);
+            }
+          };
+          await audio.play();
+          return;
+        }
+      }
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(textToSpeak);
+        u.onend = () => setIsSpeakingTts(false);
+        u.onerror = () => setIsSpeakingTts(false);
+        window.speechSynthesis.speak(u);
+      } else {
+        setIsSpeakingTts(false);
+      }
+    } catch (_) {
+      setIsSpeakingTts(false);
+    }
+  };
+
   // Codex ACP Pipeline Local States
   const [isCodexDiagnosing, setIsCodexDiagnosing] = useState(false);
   const [isCodexExecuting, setIsCodexExecuting] = useState(false);
@@ -115,6 +177,7 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
   const [isSubfolderOpen, setIsSubfolderOpen] = useState(false);
   const [isDueOpen, setIsDueOpen] = useState(false);
   const [isTagsOpen, setIsTagsOpen] = useState(false);
+  const [isColorOpen, setIsColorOpen] = useState(false);
 
   // Lightbox Preview State
   const [previewAttachment, setPreviewAttachment] = useState<Attachment | null>(null);
@@ -135,6 +198,7 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
   const subfolderMenuRef = useRef<HTMLDivElement>(null);
   const dueMenuRef = useRef<HTMLDivElement>(null);
   const tagsMenuRef = useRef<HTMLDivElement>(null);
+  const colorMenuRef = useRef<HTMLDivElement>(null);
 
   const cardComments = comments
     .filter(c => c.cardId === card._id)
@@ -148,6 +212,7 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
   const cardAttachments = attachments.filter(a => a.cardId === card._id);
   const boardLabels = activeBoard?.labels || [];
   const activeLabels = boardLabels.filter(l => (card.labelIds || []).includes(l._id));
+  const currentCardPalette = getCardPalette(card, 0);
 
   // Synchronize local states with card prop whenever card._id or data changes
   useEffect(() => {
@@ -224,6 +289,9 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
       }
       if (tagsMenuRef.current && !tagsMenuRef.current.contains(e.target as Node)) {
         setIsTagsOpen(false);
+      }
+      if (colorMenuRef.current && !colorMenuRef.current.contains(e.target as Node)) {
+        setIsColorOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -574,15 +642,16 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
         onDragLeave={e => { e.preventDefault(); e.stopPropagation(); setIsDraggingOver(false); }}
         onDrop={handleDropFiles}
         style={{
-          width: '760px',
-          maxWidth: '65vw',
+          width: '780px',
+          maxWidth: '68vw',
           height: '100vh',
-          borderRadius: 0,
-          borderLeft: '1px solid var(--border-medium)',
+          borderTopLeftRadius: '36px',
+          borderBottomLeftRadius: '36px',
+          borderLeft: '1.5px solid var(--border-medium)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
-          background: 'var(--bg-canvas)',
+          background: 'var(--bg-modal)',
           boxShadow: 'var(--shadow-modal)',
           position: 'relative',
         }}
@@ -621,15 +690,15 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
             </span>
           </div>
         )}
-        {/* ── Top Header / Breadcrumb Bar ─────────────────────────────── */}
+        {/* ── Top Header / Breadcrumb Bar (Seamless Minimalist) ────────── */}
         <div
           style={{
-            padding: '12px 24px',
-            borderBottom: '1px solid var(--border-subtle)',
+            padding: '20px 24px 10px',
+            borderBottom: 'none',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            background: 'var(--bg-header)',
+            background: 'var(--bg-modal)',
             flexShrink: 0,
           }}
         >
@@ -654,6 +723,23 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button
+              type="button"
+              onClick={async () => {
+                if (card.archived) {
+                  await unarchiveCard(card._id);
+                } else {
+                  await archiveCard(card._id);
+                  setActiveCardId(null);
+                }
+              }}
+              className="btn-subtle"
+              style={{ height: '28px', fontSize: '11.5px', padding: '0 10px', display: 'flex', alignItems: 'center', gap: '5px' }}
+              title={card.archived ? 'Restore task to board' : 'Archive task (hide from active board)'}
+            >
+              <Archive size={13} />
+              <span>{card.archived ? 'Restore' : 'Archive'}</span>
+            </button>
             <button
               type="button"
               onClick={handleDeleteCard}
@@ -792,10 +878,78 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
 
           {/* 2. Notion-Style Properties Grid */}
           <div className="notion-props-container">
+            {/* Card Color Property */}
+            <div className="notion-prop-row">
+              <div className="notion-prop-label">
+                <Palette size={13} style={{ color: '#7c5ce5' }} />
+                <span>Card Color</span>
+              </div>
+              <div className="notion-prop-value" ref={colorMenuRef}>
+                <button
+                  type="button"
+                  onClick={() => setIsColorOpen(!isColorOpen)}
+                  className="notion-prop-pill"
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <span
+                    style={{
+                      width: '14px',
+                      height: '14px',
+                      borderRadius: '50%',
+                      background: currentCardPalette.bg,
+                      border: '1.5px solid rgba(0,0,0,0.15)',
+                    }}
+                  />
+                  <span>{card.color ? card.color.charAt(0).toUpperCase() + card.color.slice(1) : currentCardPalette.name}</span>
+                  <ChevronDown size={11} style={{ opacity: 0.7 }} />
+                </button>
+
+                {isColorOpen && (
+                  <div className="notion-prop-dropdown" style={{ minWidth: '260px', padding: '14px', borderRadius: '24px', border: '1.5px solid var(--border-medium)', boxShadow: 'var(--shadow-modal)', background: 'var(--bg-modal)' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--accent-primary)', textTransform: 'uppercase', marginBottom: '8px', display: 'block', letterSpacing: '0.04em' }}>
+                      Choose Card Color
+                    </span>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
+                      {PASTEL_PALETTES.map(p => (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={async () => {
+                            await updateCard(card._id, { color: p.id });
+                            setIsColorOpen(false);
+                          }}
+                          style={{
+                            background: p.bg,
+                            border: (card.color === p.id || (!card.color && currentCardPalette.id === p.id))
+                              ? '2.5px solid var(--accent-primary)'
+                              : '1px solid var(--border-subtle)',
+                            borderRadius: '12px',
+                            height: '34px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            fontWeight: 800,
+                            fontSize: '10.5px',
+                            color: p.title,
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
+                            transition: 'all 0.15s ease',
+                          }}
+                          title={p.name}
+                        >
+                          {p.name.split(' ')[0]}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Status Property */}
             <div className="notion-prop-row">
               <div className="notion-prop-label">
-                <Layers size={13} style={{ color: 'var(--accent-blue)' }} />
+                <Layers size={13} style={{ color: 'var(--accent-primary)' }} />
                 <span>Status</span>
               </div>
               <div className="notion-prop-value" ref={statusMenuRef}>
@@ -804,13 +958,13 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                   onClick={() => setIsStatusOpen(!isStatusOpen)}
                   className="notion-prop-pill"
                 >
-                  <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: 'var(--accent-blue)' }} />
+                  <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: 'var(--accent-primary)' }} />
                   <span>{list?.title || 'Select Status'}</span>
                   <ChevronDown size={11} style={{ opacity: 0.7 }} />
                 </button>
 
                 {isStatusOpen && (
-                  <div className="notion-prop-dropdown">
+                  <div className="notion-prop-dropdown" style={{ borderRadius: '20px', border: '1.5px solid var(--border-medium)', boxShadow: 'var(--shadow-modal)', background: 'var(--bg-modal)', padding: '6px', minWidth: '180px' }}>
                     {lists.map(l => {
                       const isCurrent = l._id === card.listId;
                       return (
@@ -825,20 +979,21 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                            padding: '6px 10px',
-                            borderRadius: 'var(--r-sm)',
+                            padding: '8px 12px',
+                            borderRadius: '12px',
                             border: 'none',
                             background: isCurrent ? 'var(--bg-button-hover)' : 'transparent',
-                            color: isCurrent ? 'var(--accent-blue)' : 'var(--text-primary)',
-                            fontSize: '12px',
-                            fontWeight: isCurrent ? 600 : 500,
+                            color: isCurrent ? 'var(--accent-primary)' : 'var(--text-primary)',
+                            fontSize: '12.5px',
+                            fontWeight: 800,
                             cursor: 'pointer',
                             textAlign: 'left',
                             width: '100%',
+                            transition: 'all 0.15s ease',
                           }}
                         >
                           <span>{l.title}</span>
-                          {isCurrent && <Check size={12} />}
+                          {isCurrent && <Check size={13} strokeWidth={3} />}
                         </button>
                       );
                     })}
@@ -864,7 +1019,7 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                 </button>
 
                 {isSubfolderOpen && (
-                  <div className="notion-prop-dropdown" style={{ minWidth: '220px' }}>
+                  <div className="notion-prop-dropdown" style={{ minWidth: '220px', borderRadius: '20px', border: '1.5px solid var(--border-medium)', boxShadow: 'var(--shadow-modal)', background: 'var(--bg-modal)', padding: '6px' }}>
                     {swimlanes.map(sw => {
                       const isCurrent = sw._id === card.swimlaneId;
                       return (
@@ -879,20 +1034,21 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
-                            padding: '6px 10px',
-                            borderRadius: 'var(--r-sm)',
+                            padding: '8px 12px',
+                            borderRadius: '12px',
                             border: 'none',
                             background: isCurrent ? 'var(--bg-button-hover)' : 'transparent',
-                            color: isCurrent ? 'var(--accent-blue)' : 'var(--text-primary)',
-                            fontSize: '12px',
-                            fontWeight: isCurrent ? 600 : 500,
+                            color: isCurrent ? 'var(--accent-primary)' : 'var(--text-primary)',
+                            fontSize: '12.5px',
+                            fontWeight: 800,
                             cursor: 'pointer',
                             textAlign: 'left',
                             width: '100%',
+                            transition: 'all 0.15s ease',
                           }}
                         >
                           <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sw.title}</span>
-                          {isCurrent && <Check size={12} />}
+                          {isCurrent && <Check size={13} strokeWidth={3} />}
                         </button>
                       );
                     })}
@@ -960,11 +1116,11 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                 </button>
 
                 {isTagsOpen && (
-                  <div className="notion-prop-dropdown" style={{ minWidth: '240px', padding: '10px' }}>
-                    <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+                  <div className="notion-prop-dropdown" style={{ minWidth: '240px', padding: '14px', borderRadius: '24px', border: '1.5px solid var(--border-medium)', boxShadow: 'var(--shadow-modal)', background: 'var(--bg-modal)' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 800, color: 'var(--accent-primary)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '8px', display: 'block' }}>
                       Select Labels
                     </span>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '4px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                       {boardLabels.map(l => {
                         const isSelected = (card.labelIds || []).includes(l._id);
                         return (
@@ -973,22 +1129,24 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                             type="button"
                             onClick={() => handleToggleLabel(l._id)}
                             style={{
-                              padding: '3px 8px',
-                              borderRadius: 'var(--r-xs)',
-                              border: 'none',
-                              background: l.color || '#4b5563',
+                              padding: '5px 12px',
+                              borderRadius: '100px',
+                              border: isSelected ? '2px solid var(--accent-primary)' : '1px solid transparent',
+                              background: l.color || 'var(--accent-primary)',
                               color: '#ffffff',
-                              fontSize: '11px',
-                              fontWeight: 600,
+                              fontSize: '11.5px',
+                              fontWeight: 800,
                               cursor: 'pointer',
-                              opacity: isSelected ? 1 : 0.45,
+                              opacity: isSelected ? 1 : 0.6,
                               display: 'flex',
                               alignItems: 'center',
-                              gap: '4px',
+                              gap: '5px',
+                              boxShadow: isSelected ? '0 3px 10px rgba(124, 92, 229, 0.3)' : 'none',
+                              transition: 'all 0.15s ease',
                             }}
                           >
                             <span>{l.name || l.color}</span>
-                            {isSelected && <Check size={10} />}
+                            {isSelected && <Check size={11} strokeWidth={3} />}
                           </button>
                         );
                       })}
@@ -1019,7 +1177,7 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                                 height: '16px',
                                 borderRadius: '50%',
                                 background: col,
-                                border: newTagColor === col ? '2px solid #ffffff' : 'none',
+                                border: newTagColor === col ? '2px solid var(--accent-primary-text)' : 'none',
                                 cursor: 'pointer',
                               }}
                             />
@@ -1088,11 +1246,12 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
           {activeBoard?.projectType !== 'general' ? (
             <div
               style={{
-                marginTop: '12px',
-                padding: '16px',
-                borderRadius: 'var(--r-md)',
+                marginTop: '14px',
+                padding: '18px 20px',
+                borderRadius: '28px',
                 background: 'var(--bg-card)',
-                border: '1px solid var(--border-medium)',
+                border: '1.5px solid var(--border-subtle)',
+                boxShadow: 'var(--shadow-card)',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '14px',
@@ -1101,9 +1260,9 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
               {/* Header Row */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Cpu size={15} style={{ color: 'var(--accent-blue)' }} />
+                  <Cpu size={16} style={{ color: 'var(--accent-primary)' }} />
                   <div>
-                    <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                    <span style={{ fontSize: '13.5px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
                       Codex Autonomous Dev Pipeline
                     </span>
                   </div>
@@ -1112,24 +1271,24 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                   <span
                     style={{
                       fontSize: '11px',
-                      fontWeight: 600,
-                      padding: '2px 8px',
-                      borderRadius: 'var(--r-full)',
-                      background: isCodexDiagnosing || isCodexExecuting ? 'rgba(79, 142, 247, 0.15)' : 'rgba(77, 171, 98, 0.12)',
-                      color: isCodexDiagnosing || isCodexExecuting ? 'var(--accent-blue)' : 'var(--accent-green)',
+                      fontWeight: 800,
+                      padding: '3px 10px',
+                      borderRadius: '100px',
+                      background: isCodexDiagnosing || isCodexExecuting ? 'rgba(168, 85, 247, 0.2)' : 'rgba(46, 204, 113, 0.2)',
+                      color: isCodexDiagnosing || isCodexExecuting ? 'var(--accent-purple)' : 'var(--accent-green)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '5px',
                     }}
                   >
-                    <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: isCodexDiagnosing || isCodexExecuting ? 'var(--accent-blue)' : 'var(--accent-green)' }} />
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: isCodexDiagnosing || isCodexExecuting ? 'var(--accent-primary)' : 'var(--accent-green)' }} />
                     {isCodexDiagnosing ? 'Diagnosing Codebase...' : isCodexExecuting ? 'Writing & Testing Code...' : 'Agent Ready'}
                   </span>
                 </div>
               </div>
 
               {/* Pipeline 5-Stage Stepper */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '4px', background: 'var(--bg-input)', padding: '4px', borderRadius: 'var(--r-md)', border: '1px solid var(--border-subtle)' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '6px', background: 'var(--bg-input)', padding: '6px', borderRadius: '20px', border: '1.5px solid var(--border-subtle)' }}>
                 {[
                   { id: 'backlog', step: '1', label: 'Backlog' },
                   { id: 'diagnosis', step: '2', label: 'Diagnosis' },
@@ -1142,32 +1301,31 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                     <div
                       key={s.id}
                       style={{
-                        padding: '6px 4px',
-                        borderRadius: 'var(--r-xs)',
-                        background: isCurrent ? 'var(--bg-card)' : 'transparent',
-                        border: '1px solid',
-                        borderColor: isCurrent ? 'var(--accent-blue)' : 'transparent',
+                        padding: '8px 4px',
+                        borderRadius: '14px',
+                        background: isCurrent ? 'var(--accent-primary)' : 'var(--bg-card)',
+                        border: isCurrent ? 'none' : '1px solid var(--border-subtle)',
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
                         gap: '2px',
                         textAlign: 'center',
-                        boxShadow: isCurrent ? 'var(--shadow-xs)' : 'none',
-                        transition: 'all var(--t-fast)',
+                        boxShadow: isCurrent ? '0 4px 12px rgba(124, 92, 229, 0.3)' : '0 2px 4px rgba(0, 0, 0, 0.04)',
+                        transition: 'all 0.2s ease',
                       }}
                     >
                       <span style={{
                         fontSize: '9.5px',
-                        fontWeight: 700,
+                        fontWeight: 800,
                         letterSpacing: '0.04em',
-                        color: isCurrent ? 'var(--accent-blue)' : 'var(--text-muted)',
+                        color: isCurrent ? 'var(--accent-primary-text)' : 'var(--text-muted)',
                       }}>
                         STAGE {s.step}
                       </span>
                       <span style={{
-                        fontSize: '11.5px',
-                        fontWeight: isCurrent ? 700 : 500,
-                        color: isCurrent ? 'var(--text-primary)' : 'var(--text-secondary)',
+                        fontSize: '12px',
+                        fontWeight: 800,
+                        color: isCurrent ? 'var(--accent-primary-text)' : 'var(--text-primary)',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
@@ -1185,16 +1343,16 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                fontSize: '11.5px',
-                color: 'var(--text-secondary)',
+                fontSize: '12px',
+                color: 'var(--text-primary)',
                 background: 'var(--bg-input)',
-                padding: '7px 12px',
-                borderRadius: 'var(--r-sm)',
-                border: '1px solid var(--border-subtle)',
+                padding: '8px 14px',
+                borderRadius: '16px',
+                border: '1.5px solid var(--border-subtle)',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, minWidth: 0 }}>
-                  <Folder size={13} style={{ flexShrink: 0, color: activeBoard?.localRepoPath ? 'var(--accent-blue)' : 'var(--text-muted)' }} />
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', overflow: 'hidden', textOverflow: 'ellipsis', color: activeBoard?.localRepoPath ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+                  <Folder size={14} style={{ flexShrink: 0, color: activeBoard?.localRepoPath ? 'var(--accent-primary)' : 'var(--text-muted)' }} />
+                  <span style={{ fontSize: '11.5px', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', color: activeBoard?.localRepoPath ? 'var(--text-primary)' : 'var(--text-muted)' }}>
                     {activeBoard?.localRepoPath || 'No repository folder linked to this project'}
                   </span>
                 </div>
@@ -1202,7 +1360,7 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                   type="button"
                   onClick={handleBrowseRepo}
                   className="btn-subtle"
-                  style={{ fontSize: '11px', height: '22px', padding: '0 8px', gap: '4px', flexShrink: 0, marginLeft: '8px' }}
+                  style={{ fontSize: '11.5px', height: '26px', padding: '0 10px', gap: '4px', flexShrink: 0, marginLeft: '8px', borderRadius: '100px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', fontWeight: 800, color: 'var(--accent-primary)' }}
                 >
                   <span>{activeBoard?.localRepoPath ? 'Change Folder' : 'Link Folder'}</span>
                 </button>
@@ -1216,21 +1374,21 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                   disabled={isCodexDiagnosing || isCodexExecuting}
                   className="btn-subtle"
                   style={{
-                    height: '32px',
+                    height: '34px',
                     fontSize: '12px',
                     gap: '6px',
-                    border: '1px solid var(--border-medium)',
-                    background: 'var(--bg-card)',
+                    border: '1.5px solid var(--border-subtle)',
+                    background: 'var(--bg-input)',
                     color: 'var(--text-primary)',
                     display: 'flex',
                     alignItems: 'center',
-                    padding: '0 14px',
-                    borderRadius: 'var(--r-sm)',
-                    fontWeight: 600,
+                    padding: '0 16px',
+                    borderRadius: '100px',
+                    fontWeight: 800,
                   }}
                   title="Codex inspects codebase, reads LEARNINGS.md, and creates reproduction steps and diagnosis plan"
                 >
-                  {isCodexDiagnosing ? <Loader2 size={13} className="animate-spin" /> : <Brain size={13} style={{ color: 'var(--accent-blue)' }} />}
+                  {isCodexDiagnosing ? <Loader2 size={13} className="animate-spin" /> : <Brain size={14} style={{ color: 'var(--accent-primary)' }} />}
                   <span>1. Run Diagnosis Plan</span>
                 </button>
 
@@ -1240,14 +1398,16 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                   disabled={isCodexDiagnosing || isCodexExecuting}
                   className="btn-primary"
                   style={{
-                    height: '32px',
+                    height: '34px',
                     fontSize: '12px',
                     gap: '6px',
                     display: 'flex',
                     alignItems: 'center',
-                    padding: '0 16px',
-                    borderRadius: 'var(--r-sm)',
-                    fontWeight: 600,
+                    padding: '0 18px',
+                    borderRadius: '100px',
+                    fontWeight: 800,
+                    background: 'var(--accent-primary)',
+                    color: 'var(--accent-primary-text)',
                   }}
                   title="Codex creates feature branch, implements solution, runs quality tests in a self-healing retry loop, and opens a PR"
                 >
@@ -1352,6 +1512,21 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                   </span>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <button
+                      type="button"
+                      onClick={handleSpeakCardDescription}
+                      className="btn-subtle"
+                      style={{ height: '26px', fontSize: '11.5px', gap: '4px', padding: '0 8px' }}
+                      title="Read task aloud with Kokoro-82M TTS"
+                    >
+                      {isSpeakingTts ? (
+                        <VolumeX size={12} className="text-red-400" />
+                      ) : (
+                        <Volume2 size={12} className="text-cyan-400" />
+                      )}
+                      <span>{isSpeakingTts ? 'Stop' : 'Speak'}</span>
+                    </button>
+
                     <button
                       type="button"
                       onClick={handleAiEnhanceDescription}
@@ -1838,14 +2013,14 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                 )}
               </div>
 
-              {/* Danger Zone: Delete Task */}
+              {/* Archive Zone */}
               <div
                 style={{
                   marginTop: '12px',
                   padding: '14px 16px',
-                  borderRadius: 'var(--r-md)',
-                  background: 'rgba(248,113,113,0.04)',
-                  border: '1px solid rgba(248,113,113,0.2)',
+                  borderRadius: '20px',
+                  background: 'var(--bg-input)',
+                  border: '1.5px solid var(--border-subtle)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -1853,7 +2028,49 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                 }}
               >
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--accent-red)' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--accent-primary)' }}>
+                    {card.archived ? 'Task is archived' : 'Archive this task'}
+                  </span>
+                  <span style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>
+                    {card.archived
+                      ? 'This task is hidden from the active board. Restore it to make it visible again.'
+                      : 'Hide this task from the active kanban columns while preserving all its history and attachments.'}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (card.archived) {
+                      await unarchiveCard(card._id);
+                    } else {
+                      await archiveCard(card._id);
+                      setActiveCardId(null);
+                    }
+                  }}
+                  className="btn-primary"
+                  style={{ height: '32px', fontSize: '12px', padding: '0 14px', borderRadius: '100px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
+                >
+                  <Archive size={13} />
+                  <span>{card.archived ? 'Restore to Board' : 'Archive Task'}</span>
+                </button>
+              </div>
+
+              {/* Danger Zone: Delete Task */}
+              <div
+                style={{
+                  marginTop: '8px',
+                  padding: '14px 16px',
+                  borderRadius: '20px',
+                  background: 'rgba(248,113,113,0.06)',
+                  border: '1.5px solid rgba(248,113,113,0.2)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '16px',
+                }}
+              >
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                  <span style={{ fontSize: '13px', fontWeight: 800, color: 'var(--accent-red)' }}>
                     Delete this task
                   </span>
                   <span style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>
@@ -1864,7 +2081,7 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                   type="button"
                   onClick={handleDeleteCard}
                   className="btn-destructive"
-                  style={{ height: '30px', fontSize: '12px', padding: '0 12px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
+                  style={{ height: '32px', fontSize: '12px', padding: '0 14px', borderRadius: '100px', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}
                 >
                   <Trash2 size={13} />
                   <span>Delete Task</span>

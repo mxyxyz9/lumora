@@ -77,15 +77,16 @@
 }
 
 .card-label {
-  border: 1px solid #000;
-  border-radius: 4px;
-  color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 100px;
+  color: #3b2a59;
   display: inline-block;
-  font-weight: 700;
-  font-size: calc(13px * var(--wekan-ui-font-scale, 1));
-  margin-inline-end: 4px;
-  margin-bottom: 5px;
-  padding: 3px 8px;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 800;
+  font-size: calc(12px * var(--wekan-ui-font-scale, 1));
+  margin-inline-end: 6px;
+  margin-bottom: 6px;
+  padding: 4px 12px;
   max-width: 210px;
   min-width: 8px;
   word-wrap: break-word;
@@ -93,22 +94,25 @@
   vertical-align: middle;
   white-space: initial;
   overflow: initial;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 .card-label:hover {
-  color: #fff;
+  filter: brightness(0.95);
 }
 .card-label.square {
   height: 30px;
   width: 30px;
   padding: 0;
+  border-radius: 12px;
 }
 .card-label.add-label {
-  box-shadow: 0 0 0 2px #bfbfbf inset;
+  box-shadow: 0 0 0 2px #a68cff inset;
   border: initial;
+  border-radius: 100px;
 }
 .card-label.add-label:hover,
 .card-label.add-label.is-active {
-  box-shadow: 0 0 0 2px #666 inset;
+  box-shadow: 0 0 0 2px #7c5ce5 inset;
 }
 .card-label p {
   margin: 0px;
@@ -125,79 +129,84 @@
   justify-content: center;
 }
 .card-label-white {
-  background-color: #fff;
-  color: #000;
-}
-.card-label-white:hover {
-  color: #aaa;
+  background-color: #ffffff;
+  color: #3b2a59;
 }
 .card-label-green {
-  background-color: #3cb500;
-}
-.card-label-green:hover {
-  color: #000;
+  background-color: #d4f1dd;
+  color: #1f8b4d;
 }
 .card-label-yellow {
-  background-color: #fad900;
-  color: #000;
+  background-color: #ffeaa7;
+  color: #b28900;
 }
 .card-label-orange {
-  background-color: #ff9f19;
-  color: #000;
+  background-color: #ffe5d9;
+  color: #c45b38;
 }
 .card-label-red {
-  background-color: #eb4646;
+  background-color: #ffb8b8;
+  color: #a62a2a;
 }
 .card-label-purple {
-  background-color: #a632db;
+  background-color: #e0d4ff;
+  color: #493396;
 }
 .card-label-blue {
-  background-color: #0079bf;
+  background-color: #c7ecee;
+  color: #1e7075;
 }
 .card-label-pink {
-  background-color: #ff78cb;
-  color: #000;
+  background-color: #ffccdf;
+  color: #a62a6e;
 }
 .card-label-sky {
-  background-color: #00c2e0;
+  background-color: #c7ecee;
+  color: #1e7075;
 }
 .card-label-black {
-  background-color: #4d4d4d;
+  background-color: #f1f2f6;
+  color: #57606f;
 }
 .card-label-lime {
-  background-color: #51e898;
-  color: #000;
+  background-color: #e3f9e5;
+  color: #1f8b4d;
 }
 .card-label-silver {
-  background-color: #c0c0c0;
-  color: #000;
+  background-color: #f1f2f6;
+  color: #57606f;
 }
 .card-label-peachpuff {
-  background-color: #ffdab9;
-  color: #000;
+  background-color: #ffe5d9;
+  color: #c45b38;
 }
 .card-label-crimson {
-  background-color: #dc143c;
+  background-color: #ffd1d1;
+  color: #a62a2a;
 }
 .card-label-plum {
-  background-color: #dda0dd;
-  color: #000;
+  background-color: #eeddfa;
+  color: #582f7d;
 }
 .card-label-darkgreen {
-  background-color: #006400;
+  background-color: #d4f1dd;
+  color: #1f8b4d;
 }
 .card-label-slateblue {
-  background-color: #6a5acd;
+  background-color: #e0d4ff;
+  color: #493396;
 }
 .card-label-magenta {
-  background-color: #f0f;
+  background-color: #ffccdf;
+  color: #a62a6e;
 }
 .card-label-gold {
-  background-color: #ffd700;
-  color: #000;
+  background-color: #ffeaa7;
+  color: #b28900;
 }
 .card-label-navy {
-  background-color: #000080;
+  background-color: #d8e2fd;
+  color: #27448d;
 }
 .card-label-gray {
   background-color: #808080;

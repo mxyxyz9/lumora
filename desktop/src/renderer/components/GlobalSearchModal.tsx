@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Card } from '../lib/types';
 import { useBoardStore } from '../store/boardStore';
-import { Search, X, Calendar, CornerDownLeft, Archive, Tag, GitPullRequest, Layers, FolderKanban } from 'lucide-react';
+import { getCardPalette } from './KanbanCard';
+import { Search, X, Calendar, CornerDownLeft, Archive, Tag, GitPullRequest, Layers, FolderKanban, Sparkles } from 'lucide-react';
 
 interface GlobalSearchModalProps {
   isOpen: boolean;
@@ -24,7 +25,10 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
     lists,
     swimlanes,
     activeBoard,
+    settings,
   } = useBoardStore();
+
+  const isDarkTheme = ['midnight', 'abyss', 'emerald_dark', 'dark', 'oled'].includes(settings.theme || '');
 
   useEffect(() => {
     if (isOpen) {
@@ -43,30 +47,20 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
     try {
       regex = new RegExp(term, 'i');
     } catch {
-      // Escape special characters if user types invalid regex
       const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       regex = new RegExp(escaped, 'i');
     }
 
     return cards.filter((card) => {
-      // Filter out archived unless toggle is enabled
       if (!includeArchived && card.archived) {
         return false;
       }
-
-      // Title match
       if (regex.test(card.title)) return true;
-
-      // Description match
       if (card.description && regex.test(card.description)) return true;
-
-      // GitHub issue / metadata match
       if (card.github) {
         if (regex.test(String(card.github.issueNumber))) return true;
         if (regex.test(card.github.repo)) return true;
       }
-
-      // Custom fields match
       if (card.customFields && Array.isArray(card.customFields)) {
         for (const cf of card.customFields) {
           if (cf.value !== undefined && cf.value !== null) {
@@ -74,12 +68,10 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
           }
         }
       }
-
       return false;
     });
   }, [cards, searchTerm, includeArchived]);
 
-  // Keyboard navigation for Cmd+K search dialog
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       e.preventDefault();
@@ -107,9 +99,9 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
   };
 
   const getSwimlaneName = (swimlaneId?: string) => {
-    if (!swimlaneId) return 'General';
+    if (!swimlaneId) return 'Main';
     const s = swimlanes.find((item) => item._id === swimlaneId);
-    return s ? s.title : 'General';
+    return s ? s.title : 'Main';
   };
 
   return (
@@ -121,24 +113,24 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        paddingTop: '12vh',
-        background: 'rgba(0, 0, 0, 0.75)',
-        backdropFilter: 'blur(8px)',
+        paddingTop: '10vh',
+        background: 'rgba(0, 0, 0, 0.55)',
+        backdropFilter: 'blur(10px)',
         zIndex: 200,
       }}
     >
       <div
         className="modal-dialog"
         style={{
-          width: '680px',
+          width: '640px',
           maxWidth: '92vw',
           maxHeight: '78vh',
           display: 'flex',
           flexDirection: 'column',
           background: 'var(--bg-modal)',
-          borderRadius: 'var(--r-lg)',
-          border: '1px solid var(--border-strong)',
-          boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border-medium)',
+          borderRadius: '36px',
+          border: '1.5px solid var(--border-medium)',
+          boxShadow: 'var(--shadow-modal)',
           overflow: 'hidden',
         }}
         onClick={(e) => e.stopPropagation()}
@@ -146,15 +138,15 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         {/* Search Header Input Bar */}
         <div
           style={{
-            padding: '12px 16px',
-            borderBottom: '1px solid var(--border-subtle)',
-            background: 'var(--bg-header)',
+            padding: '16px 22px',
+            borderBottom: '1.5px solid var(--border-subtle)',
+            background: 'var(--bg-modal)',
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
+            gap: '12px',
           }}
         >
-          <Search size={16} style={{ color: 'var(--accent-blue)', flexShrink: 0 }} />
+          <Search size={22} style={{ color: 'var(--accent-primary)', flexShrink: 0 }} />
           <input
             ref={inputRef}
             type="text"
@@ -163,14 +155,14 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
               setSearchTerm(e.target.value);
               setSelectedIndex(0);
             }}
-            placeholder="Search cards, descriptions, custom fields... (Cmd+K)"
+            placeholder="Search cards, tasks, descriptions, or #tags..."
             style={{
               flex: 1,
               background: 'none',
               border: 'none',
               color: 'var(--text-primary)',
-              fontSize: '14px',
-              fontWeight: 500,
+              fontSize: '15px',
+              fontWeight: 700,
               outline: 'none',
               fontFamily: 'inherit',
             }}
@@ -180,24 +172,28 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
               type="button"
               onClick={() => setSearchTerm('')}
               style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--text-muted)',
+                background: 'var(--bg-input)',
+                border: '1px solid var(--border-subtle)',
+                color: 'var(--accent-primary)',
                 cursor: 'pointer',
-                padding: '2px',
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
                 display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
-              <X size={14} />
+              <X size={12} />
             </button>
           )}
           <span
             style={{
-              fontSize: '10px',
-              fontFamily: 'var(--font-mono)',
-              color: 'var(--text-muted)',
-              padding: '2px 6px',
-              borderRadius: '4px',
+              fontSize: '11px',
+              fontWeight: 800,
+              color: 'var(--accent-primary)',
+              padding: '3px 10px',
+              borderRadius: '100px',
               background: 'var(--bg-input)',
               border: '1px solid var(--border-subtle)',
               letterSpacing: '0.04em',
@@ -210,13 +206,13 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         {/* Options & Metadata Bar */}
         <div
           style={{
-            padding: '7px 16px',
-            background: 'var(--bg-canvas)',
-            borderBottom: '1px solid var(--border-subtle)',
+            padding: '8px 22px',
+            background: 'var(--bg-input)',
+            borderBottom: '1.5px solid var(--border-subtle)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            fontSize: '11px',
+            fontSize: '12px',
             color: 'var(--text-muted)',
           }}
         >
@@ -224,9 +220,10 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
+              gap: '8px',
               cursor: 'pointer',
               userSelect: 'none',
+              fontWeight: 700,
             }}
           >
             <input
@@ -234,56 +231,83 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
               checked={includeArchived}
               onChange={(e) => setIncludeArchived(e.target.checked)}
               style={{
-                accentColor: 'var(--accent-blue)',
+                accentColor: 'var(--accent-primary)',
                 cursor: 'pointer',
-                borderRadius: '3px',
+                width: '15px',
+                height: '15px',
+                borderRadius: '4px',
               }}
             />
-            <span style={{ color: includeArchived ? 'var(--text-primary)' : 'var(--text-muted)' }}>
+            <span style={{ color: includeArchived ? 'var(--accent-primary)' : 'var(--text-secondary)' }}>
               Include archived cards
             </span>
           </label>
 
-          <span style={{ fontSize: '11px' }}>
-            {searchTerm.trim() ? `${searchResults.length} match${searchResults.length !== 1 ? 'es' : ''} found` : `Searching "${activeBoard?.title || 'Workspace'}"`}
+          <span style={{ fontSize: '11.5px', fontWeight: 700, color: 'var(--accent-primary)' }}>
+            {searchTerm.trim() ? `${searchResults.length} match${searchResults.length !== 1 ? 'es' : ''}` : `${cards.length} cards in workspace`}
           </span>
         </div>
 
         {/* Results Body */}
         <div
+          className="no-scrollbar"
           style={{
             flex: 1,
             overflowY: 'auto',
-            padding: '8px',
+            padding: '14px 18px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '4px',
+            gap: '8px',
           }}
         >
           {!searchTerm.trim() ? (
             <div
               style={{
-                padding: '40px 16px',
+                padding: '36px 16px',
                 textAlign: 'center',
                 color: 'var(--text-muted)',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '8px',
+                gap: '10px',
               }}
             >
-              <Search size={24} style={{ color: 'var(--border-strong)', marginBottom: '4px' }} />
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                Type to search workspace
+              <div style={{ width: '48px', height: '48px', borderRadius: '18px', background: 'var(--bg-input)', border: '1.5px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Sparkles size={24} style={{ color: 'var(--accent-primary)' }} />
               </div>
-              <div style={{ fontSize: '11.5px', maxWidth: '340px', lineHeight: 1.4 }}>
-                Instant live search across titles, markdown descriptions, tags, and custom fields with full regex support.
+              <div style={{ fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                Instant Workspace Search
+              </div>
+              <div style={{ fontSize: '12px', maxWidth: '360px', lineHeight: 1.45, fontWeight: 600 }}>
+                Type keywords, tags, or descriptions to find tasks across all columns and subfolders.
+              </div>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '6px' }}>
+                {['bug', 'offline', 'calendar', 'sync', 'pipeline'].map(tag => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => setSearchTerm(tag)}
+                    style={{
+                      padding: '4px 12px',
+                      borderRadius: '100px',
+                      background: 'var(--bg-input)',
+                      border: '1px solid var(--border-subtle)',
+                      color: 'var(--accent-primary)',
+                      fontSize: '11.5px',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                    }}
+                  >
+                    #{tag}
+                  </button>
+                ))}
               </div>
             </div>
           ) : searchResults.length === 0 ? (
             <div
               style={{
-                padding: '40px 16px',
+                padding: '36px 16px',
                 textAlign: 'center',
                 color: 'var(--text-muted)',
                 display: 'flex',
@@ -292,8 +316,8 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                 gap: '8px',
               }}
             >
-              <Archive size={24} style={{ color: 'var(--border-strong)', marginBottom: '4px' }} />
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
+              <Archive size={28} style={{ color: 'var(--text-muted)', marginBottom: '4px' }} />
+              <div style={{ fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)' }}>
                 No cards matched "{searchTerm}"
               </div>
               {!includeArchived && (
@@ -301,7 +325,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                   type="button"
                   onClick={() => setIncludeArchived(true)}
                   className="btn-subtle"
-                  style={{ fontSize: '11.5px', marginTop: '4px', color: 'var(--accent-blue)' }}
+                  style={{ fontSize: '12px', marginTop: '4px', color: 'var(--accent-primary)', borderRadius: '100px', padding: '4px 14px', background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', fontWeight: 800 }}
                 >
                   Search inside archived cards?
                 </button>
@@ -310,6 +334,17 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
           ) : (
             searchResults.map((card, idx) => {
               const isSelected = idx === selectedIndex;
+              const pal = getCardPalette(card, idx);
+
+              const cardBg = isDarkTheme ? (pal.darkBg || 'var(--bg-card)') : pal.bg;
+              const cardTitle = isDarkTheme ? (pal.darkTitle || 'var(--text-primary)') : pal.title;
+              const cardText = isDarkTheme ? (pal.darkText || 'var(--text-secondary)') : pal.text;
+              const tagBg = isDarkTheme ? (pal.darkTagBg || 'rgba(255,255,255,0.08)') : pal.tagBg;
+              const tagColor = isDarkTheme ? (pal.darkTagColor || pal.text) : pal.tagColor;
+              const cardBorder = isDarkTheme
+                ? (isSelected ? '2px solid var(--accent-primary)' : (pal.darkBorder || '1px solid var(--border-subtle)'))
+                : (isSelected ? '2px solid var(--accent-primary)' : '1px solid rgba(0,0,0,0.06)');
+
               return (
                 <div
                   key={card._id}
@@ -319,25 +354,27 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                   }}
                   onMouseEnter={() => setSelectedIndex(idx)}
                   style={{
-                    padding: '10px 12px',
-                    borderRadius: 'var(--r-md)',
+                    padding: '12px 14px',
+                    borderRadius: '20px',
                     cursor: 'pointer',
-                    background: isSelected ? 'var(--bg-button-hover)' : 'transparent',
-                    border: `1px solid ${isSelected ? 'var(--accent-blue)' : 'var(--border-subtle)'}`,
+                    background: cardBg,
+                    border: cardBorder,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    gap: '10px',
-                    transition: 'all 120ms ease',
+                    gap: '12px',
+                    boxShadow: isSelected ? '0 8px 20px rgba(124, 92, 229, 0.18)' : '0 2px 6px rgba(0,0,0,0.03)',
+                    transition: 'all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    transform: isSelected ? 'translateY(-2px)' : 'none',
                   }}
                 >
                   <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <span
                         style={{
-                          fontSize: '13px',
-                          fontWeight: 600,
-                          color: isSelected ? 'var(--text-primary)' : 'var(--text-primary)',
+                          fontSize: '13.5px',
+                          fontWeight: 800,
+                          color: cardTitle,
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -349,12 +386,11 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                         <span
                           style={{
                             fontSize: '9.5px',
-                            fontWeight: 700,
-                            padding: '1px 5px',
-                            borderRadius: 'var(--r-full)',
-                            background: 'rgba(234,179,8,0.15)',
-                            color: '#eab308',
-                            border: '1px solid rgba(234,179,8,0.3)',
+                            fontWeight: 800,
+                            padding: '2px 7px',
+                            borderRadius: '100px',
+                            background: tagBg,
+                            color: tagColor,
                           }}
                         >
                           Archived
@@ -364,12 +400,11 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                         <span
                           style={{
                             fontSize: '9.5px',
-                            fontFamily: 'var(--font-mono)',
-                            padding: '1px 5px',
-                            borderRadius: 'var(--r-full)',
-                            background: 'rgba(168,85,247,0.15)',
-                            color: '#c084fc',
-                            border: '1px solid rgba(168,85,247,0.3)',
+                            fontWeight: 800,
+                            padding: '2px 7px',
+                            borderRadius: '100px',
+                            background: tagBg,
+                            color: tagColor,
                           }}
                         >
                           GH #{card.github.issueNumber}
@@ -380,19 +415,21 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                     {card.description && (
                       <div
                         style={{
-                          fontSize: '11px',
-                          color: 'var(--text-muted)',
+                          fontSize: '11.5px',
+                          color: cardText,
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
+                          opacity: 0.85,
+                          fontWeight: 500,
                         }}
                       >
                         {card.description}
                       </div>
                     )}
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10.5px', color: 'var(--text-muted)', marginTop: '2px' }}>
-                      <span style={{ padding: '1px 6px', borderRadius: '4px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: tagColor, marginTop: '2px', fontWeight: 700 }}>
+                      <span style={{ padding: '2px 8px', borderRadius: '100px', background: tagBg }}>
                         {getListName(card.listId)}
                       </span>
                       <span>·</span>
@@ -414,11 +451,12 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
                       display: 'flex',
                       alignItems: 'center',
                       gap: '4px',
-                      color: isSelected ? 'var(--accent-blue)' : 'var(--text-muted)',
+                      color: isSelected ? 'var(--accent-primary)' : 'var(--text-muted)',
                       opacity: isSelected ? 1 : 0.4,
+                      flexShrink: 0,
                     }}
                   >
-                    <CornerDownLeft size={13} />
+                    <CornerDownLeft size={16} />
                   </div>
                 </div>
               );
@@ -429,22 +467,23 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
         {/* Footer Shortcut Bar */}
         <div
           style={{
-            padding: '7px 16px',
-            background: 'var(--bg-header)',
-            borderTop: '1px solid var(--border-subtle)',
+            padding: '10px 22px',
+            background: 'var(--bg-input)',
+            borderTop: '1.5px solid var(--border-subtle)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            fontSize: '10.5px',
+            fontSize: '11.5px',
             color: 'var(--text-muted)',
+            fontWeight: 600,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span><strong style={{ color: 'var(--text-secondary)' }}>↑ ↓</strong> navigate</span>
-            <span><strong style={{ color: 'var(--text-secondary)' }}>↵</strong> open card</span>
-            <span><strong style={{ color: 'var(--text-secondary)' }}>esc</strong> close</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <span><strong style={{ color: 'var(--text-primary)' }}>↑ ↓</strong> navigate</span>
+            <span><strong style={{ color: 'var(--text-primary)' }}>↵</strong> open card</span>
+            <span><strong style={{ color: 'var(--text-primary)' }}>esc</strong> close</span>
           </div>
-          <span>Lumora Board Search</span>
+          <span style={{ color: 'var(--accent-primary)', fontWeight: 800 }}>Workspace Search</span>
         </div>
       </div>
     </div>

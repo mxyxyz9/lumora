@@ -77,48 +77,16 @@
    does not mirror under `dir=rtl`, which is how the Admin Panel's shaded the
    wrong inner edge once its menu moved to the right. */
 .boards-left-menu {
-  /* The width the grid track used to carry. It lives here so the track is the
-     menu's own width, and folded there is no track at all.
-     The SHARED variable (settingBody.css), so this menu and the Admin Panel's
-     are one menu at one width, and dragging either grip changes both. */
   width: var(--wekan-left-menu-width);
-  /* `min-width: 0` so the menu CAN be narrower than its contents: a grid item's
-     default `min-width: auto` is its content's intrinsic minimum, and a minimum
-     beats a maximum. The rows inside already ellipse (the workspace name carries
-     its own `min-width: 0`), so nothing needs the intrinsic width held open.
-
-     `max-width: 100%` does NOT cap the menu to its grid track, whatever it looks
-     like it should do - this comment used to claim it did. A percentage width on
-     a grid item does not resolve against the track, so on a phone the menu kept
-     all 260px and lay over the boards in Chromium, Firefox and WebKit alike.
-     What actually caps it is `width: auto` in the phone rules further down,
-     which makes the item stretch to its grid area. This stays because it is
-     still right for the non-grid places this menu is used. */
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
-  background-color: #f7f7f7;
-  /* Flush on three sides, like the Admin Panel's: it starts at the window's
-     left edge, directly under the header, and runs to the bottom - so it has a
-     border and a corner only on the side that faces the page. A rounded corner
-     on a flush edge shows the grey behind it. docs/Features/Page/Left-Menu.md */
-  border: 1px solid #f0f0f0;
-  border-inline-start: 0;
-  border-top: 0;
-  border-bottom: 0;
-  border-radius: 0;
-  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.05);
-  /* No padding on the PANEL. The Admin Panel's has none either: its rows carry
-     `margin: 2px 4px` themselves, so a selected row is a block that runs nearly
-     the full width of the menu rather than a pill floating inside it. Padding
-     here would inset every row by a second amount on top of that. */
-  padding: 0;
-  padding-block-start: 8px;
-  /* A long menu - many workspaces - scrolls inside the panel rather than
-     spilling past its own rounded corner, the same fix the Problems menu
-     needed. `min-height: 0` because a grid item will not shrink below its
-     content otherwise, and an overflow that never engages leaves the spill
-     exactly as it was. */
+  background-color: #ffffff;
+  border: none;
+  border-radius: 0 32px 32px 0;
+  box-shadow: 4px 0 28px rgba(100, 80, 200, 0.07);
+  padding: 12px 8px;
+  padding-block-start: 12px;
   overflow-y: auto;
   min-height: 0;
 }
@@ -129,51 +97,50 @@
   margin: 0 0 12px 0;
 }
 
-/* Rows laid out like the Admin Panel's (settingBody.css): the same margins, the
-   same block padding, the same reading-direction indent - and NO rounded
-   corners, so the selected row is a block across the menu rather than a pill
-   inside it. Those two menus should not be two different-looking menus. */
 .boards-left-menu .menu-item {
-  margin: 2px 4px;
+  margin: 4px 6px;
 }
 .boards-left-menu .menu-item a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* Logical, so the indent follows the reading direction instead of staying on
-     the left when the menu mirrors to the right. */
   padding-block: 12px;
   padding-inline-start: 18px;
-  padding-inline-end: 10px;
+  padding-inline-end: 12px;
   cursor: pointer;
+  border-radius: 18px;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 700;
+  color: #3b2a59;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.boards-left-menu .menu-item a:hover {
+  background: #f4f0ff;
+  color: #7c5ce5;
+  transform: translateX(4px);
 }
 .boards-left-menu .menu-item .menu-label {
   flex: 1;
 }
 .boards-left-menu .menu-item .menu-count {
-  background: #ddd;
-  padding: 2px 8px;
-  border-radius: 12px;
+  background: #ede8f9;
+  color: #7c5ce5;
+  padding: 3px 10px;
+  border-radius: 20px;
   font-size: calc(12px * var(--wekan-ui-font-scale, 1));
-  font-weight: bold;
+  font-weight: 800;
   margin-inline-start: 8px;
 }
-/* The entry you are on is filled with the theme colour and its label and icon go
-   white - the same treatment the Admin Panel's selected entry gets, and the same
-   treatment the selected tab gets in the header bar above. One selected-thing
-   look everywhere.
-
-   The colour is the per-user theme accent (Member Settings -> Change color sets
-   --theme-accent on :root); the fallback is the WeKan header blue, so with no
-   chosen colour the menu matches the bar exactly.
-
-   `:hover` is listed on the active rule too: the hover rule below sets a white
-   background at the SAME specificity, and being later in the file it would
-   otherwise wash the selected entry back to white as soon as the pointer
-   crossed it - which is the bug that had to be fixed in the Admin Panel's. */
 .boards-left-menu .menu-item.active a,
 .boards-left-menu .menu-item.active a:hover {
-  background: var(--theme-accent, #2980b9);
+  background: var(--theme-accent, linear-gradient(135deg, #7c5ce5 0%, #a68cff 100%)) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(124, 92, 229, 0.35);
+  border-radius: 18px;
+}
+.boards-left-menu .menu-item.active a .menu-count {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
 }
 /* The Admin Panel puts the selected background on the LI, not the anchor, so
    the fill reaches the row's full width. Here the anchor is what fills, so it
@@ -913,8 +880,8 @@
   padding: 0;
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
   align-content: start;
 }
 .board-list li {
@@ -923,18 +890,27 @@
   margin: 0;
   box-sizing: border-box;
   position: relative;
+  border-radius: 28px;
+  box-shadow: 0 8px 24px rgba(100, 80, 200, 0.1), 0 4px 0px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  overflow: hidden;
+}
+.board-list li:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 16px 36px rgba(100, 80, 200, 0.16);
 }
 .board-list li.placeholder:after {
   content: '';
   display: block;
-  background: #ccc;
-  border-radius: 3px;
+  background: #e0d4ff;
+  border-radius: 28px;
   height: 106px;
-  margin: 8px;
+  margin: 0;
 }
 .board-list li.ui-sortable-helper {
   cursor: grabbing;
-  transform: rotate(4deg);
+  transform: scale(1.05) rotate(-3deg);
+  box-shadow: 0 20px 30px rgba(100, 80, 200, 0.2);
   display: block !important;
 }
 .board-list li.starred .is-star-active,
@@ -951,26 +927,16 @@
   overflow: hidden;
   background-color: inherit; /* Inherit board color from parent li.js-board */
   color: #f6f6f6;
-  /* The number IS the rendered height, padding and border folded in - the same
-     thing the mobile rules below do for the same reason (#6523).
-     It used to be a 72px floor with 42px of padding added outside it, which came
-     to the same 114px for an ordinary tile and to 122px for a BORDERED one: the
-     bookmarks in All Boards / Starred and the Template Container tile both carry
-     `border: 4px solid #fff`, and on a content-box element those 8px are added
-     to the height rather than taken out of it. So a starred page sat 8px taller
-     than the board beside it and than the grey "+ Add Board" tile, and the row
-     it was in inherited the extra height.
-     114px is what an ordinary tile already rendered at (72 + 24 + 18), so
-     nothing moves except the bordered tiles, which now match. */
   box-sizing: border-box;
   min-height: 114px;
+  font-family: 'Quicksand', system-ui, sans-serif;
   font-size: calc(16px * var(--wekan-ui-font-scale, 1));
   line-height: calc(22px * var(--wekan-ui-font-scale, 1));
-  border-radius: 0; /* No border-radius - parent .js-board has it */
+  border-radius: 28px;
   display: block;
-  font-weight: 700;
-  padding: 24px 8px 18px 8px; /* #6465: trimmed; top leaves room for the drag handle, bottom for the checkbox */
-  margin: 0; /* No margin - moved to parent .js-board */
+  font-weight: 800;
+  padding: 24px 14px 18px 14px;
+  margin: 0;
   position: relative;
   text-decoration: none;
   word-wrap: break-word;
@@ -1034,39 +1000,38 @@
   flex: 1 1 auto;
 }
 .board-list .js-add-board .label {
-  font-weight: normal;
-  /* Match the board tiles (#6465 thinner tiles) so the grey "+ Add Board" /
-     "+ Add Template Container" box is the same height as a board icon:
-     same min-height, padding and line-height as .board-list-item above. */
+  font-weight: 800;
+  font-family: 'Quicksand', system-ui, sans-serif;
   line-height: calc(22px * var(--wekan-ui-font-scale, 1));
-  /* Border-box and the full height, like .board-list-item above: the two are
-     compared by eye on the same row, so they are stated the same way. */
   box-sizing: border-box;
   min-height: 114px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #999; /* Darker background for better text contrast */
-  border-radius: 3px;
-  /* Same total vertical padding as .board-list-item (42px -> same tile height),
-     but shifted up (top 24->18, bottom 18->24) so the "+ Add Board" text sits
-     higher. */
+  background-color: #ffffff;
+  border: 2px dashed #a68cff;
+  border-radius: 28px;
   padding: 18px 8px 24px 8px;
-  color: #fff; /* White text */
+  color: #7c5ce5;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-/* "+ Add Template Container" text sits 2px lower than "+ Add Board" (same 42px
-   total vertical padding, so the tile height is unchanged). */
 .board-list .js-add-board .label.is-template-container {
   padding: 20px 8px 22px 8px;
 }
 .board-list .js-add-board .label i {
-  color: #fff; /* White icon */
+  color: #7c5ce5;
+  margin-inline-end: 8px;
+  transition: color 0.3s;
 }
 .board-list .js-add-board .label:hover {
-  background-color: #808080; /* Even darker on hover */
+  background-color: #f4f0ff;
+  color: #3b2a59;
+  border-color: #7c5ce5;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(124, 92, 229, 0.2);
 }
 .board-list .js-add-board .label:hover i {
-  color: #fff; /* Keep icon white on hover */
+  color: #3b2a59;
 }
 .board-list .is-star-active,
 .board-list .is-not-star-active {

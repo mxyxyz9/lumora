@@ -18,6 +18,9 @@ import { GlobalWorkspaceHub } from './GlobalWorkspaceHub';
 import { EditBoardModal } from './EditBoardModal';
 import { GlobalSearchModal } from './GlobalSearchModal';
 import { IntegrationsModal } from './IntegrationsModal';
+import { VoicePanel } from './VoicePanel';
+import { UpstreamSyncModal } from './UpstreamSyncModal';
+import { ArchivedCardsModal } from './ArchivedCardsModal';
 import { LumoraLogo, KansoLogo } from './LumoraLogo';
 import {
   Settings,
@@ -40,6 +43,9 @@ import {
   RotateCcw,
   ChevronDown,
   Check,
+  Mic,
+  GitPullRequest,
+  Archive,
 } from 'lucide-react';
 import { monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 
@@ -59,6 +65,7 @@ function parseProjectDisplay(rawTitle: string, explicitIcon?: string) {
 
 export const BoardView: React.FC = () => {
   const {
+    settings,
     activeBoard,
     activeSwimlaneId,
     activeView,
@@ -78,6 +85,7 @@ export const BoardView: React.FC = () => {
     setMemberModalOpen,
     setActivityDrawerOpen,
     setGitHubModalOpen,
+    setArchivedCardsModalOpen,
     isSearchOpen,
     setSearchOpen,
     setActiveCardId,
@@ -96,14 +104,32 @@ export const BoardView: React.FC = () => {
   const [isAddingList, setIsAddingList] = useState(false);
   const [newListTitle, setNewListTitle] = useState('');
   const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false);
+  const [isVoicePanelOpen, setIsVoicePanelOpen] = useState(false);
   const [isToolsOpen, setIsToolsOpen] = useState(false);
   const [isIntegrationsModalOpen, setIntegrationsModalOpen] = useState(false);
+  const [isUpstreamModalOpen, setUpstreamModalOpen] = useState(false);
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
   const [editingBoard, setEditingBoard] = useState<any | null>(null);
   const [hoveredTooltip, setHoveredTooltip] = useState<{ text: string; top: number; left: number } | null>(null);
   const toolsRef = useRef<HTMLDivElement>(null);
   const projectDropdownRef = useRef<HTMLDivElement>(null);
   const listInputRef = useRef<HTMLInputElement>(null);
+
+  const aiConfig = {
+    provider: (typeof localStorage !== 'undefined' ? localStorage.getItem('kanso_ai_provider') || 'gemini' : 'gemini') as any,
+    geminiApiKey: typeof localStorage !== 'undefined' ? localStorage.getItem('kanso_gemini_api_key') || undefined : undefined,
+    geminiModel: typeof localStorage !== 'undefined' ? localStorage.getItem('kanso_gemini_model') || undefined : undefined,
+    ollamaEndpoint: typeof localStorage !== 'undefined' ? localStorage.getItem('kanso_ollama_endpoint') || undefined : undefined,
+    ollamaModel: typeof localStorage !== 'undefined' ? localStorage.getItem('kanso_ollama_model') || undefined : undefined,
+  };
+
+  // Listen for global hotkey to open Voice panel
+  useEffect(() => {
+    const unbind = window.electronAPI?.onVoiceHotkeyTriggered?.(() => {
+      setIsVoicePanelOpen(true);
+    });
+    return () => unbind?.();
+  }, []);
 
   const showTooltip = (text: string, e: React.MouseEvent) => {
     if (!isSidebarCollapsed) return;
@@ -233,9 +259,11 @@ export const BoardView: React.FC = () => {
     })
     .sort((a, b) => (a.sort || 0) - (b.sort || 0));
   const currentSubfolder = swimlanes.find(s => s._id === activeSwimlaneId);
-  const filteredCards = activeSwimlaneId === 'all'
+  const activeCardsForSubfolder = activeSwimlaneId === 'all'
     ? cards
     : cards.filter(c => c.swimlaneId === activeSwimlaneId);
+  const filteredCards = activeCardsForSubfolder.filter(c => !c.archived);
+  const archivedCount = cards.filter(c => !!c.archived).length;
 
   const viewLabels: Record<string, string> = {
     global_hub: 'Home',
@@ -244,6 +272,36 @@ export const BoardView: React.FC = () => {
     calendar: 'Calendar',
     settings: 'Settings',
   };
+
+  const canvasBgStyle: React.CSSProperties = React.useMemo(() => {
+    const bg = settings.customBackground;
+    if (!bg || bg === 'default' || bg === 'dots') return {};
+    if (bg === 'clean_solid') {
+      return {
+        backgroundImage: 'none',
+        backgroundColor: 'var(--bg-canvas)',
+      };
+    }
+    if (bg.startsWith('http://') || bg.startsWith('https://') || bg.startsWith('data:image/') || bg.startsWith('file://')) {
+      return {
+        backgroundImage: `url("${bg}")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+      };
+    }
+    if (bg.includes('radial-gradient(circle') || bg.includes('radial-gradient(var(--border-medium)')) {
+      return {
+        backgroundImage: bg,
+        backgroundSize: bg.includes('1.2px') ? '16px 16px' : '24px 24px',
+        backgroundColor: 'var(--bg-canvas)',
+      };
+    }
+    return {
+      background: bg,
+    };
+  }, [settings.customBackground]);
 
   return (
     <div className="app-container">
@@ -683,6 +741,32 @@ export const BoardView: React.FC = () => {
               <span>Lumora Copilot</span>
             </button>
 
+            {/* Lumora Voice Dictation Button (OpenWhispr base) */}
+            <button
+              onClick={() => setIsVoicePanelOpen(true)}
+              className="btn-subtle"
+              style={{ gap: '6px', fontSize: '12.5px', height: '30px', color: 'var(--accent-blue)', borderColor: isVoicePanelOpen ? 'rgba(59, 130, 246, 0.4)' : undefined, background: isVoicePanelOpen ? 'rgba(59, 130, 246, 0.1)' : undefined }}
+              title="Lumora Voice Dictation (⌥ Space)"
+            >
+              <Mic size={14} />
+              <span>Voice</span>
+            </button>
+
+            {/* Archived Tasks Button */}
+            <button
+              onClick={() => setArchivedCardsModalOpen(true)}
+              className="btn-subtle"
+              style={{ gap: '6px', fontSize: '12.5px', height: '30px' }}
+              title="View & restore archived tasks"
+            >
+              <Archive size={13} style={{ color: '#7c5ce5' }} />
+              <span>Archived</span>
+              {archivedCount > 0 && (
+                <span style={{ fontSize: '10px', background: '#e0d4ff', color: '#3b2a59', padding: '1px 6px', borderRadius: '100px', fontWeight: 800 }}>
+                  {archivedCount}
+                </span>
+              )}
+            </button>
 
             {/* Tools Menu Popover */}
             <div style={{ position: 'relative' }} ref={toolsRef}>
@@ -702,11 +786,11 @@ export const BoardView: React.FC = () => {
                     top: 'calc(100% + 6px)',
                     right: 0,
                     background: 'var(--bg-modal)',
-                    border: '1px solid var(--border-medium)',
-                    borderRadius: 'var(--r-md)',
+                    border: '1.5px solid var(--border-medium)',
+                    borderRadius: '20px',
                     boxShadow: 'var(--shadow-modal)',
-                    padding: '5px',
-                    minWidth: '172px',
+                    padding: '8px',
+                    minWidth: '200px',
                     zIndex: 200,
                     display: 'flex',
                     flexDirection: 'column',
@@ -714,6 +798,8 @@ export const BoardView: React.FC = () => {
                   }}
                 >
                   {[
+                    { icon: <Archive size={13} />, label: `Archived Tasks (${archivedCount})`, action: () => { setArchivedCardsModalOpen(true); setIsToolsOpen(false); } },
+                    { icon: <GitPullRequest size={13} />, label: 'Upstream Sync & Checkpoints', action: () => { setUpstreamModalOpen(true); setIsToolsOpen(false); } },
                     { icon: <Layers size={13} />, label: 'Integrations & PM Sync', action: () => { setIntegrationsModalOpen(true); setIsToolsOpen(false); } },
                     { icon: <Github size={13} />, label: 'GitHub Sync', action: () => { setGitHubModalOpen(true); setIsToolsOpen(false); } },
                     { icon: <Users size={13} />, label: 'Members', action: () => { setMemberModalOpen(true); setIsToolsOpen(false); } },
@@ -796,7 +882,7 @@ export const BoardView: React.FC = () => {
           <>
             <SubfolderTabBar />
 
-            <main className="board-canvas">
+            <main className="board-canvas" style={canvasBgStyle}>
               {sortedLists.map((list, idx) => {
                 const listCards = filteredCards
                   .filter(c => c.listId === list._id)
@@ -813,19 +899,19 @@ export const BoardView: React.FC = () => {
               })}
 
               {/* "+ Add Column" Inline Form */}
-              <div style={{ width: 'var(--column-width)', minWidth: 'var(--column-width)', flexShrink: 0 }}>
+              <div style={{ width: '340px', minWidth: '340px', flexShrink: 0 }}>
                 {isAddingList ? (
                   <form
                     onSubmit={handleAddListSubmit}
                     style={{
-                      background: 'var(--bg-card)',
-                      border: '1px solid var(--border-medium)',
-                      borderRadius: 'var(--r-lg)',
-                      padding: '12px',
+                      background: 'var(--bg-column)',
+                      border: '1.5px solid var(--border-subtle)',
+                      borderRadius: '40px',
+                      padding: '20px',
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '8px',
-                      boxShadow: 'var(--shadow-sm)',
+                      gap: '12px',
+                      boxShadow: '0 16px 40px var(--border-card)',
                     }}
                   >
                     <input
@@ -842,25 +928,26 @@ export const BoardView: React.FC = () => {
                       }}
                       placeholder="Column name (e.g. In Review)..."
                       className="form-input"
+                      style={{ padding: '8px 14px', fontSize: '1rem', fontWeight: 800, borderRadius: '16px' }}
                       autoFocus
                     />
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px', paddingTop: '4px' }}>
-                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>↵ Enter to save</span>
-                      <div style={{ display: 'flex', gap: '6px' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>↵ Enter to save</span>
+                      <div style={{ display: 'flex', gap: '8px' }}>
                         <button
                           type="button"
                           onClick={() => { setIsAddingList(false); setNewListTitle(''); }}
                           className="btn-subtle"
-                          style={{ height: '28px', fontSize: '12px', padding: '0 10px' }}
+                          style={{ height: '32px', fontSize: '12px', padding: '0 14px', borderRadius: '100px' }}
                         >
                           Cancel
                         </button>
                         <button
                           type="submit"
                           className="btn-primary"
-                          style={{ fontSize: '12px', height: '28px', padding: '0 12px', gap: '4px' }}
+                          style={{ fontSize: '12px', height: '32px', padding: '0 16px', gap: '6px', borderRadius: '100px' }}
                         >
-                          <Plus size={12} />
+                          <Plus size={13} />
                           <span>Add Column</span>
                         </button>
                       </div>
@@ -871,30 +958,40 @@ export const BoardView: React.FC = () => {
                     onClick={() => setIsAddingList(true)}
                     style={{
                       width: '100%',
-                      padding: '10px 14px',
-                      background: 'var(--bg-button-subtle)',
-                      border: '1px dashed var(--border-medium)',
-                      borderRadius: 'var(--r-lg)',
-                      color: 'var(--text-muted)',
-                      fontSize: '13px',
-                      fontWeight: 500,
+                      minHeight: '120px',
+                      padding: '24px 20px',
+                      background: 'rgba(255, 255, 255, 0.65)',
+                      border: '2.5px dashed rgba(166, 140, 255, 0.5)',
+                      borderRadius: '40px',
+                      color: '#a68cff',
+                      fontSize: '1.1rem',
+                      fontWeight: 800,
                       cursor: 'pointer',
                       display: 'flex',
+                      flexDirection: 'column',
                       alignItems: 'center',
+                      justifyContent: 'center',
                       gap: '8px',
-                      transition: 'all var(--t-fast)',
+                      transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                      backdropFilter: 'blur(8px)',
                     }}
                     onMouseEnter={e => {
-                      (e.currentTarget as HTMLElement).style.background = 'var(--bg-button-hover)';
-                      (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)';
+                      (e.currentTarget as HTMLElement).style.background = '#ffffff';
+                      (e.currentTarget as HTMLElement).style.color = '#7c5ce5';
+                      (e.currentTarget as HTMLElement).style.borderColor = '#7c5ce5';
+                      (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+                      (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 30px rgba(124, 92, 229, 0.15)';
                     }}
                     onMouseLeave={e => {
-                      (e.currentTarget as HTMLElement).style.background = 'var(--bg-button-subtle)';
-                      (e.currentTarget as HTMLElement).style.color = 'var(--text-muted)';
+                      (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.65)';
+                      (e.currentTarget as HTMLElement).style.color = '#a68cff';
+                      (e.currentTarget as HTMLElement).style.borderColor = 'rgba(166, 140, 255, 0.5)';
+                      (e.currentTarget as HTMLElement).style.transform = 'none';
+                      (e.currentTarget as HTMLElement).style.boxShadow = 'none';
                     }}
                   >
-                    <Plus size={14} />
-                    <span>Add another list</span>
+                    <Plus size={20} />
+                    <span>+ Add Column</span>
                   </button>
                 )}
               </div>
@@ -905,6 +1002,7 @@ export const BoardView: React.FC = () => {
 
       {/* Modals & Drawers */}
       <CardDetailModal />
+      <ArchivedCardsModal />
       <NewBoardModal />
       <EditBoardModal
         board={editingBoard}
@@ -936,6 +1034,16 @@ export const BoardView: React.FC = () => {
       <AiAssistantDrawer
         isOpen={isAiDrawerOpen}
         onClose={() => setIsAiDrawerOpen(false)}
+      />
+      <VoicePanel
+        isOpen={isVoicePanelOpen}
+        onClose={() => setIsVoicePanelOpen(false)}
+        lists={lists}
+        aiConfig={aiConfig}
+      />
+      <UpstreamSyncModal
+        isOpen={isUpstreamModalOpen}
+        onClose={() => setUpstreamModalOpen(false)}
       />
       <ConfirmModal />
 

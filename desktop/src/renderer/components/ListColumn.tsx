@@ -122,23 +122,16 @@ export const ListColumn: React.FC<ListColumnProps> = ({ list, cards, index }) =>
     >
       {/* Column Header */}
       <div className="column-header">
-        {/* Grip handle */}
-        <div
-          ref={dragHandleRef}
-          style={{ cursor: 'grab', color: 'var(--text-subtle)', display: 'flex', flexShrink: 0 }}
-          title="Drag to reorder column"
-        >
-          <GripVertical size={13} />
-        </div>
-
-        {/* Accent dot */}
-        <div
-          className="column-accent-dot"
-          style={{ background: accentColor }}
-        />
-
-        {/* Title */}
+        {/* Title & Grip */}
         <div className="column-title-box">
+          <div
+            ref={dragHandleRef}
+            style={{ cursor: 'grab', color: 'var(--text-subtle)', display: 'flex', flexShrink: 0, padding: '2px' }}
+            title="Drag to reorder column"
+          >
+            <GripVertical size={14} />
+          </div>
+
           {isEditingTitle ? (
             <form onSubmit={handleSaveTitle} style={{ flex: 1 }}>
               <input
@@ -148,7 +141,7 @@ export const ListColumn: React.FC<ListColumnProps> = ({ list, cards, index }) =>
                 autoFocus
                 onBlur={handleSaveTitle}
                 className="form-input"
-                style={{ padding: '3px 7px', fontSize: '13px', height: '26px' }}
+                style={{ padding: '4px 10px', fontSize: '1.1rem', fontWeight: 800, height: '32px', borderRadius: '12px' }}
               />
             </form>
           ) : (
@@ -158,48 +151,70 @@ export const ListColumn: React.FC<ListColumnProps> = ({ list, cards, index }) =>
               title="Click to rename column"
             >
               <span>{list.title}</span>
-              <Edit2 size={11} className="column-title-edit-icon" />
+              <Edit2 size={13} className="column-title-edit-icon" />
             </div>
           )}
         </div>
 
-        {/* Count + Menu */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '3px', position: 'relative', flexShrink: 0 }} ref={menuRef}>
-          <span className="column-count-badge">{cards.length}</span>
+        {/* Count Pill Badge + Quick Add + Options Menu */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', position: 'relative', flexShrink: 0 }} ref={menuRef}>
+          <span className="column-count">{cards.length}</span>
+
+          <button
+            type="button"
+            onClick={() => setIsAddingCard(true)}
+            className="btn-icon"
+            style={{
+              width: '28px',
+              height: '28px',
+              borderRadius: '50%',
+              background: 'var(--bg-input)',
+              border: '1px solid var(--border-subtle)',
+              color: 'var(--accent-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'all 0.15s ease',
+            }}
+            title="Quick add task"
+          >
+            <Plus size={14} />
+          </button>
 
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="btn-icon"
-            style={{ width: '24px', height: '24px' }}
+            style={{ width: '28px', height: '28px', borderRadius: '50%', color: 'var(--text-muted)' }}
             title="Column options"
           >
-            <MoreHorizontal size={13} />
+            <MoreHorizontal size={15} />
           </button>
 
           {isMenuOpen && (
             <div style={{
-              position: 'absolute', top: 'calc(100% + 4px)', right: 0,
+              position: 'absolute', top: 'calc(100% + 6px)', right: 0,
               width: '160px',
               background: 'var(--bg-modal)',
-              border: '1px solid var(--border-medium)',
-              borderRadius: 'var(--r-md)',
+              border: '1.5px solid var(--border-medium)',
+              borderRadius: '20px',
               boxShadow: 'var(--shadow-md)',
-              padding: '4px',
+              padding: '6px',
               zIndex: 60,
-              display: 'flex', flexDirection: 'column', gap: '2px',
+              display: 'flex', flexDirection: 'column', gap: '3px',
             }}>
               <button
                 onClick={() => { setIsMenuOpen(false); setIsEditingTitle(true); }}
                 style={{
                   display: 'flex', alignItems: 'center', gap: '8px',
-                  padding: '7px 10px', background: 'none', border: 'none',
-                  color: 'var(--text-primary)', fontSize: '13px', cursor: 'pointer',
-                  borderRadius: 'var(--r-sm)', textAlign: 'left',
+                  padding: '8px 12px', background: 'none', border: 'none',
+                  color: 'var(--text-primary)', fontSize: '13px', fontWeight: 700, cursor: 'pointer',
+                  borderRadius: '12px', textAlign: 'left',
                 }}
                 onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-button-hover)')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'none')}
               >
-                <Edit2 size={12} style={{ color: 'var(--text-muted)' }} />
+                <Edit2 size={13} style={{ color: 'var(--text-muted)' }} />
                 <span>Rename</span>
               </button>
 
@@ -207,14 +222,14 @@ export const ListColumn: React.FC<ListColumnProps> = ({ list, cards, index }) =>
                 onClick={handleDeleteList}
                 style={{
                   display: 'flex', alignItems: 'center', gap: '8px',
-                  padding: '7px 10px', background: 'none', border: 'none',
-                  color: 'var(--danger)', fontSize: '13px', cursor: 'pointer',
-                  borderRadius: 'var(--r-sm)', textAlign: 'left',
+                  padding: '8px 12px', background: 'none', border: 'none',
+                  color: 'var(--danger)', fontSize: '13px', fontWeight: 700, cursor: 'pointer',
+                  borderRadius: '12px', textAlign: 'left',
                 }}
-                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(248,113,113,0.08)')}
+                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(248,113,113,0.12)')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'none')}
               >
-                <Trash2 size={12} />
+                <Trash2 size={13} />
                 <span>Delete</span>
               </button>
             </div>
@@ -222,19 +237,24 @@ export const ListColumn: React.FC<ListColumnProps> = ({ list, cards, index }) =>
         </div>
       </div>
 
-      {/* Thin accent line under header */}
-      <div style={{ height: '1px', background: 'var(--border-subtle)', margin: '0 12px' }} />
-
-      {/* Card list */}
-      <div className="column-card-list">
-        {cards.map((card, idx) => (
-          <KanbanCard key={card._id} card={card} index={idx} accentColor={accentColor} />
-        ))}
-      </div>
-
-      {/* Add Card Section */}
-      {isAddingCard ? (
-        <form onSubmit={handleQuickAddSubmit} style={{ padding: '8px 10px', background: 'var(--bg-card)', border: '1px solid var(--border-medium)', borderRadius: 'var(--r-md)', margin: '8px 10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+      {/* Top Quick Add Form (when isAddingCard is triggered) */}
+      {isAddingCard && (
+        <form
+          onSubmit={handleQuickAddSubmit}
+          style={{
+            padding: '16px',
+            background: 'var(--bg-card)',
+            border: '2px solid var(--border-subtle)',
+            borderRadius: '24px',
+            margin: '0 0 14px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            boxShadow: '0 8px 24px var(--border-card)',
+            flexShrink: 0,
+            animation: 'cardPopIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+          }}
+        >
           <textarea
             ref={textareaRef}
             value={newCardTitle}
@@ -248,28 +268,35 @@ export const ListColumn: React.FC<ListColumnProps> = ({ list, cards, index }) =>
                 setNewCardTitle('');
               }
             }}
-            placeholder="Task title... (Enter to add, Esc to close)"
+            placeholder="What needs to be done? (Enter to save)"
             rows={2}
             autoFocus
             style={{
               width: '100%',
-              background: 'transparent',
-              border: 'none',
+              background: 'var(--bg-input)',
+              border: '1.5px solid var(--border-subtle)',
+              borderRadius: '16px',
+              padding: '10px 12px',
               outline: 'none',
               resize: 'none',
               color: 'var(--text-primary)',
-              fontSize: '12.5px',
+              fontSize: '13.5px',
+              fontWeight: 600,
               lineHeight: 1.45,
-              fontFamily: 'var(--font)',
+              fontFamily: 'inherit',
+              boxSizing: 'border-box',
+              transition: 'border-color 0.15s ease',
             }}
+            onFocus={e => (e.currentTarget.style.borderColor = 'var(--accent-primary)')}
+            onBlur={e => (e.currentTarget.style.borderColor = 'var(--border-subtle)')}
           />
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '2px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <button
                 type="submit"
                 disabled={!newCardTitle.trim()}
                 className="btn-primary"
-                style={{ height: '24px', fontSize: '11px', padding: '0 8px' }}
+                style={{ height: '30px', fontSize: '12px', padding: '0 14px', borderRadius: '100px', background: 'var(--accent-primary)', color: 'var(--accent-primary-text)' }}
               >
                 Add Task
               </button>
@@ -280,7 +307,7 @@ export const ListColumn: React.FC<ListColumnProps> = ({ list, cards, index }) =>
                   setNewCardTitle('');
                 }}
                 className="btn-subtle"
-                style={{ height: '24px', fontSize: '11px', padding: '0 6px' }}
+                style={{ height: '30px', fontSize: '12px', padding: '0 12px', borderRadius: '100px' }}
               >
                 Cancel
               </button>
@@ -290,22 +317,37 @@ export const ListColumn: React.FC<ListColumnProps> = ({ list, cards, index }) =>
               type="button"
               onClick={handleOpenDrawerWithDraft}
               className="btn-subtle"
-              style={{ height: '24px', fontSize: '10.5px', gap: '4px', padding: '0 6px' }}
+              style={{ height: '30px', fontSize: '11.5px', gap: '5px', padding: '0 10px', borderRadius: '100px' }}
               title="Open full task drawer"
             >
-              <Maximize2 size={10} />
-              <span>Full Drawer</span>
+              <Maximize2 size={12} />
+              <span>Details</span>
             </button>
           </div>
         </form>
-      ) : (
+      )}
+
+      {/* Card list */}
+      <div className="card-list">
+        {cards.map((card, idx) => (
+          <KanbanCard key={card._id} card={card} index={idx} accentColor={accentColor} />
+        ))}
+        {isDraggedOver && cards.length === 0 && (
+          <div className="card-drop-slot">
+            <span>✦ Drop task here ✦</span>
+          </div>
+        )}
+      </div>
+
+      {/* Bottom "+ Add Task" Button (always accessible) */}
+      {!isAddingCard && (
         <button
           type="button"
           onClick={() => setIsAddingCard(true)}
-          className="add-card-btn"
+          className="add-task-btn"
+          style={{ flexShrink: 0 }}
         >
-          <Plus size={13} />
-          <span>Add a task</span>
+          <span>+ Add Task</span>
         </button>
       )}
     </div>

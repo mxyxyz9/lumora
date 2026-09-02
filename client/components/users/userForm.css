@@ -15,20 +15,23 @@
 }
 .auth-layout .auth-dialog {
   width: min(275px, 36vw);
-  padding: 24px 24px;
+  padding: 28px 28px;
   margin: auto;
   margin-bottom: 22px;
-  background: #fff;
-  border-radius: 3px;
-  border: 1px solid #dbdbdb;
-  border-bottom-color: #c2c2c2;
-  box-shadow: 0 2px 7px rgba(0,0,0,0.3);
+  background: #ffffff;
+  border-radius: 32px;
+  border: 1px solid rgba(166, 140, 255, 0.2);
+  box-shadow: 0 20px 60px rgba(59, 42, 89, 0.15);
 }
 .auth-layout .auth-dialog .at-form .at-link {
-  color: #17683a;
+  color: #7c5ce5;
+  font-weight: 700;
 }
 .auth-layout .auth-dialog .at-form label {
   margin-bottom: 4px;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 700;
+  color: #3b2a59;
 }
 .auth-layout .auth-dialog .at-form input {
   width: 100%;
@@ -61,12 +64,15 @@
   min-width: 0;
   padding: 0;
   border: 0;
+  border-radius: 14px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   line-height: 1;
+  background: #ede8f9;
+  color: #7c5ce5;
 }
 .auth-layout .auth-dialog .at-form .password-input-container .password-toggle-btn .fa {
   display: block;
@@ -88,17 +94,24 @@ body.mobile-mode .auth-layout .auth-dialog .at-form .password-input-container .p
 }
 .auth-layout .auth-dialog .at-form button {
   width: 100%;
-  background: #216694;
+  background: linear-gradient(135deg, #7c5ce5 0%, #a68cff 100%);
   color: #fff;
+  border-radius: 20px;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(124, 92, 229, 0.35);
+  border: none;
 }
 .auth-layout .auth-dialog .at-form .at-title {
-  background: #f7f7f7;
-  margin: -24px -24px;
-  padding: 18px 24px 6px;
+  background: #fbf9ff;
+  margin: -28px -28px;
+  padding: 20px 28px 10px;
   margin-bottom: 22px;
-  border-bottom: 1px solid #dcdcdc;
-  color: #4d4d4d;
-  font-weight: bold;
+  border-bottom: 1px solid #ede8f9;
+  border-radius: 32px 32px 0 0;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 800;
+  color: #3b2a59;
 }
 .auth-layout .auth-dialog .at-form .at-signup-link,
 .auth-layout .auth-dialog .at-form .at-signin-link,

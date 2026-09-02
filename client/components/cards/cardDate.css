@@ -1,12 +1,16 @@
 .card-date {
-  display: block;
-  border-radius: 4px;
-  padding: 1px 3px;
-  background-color: #dbdbdb;
+  display: inline-block;
+  border-radius: 12px;
+  padding: 3px 8px;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: calc(12px * var(--wekan-ui-font-scale, 1));
+  background-color: #f1f2f6;
+  color: #57606f;
 }
 .card-date:hover,
 .card-date.is-active {
-  background-color: #b3b3b3;
+  filter: brightness(0.95);
 }
 /* Date status colors - red = overdue, amber = due soon, no shade = not due.
  * These status rules use !important so they override the date-type base
@@ -14,21 +18,21 @@
  * due-date badge in the card detail showed yellow/amber instead of red, while
  * the minicard (which already used !important) showed red - issue #5965. */
 .card-date.overdue {
-  background-color: #ff4444 !important; /* Red for overdue */
-  color: #fff !important;
+  background-color: #ffb8b8 !important; /* Pastel red for overdue */
+  color: #a62a2a !important;
 }
 .card-date.overdue:hover,
 .card-date.overdue.is-active {
-  background-color: #cc3333 !important;
+  background-color: #ffa1a1 !important;
 }
 
 .card-date.due-soon {
-  background-color: #ffaa00 !important; /* Amber for due soon */
-  color: #000 !important;
+  background-color: #ffeaa7 !important; /* Pastel amber for due soon */
+  color: #b28900 !important;
 }
 .card-date.due-soon:hover,
 .card-date.due-soon.is-active {
-  background-color: #e69900 !important;
+  background-color: #ffdf7a !important;
 }
 
 .card-date.not-due {
@@ -36,88 +40,89 @@
 }
 
 .card-date.current {
-  background-color: #5ba639 !important; /* Green for current/active */
-  color: #fff !important;
+  background-color: #d4f1dd !important; /* Green for current/active */
+  color: #1f8b4d !important;
 }
 .card-date.current:hover,
 .card-date.current.is-active {
-  background-color: #46802c !important;
+  background-color: #c3ebd0 !important;
 }
 
 .card-date.completed {
-  background-color: #90ee90 !important; /* Light green for completed */
-  color: #000 !important;
+  background-color: #d4f1dd !important; /* Light green for completed */
+  color: #1f8b4d !important;
 }
 .card-date.completed:hover,
 .card-date.completed.is-active {
-  background-color: #7dd87d !important;
+  background-color: #c3ebd0 !important;
 }
 
 .card-date.completed-early {
-  background-color: #4caf50 !important; /* Green for completed early */
-  color: #fff !important;
+  background-color: #d4f1dd !important; /* Green for completed early */
+  color: #1f8b4d !important;
 }
 .card-date.completed-early:hover,
 .card-date.completed-early.is-active {
-  background-color: #45a049 !important;
+  background-color: #c3ebd0 !important;
 }
 
 .card-date.completed-late {
-  background-color: #ff9800 !important; /* Orange for completed late */
-  color: #fff !important;
+  background-color: #ffe5d9 !important; /* Orange for completed late */
+  color: #c45b38 !important;
 }
 .card-date.completed-late:hover,
 .card-date.completed-late.is-active {
-  background-color: #f57c00 !important;
+  background-color: #ffd5c2 !important;
 }
 
 .card-date.completed-on-time {
-  background-color: #2196f3 !important; /* Blue for completed on time */
-  color: #fff !important;
+  background-color: #c7ecee !important; /* Blue for completed on time */
+  color: #1e7075 !important;
 }
 .card-date.completed-on-time:hover,
 .card-date.completed-on-time.is-active {
-  background-color: #1976d2 !important;
+  background-color: #b2e5e7 !important;
 }
 
 /* Date type specific colors */
 .card-date.received-date {
-  background-color: #dbdbdb; /* Light grey for received */
+  background-color: #f1f2f6; /* Light grey for received */
+  color: #57606f;
 }
 
 .card-date.received-date:hover,
 .card-date.received-date.is-active {
-  background-color: #b3b3b3;
+  background-color: #e4e7ed;
 }
 
 .card-date.start-date {
-  background-color: #90ee90; /* Light green for start */
-  color: #000; /* Black text for start */
+  background-color: #d4f1dd; /* Pastel green for start */
+  color: #1f8b4d;
 }
 
 .card-date.start-date:hover,
 .card-date.start-date.is-active {
-  background-color: #7dd87d;
+  background-color: #c3ebd0;
 }
 
 .card-date.due-date {
-  background-color: #ffd700; /* Yellow for due */
-  color: #000; /* Black text for due */
+  background-color: #ffeaa7; /* Pastel yellow for due */
+  color: #b28900;
 }
 
 .card-date.due-date:hover,
 .card-date.due-date.is-active {
-  background-color: #e6c200;
+  background-color: #ffdf7a;
 }
 
 .card-date.end-date {
-  background-color: #ffb3b3; /* Light red for end */
-  color: #000; /* Black text for end */
+  background-color: #c7ecee; /* Light cyan for end */
+  color: #1e7075;
 }
 
 .card-date.end-date:hover,
 .card-date.end-date.is-active {
-  background-color: #ff9999;
+  background-color: #b2e5e7;
 }
 /* Font Awesome glyphs, not emoji: the emoji were the last of the 8.00-8.24
    colourful-emoji icon set, they render differently on every platform, and the

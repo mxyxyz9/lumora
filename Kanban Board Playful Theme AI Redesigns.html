@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playful Kanban Board</title>
+  <style>
+    /* Only importing the Quicksand font needed for this design */
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800&display=swap');
+
+    /* =========================================
+       BASE RESET & PLAYFUL THEME STYLES
+       ========================================= */
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+    
+    body {
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #f4f0ff; /* Soft lavender */
+      color: #3b2a59;
+      font-family: 'Quicksand', system-ui, sans-serif;
+    }
+
+    /* Core structural layout */
+    .app-header {
+      padding: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 10;
+    }
+
+    .app-header h1 { 
+      font-weight: 800; 
+      font-size: 2.5rem; 
+      letter-spacing: -1px; 
+    }
+    
+    .board-container {
+      flex-grow: 1;
+      padding: 0 2rem 6rem 2rem;
+      overflow-x: auto;
+      overflow-y: hidden;
+      position: relative;
+      z-index: 10;
+    }
+
+    .board {
+      display: inline-flex;
+      align-items: flex-start;
+      height: 100%;
+      min-height: 70vh;
+      gap: 24px; 
+      padding: 12px;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      height: 100%;
+      max-height: 80vh;
+      cursor: grab;
+      position: relative;
+      width: 340px; 
+      background: #ffffff; 
+      border-radius: 40px; 
+      padding: 16px;
+      box-shadow: 0 16px 40px rgba(100, 80, 200, 0.08);
+    }
+    
+    .column:active { cursor: grabbing; }
+    .column.is-dragging { opacity: 0.5 !important; }
+
+    .column-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      padding: 12px 12px 24px 12px;
+    }
+
+    .column-title { 
+      font-weight: 800; 
+      font-size: 1.3rem; 
+      color: #3b2a59; 
+    }
+    
+    .column-count { 
+      font-weight: 800; 
+      font-size: 1rem; 
+      color: #fff; 
+      background: #a68cff; 
+      padding: 4px 12px; 
+      border-radius: 20px; 
+    }
+
+    .card-list {
+      flex-grow: 1;
+      overflow-y: auto;
+      min-height: 150px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px; 
+      padding: 4px;
+    }
+    
+    /* Hide scrollbars */
+    .card-list::-webkit-scrollbar { display: none; }
+    .card-list { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .card {
+      cursor: grab;
+      position: relative;
+      transform-origin: center center;
+      border-radius: 24px; 
+      padding: 24px;
+      box-shadow: 0 4px 0px rgba(0,0,0,0.05); /* Chunky solid shadow */
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy */
+    }
+    
+    /* Playful color blocks based on data-attribute */
+    .card[data-color="1"] { background: #ffeaa7; color: #b28900; }
+    .card[data-color="2"] { background: #ffb8b8; color: #a62a2a; }
+    .card[data-color="3"] { background: #c7ecee; color: #1e7075; }
+    .card[data-color="4"] { background: #e0d4ff; color: #493396; }
+    .card[data-color="5"] { background: #f1f2f6; color: #57606f; }
+    
+    .card:active { cursor: grabbing; }
+    .card:hover { 
+      transform: translateY(-6px) scale(1.02); 
+      box-shadow: 0 10px 0px rgba(0,0,0,0.08); 
+    }
+    
+    .card.is-dragging { 
+      transform: scale(1.05) rotate(-3deg); 
+      box-shadow: 0 20px 30px rgba(0,0,0,0.1); 
+      opacity: 0.4 !important;
+    }
+    
+    .card-tags { display: flex; flex-wrap: wrap; }
+    
+    .tag {
+      font-size: 0.8rem; 
+      font-weight: 800; 
+      padding: 6px 14px; 
+      border-radius: 100px; 
+      margin-right: 8px; 
+      margin-bottom: 16px;
+      background: rgba(255,255,255,0.6); 
+      color: inherit;
+    }
+
+    .card-title { 
+      font-size: 1.15rem; 
+      font-weight: 700; 
+      margin-bottom: 20px; 
+      line-height: 1.4; 
+      color: #111; 
+    }
+    
+    .card-meta { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center;
+      font-size: 0.9rem; 
+      font-weight: 700; 
+      opacity: 0.7; 
+    }
+    
+    .card-avatar { 
+      width: 32px; 
+      height: 32px; 
+      background: rgba(0,0,0,0.1); 
+      border-radius: 50%; 
+    }
+    
+    .add-task-btn {
+      width: 100%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      margin-top: 12px; 
+      padding: 20px; 
+      font-family: inherit; 
+      font-weight: 800; 
+      font-size: 1rem; 
+      color: #a68cff;
+      background: #f4f0ff; 
+      border-radius: 24px; 
+      transition: all 0.2s;
+    }
+    
+    .add-task-btn:hover { 
+      background: #e0d4ff; 
+      color: #3b2a59; 
+      transform: translateY(-2px); 
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>Project Overview</h1>
+  </header>
+
+  <div class="board-container">
+    <main class="board" id="board">
+      
+      <!-- Column 1 -->
+      <div class="column" draggable="true">
+        <div class="column-header">
+          <span class="column-title">Backlog</span>
+          <span class="column-count">3</span>
+        </div>
+        <div class="card-list">
+          <div class="card" draggable="true" data-color="1">
+            <div class="card-tags"><span class="tag">Research</span></div>
+            <h3 class="card-title">Audit existing component library</h3>
+            <div class="card-meta"><span class="card-date">Oct 12</span><span class="card-avatar"></span></div>
+          </div>
+          <div class="card" draggable="true" data-color="2">
+            <div class="card-tags"><span class="tag">Design</span><span class="tag">System</span></div>
+            <h3 class="card-title">Draft initial color tokens</h3>
+            <div class="card-meta"><span class="card-date">Oct 14</span><span class="card-avatar"></span></div>
+          </div>
+          <div class="card" draggable="true" data-color="3">
+            <div class="card-tags"><span class="tag">Product</span></div>
+            <h3 class="card-title">User interviews for navigation pain points</h3>
+            <div class="card-meta"><span class="card-date">Oct 18</span><span class="card-avatar"></span></div>
+          </div>
+        </div>
+        <button class="add-task-btn">+ Add Task</button>
+      </div>
+
+      <!-- Column 2 -->
+      <div class="column" draggable="true">
+        <div class="column-header">
+          <span class="column-title">To Do</span>
+          <span class="column-count">2</span>
+        </div>
+        <div class="card-list">
+          <div class="card" draggable="true" data-color="4">
+            <div class="card-tags"><span class="tag">Dev</span></div>
+            <h3 class="card-title">Setup Electron boilerplate with new bundler</h3>
+            <div class="card-meta"><span class="card-date">Oct 09</span><span class="card-avatar"></span></div>
+          </div>
+          <div class="card" draggable="true" data-color="5">
+            <div class="card-tags"><span class="tag">Design</span></div>
+            <h3 class="card-title">Redesign main board headers</h3>
+            <div class="card-meta"><span class="card-date">Oct 10</span><span class="card-avatar"></span></div>
+          </div>
+        </div>
+        <button class="add-task-btn">+ Add Task</button>
+      </div>
+
+      <!-- Column 3 -->
+      <div class="column" draggable="true">
+        <div class="column-header">
+          <span class="column-title">In Progress</span>
+          <span class="column-count">1</span>
+        </div>
+        <div class="card-list">
+          <div class="card" draggable="true" data-color="1">
+            <div class="card-tags"><span class="tag">Design</span><span class="tag">Motion</span></div>
+            <h3 class="card-title">Drag and drop interaction prototypes</h3>
+            <div class="card-meta"><span class="card-date">Oct 08</span><span class="card-avatar"></span></div>
+          </div>
+        </div>
+        <button class="add-task-btn">+ Add Task</button>
+      </div>
+
+      <!-- Column 4 -->
+      <div class="column" draggable="true">
+        <div class="column-header">
+          <span class="column-title">Done</span>
+          <span class="column-count">2</span>
+        </div>
+        <div class="card-list">
+          <div class="card" draggable="true" data-color="2">
+            <div class="card-tags"><span class="tag">Strategy</span></div>
+            <h3 class="card-title">Finalize Q4 roadmap priorities</h3>
+            <div class="card-meta"><span class="card-date">Oct 01</span><span class="card-avatar"></span></div>
+          </div>
+          <div class="card" draggable="true" data-color="3">
+            <div class="card-tags"><span class="tag">Bug</span></div>
+            <h3 class="card-title">Fix subfolder routing issue on Windows</h3>
+            <div class="card-meta"><span class="card-date">Oct 05</span><span class="card-avatar"></span></div>
+          </div>
+        </div>
+        <button class="add-task-btn">+ Add Task</button>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // --- Robust Vanilla JS Drag & Drop ---
+    let draggedElement = null;
+    let dragType = null; // 'card' or 'column'
+
+    const initDnD = () => {
+      const cards = document.querySelectorAll('.card');
+      const columns = document.querySelectorAll('.column');
+      const board = document.getElementById('board');
+
+      // 1. Card Dragging Setup
+      cards.forEach(card => {
+        card.addEventListener('dragstart', (e) => {
+          e.stopPropagation(); // Prevent column from dragging when grabbing a card
+          dragType = 'card';
+          draggedElement = card;
+          e.dataTransfer.effectAllowed = 'move';
+          setTimeout(() => card.classList.add('is-dragging'), 0);
+        });
+
+        card.addEventListener('dragend', (e) => {
+          e.stopPropagation();
+          card.classList.remove('is-dragging');
+          draggedElement = null;
+          dragType = null;
+        });
+      });
+
+      // 2. Column Dragging Setup
+      columns.forEach(col => {
+        col.addEventListener('dragstart', (e) => {
+          if (dragType === 'card') return; // Ignore if it's a bubbling card drag
+          dragType = 'column';
+          draggedElement = col;
+          e.dataTransfer.effectAllowed = 'move';
+          setTimeout(() => col.classList.add('is-dragging'), 0);
+        });
+
+        col.addEventListener('dragend', () => {
+          col.classList.remove('is-dragging');
+          draggedElement = null;
+          dragType = null;
+        });
+
+        // 3. Card Drop Logic (Inside Columns)
+        const cardList = col.querySelector('.card-list');
+        cardList.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          if (dragType !== 'card') return; // Only accept cards
+
+          const afterElement = getDragAfterElement(cardList, e.clientY);
+          if (afterElement == null) {
+            cardList.appendChild(draggedElement);
+          } else {
+            cardList.insertBefore(draggedElement, afterElement);
+          }
+        });
+      });
+
+      // 4. Column Drop Logic (Inside Board)
+      board.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (dragType !== 'column') return; // Only accept columns
+
+        const afterElement = getDragAfterColumn(board, e.clientX);
+        if (afterElement == null) {
+          board.appendChild(draggedElement);
+        } else {
+          board.insertBefore(draggedElement, afterElement);
+        }
+      });
+    };
+
+    // Helper: Determine insertion position for cards
+    function getDragAfterElement(container, y) {
+      const draggableElements = [...container.querySelectorAll('.card:not(.is-dragging)')];
+      return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    // Helper: Determine insertion position for columns
+    function getDragAfterColumn(container, x) {
+      const draggableElements = [...container.querySelectorAll('.column:not(.is-dragging)')];
+      return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = x - box.left - box.width / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    initDnD();
+  </script>
+</body>
+</html>

@@ -3,13 +3,15 @@ textarea,
 input:not([type=file]),
 button {
   box-sizing: border-box;
-  background-color: #ebebeb;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  background-color: #fbf9ff;
+  border: 2px solid #e2d9fa;
+  border-radius: 18px;
   display: block;
   margin-bottom: 14px;
   min-height: 41px;
   padding: 9px 14px;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  color: #3b2a59;
 }
 select.full,
 textarea.full,
@@ -21,8 +23,8 @@ select.input-error,
 textarea.input-error,
 input:not([type=file]).input-error,
 button.input-error {
-  background-color: #ece9e9;
-  border-color: #ba1212;
+  background-color: #fff2f2;
+  border-color: #ffb8b8;
 }
 select:focus,
 textarea:focus,
@@ -67,37 +69,37 @@ input[type="text"]:hover,
 input[type="password"]:hover,
 input[type="email"]:hover,
 textarea:hover {
-  border-color: #999;
+  border-color: #a68cff;
 }
 input[type="text"]:hover.input-error,
 input[type="password"]:hover.input-error,
 input[type="email"]:hover.input-error,
 textarea:hover.input-error {
-  border-color: #ba1212;
+  border-color: #ffb8b8;
 }
 input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="email"]:focus,
 textarea:focus {
   background: #fff;
-  border-color: #318ec4;
-  box-shadow: 0 0 2px #318ec4;
+  border-color: #7c5ce5;
+  box-shadow: 0 0 0 4px rgba(124, 92, 229, 0.25);
 }
 input[type="text"]:focus.input-error,
 input[type="password"]:focus.input-error,
 input[type="email"]:focus.input-error,
 textarea:focus.input-error {
-  background-color: #f8f7f7;
-  border-color: #ba1212;
-  box-shadow: 0 0 2px #d11515;
+  background-color: #fff5f5;
+  border-color: #ff8585;
+  box-shadow: 0 0 0 4px rgba(255, 133, 133, 0.25);
 }
 input[type="text"]:disabled,
 input[type="password"]:disabled,
 input[type="email"]:disabled,
 textarea:disabled {
-  background-color: #dcdcdc;
-  border-color: #bfbfbf;
-  color: #222;
+  background-color: #f1f2f6;
+  border-color: #e4e7ed;
+  color: #8c7ba8;
   -webkit-touch-callout: none;
    -webkit-user-select: none;
   user-select: none;
@@ -111,7 +113,7 @@ select.inline {
   width: 100%;
 }
 option[disabled] {
-  color: #222;
+  color: #8c7ba8;
 }
 textarea {
   height: 180px;
@@ -124,22 +126,25 @@ textarea.editor {
   padding-bottom: 27px;
 }
 .button {
-  border-radius: 3px;
+  border-radius: 20px;
   text-decoration: none;
   position: relative;
 }
 input[type="submit"],
 button {
-  background: var(--theme-accent, #000);
-  background: linear-gradient(var(--theme-accent, #000), var(--theme-accent, #000));
+  background: var(--theme-accent, linear-gradient(135deg, #7c5ce5 0%, #9b7aff 100%));
   border: none;
+  border-radius: 20px;
   cursor: pointer;
   display: inline-block;
-  font-weight: 700;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 800;
   line-height: 1.3;
-  padding: 9px 35px;
+  padding: 10px 32px;
   text-align: center;
   color: #fff;
+  box-shadow: 0 4px 14px rgba(124, 92, 229, 0.3);
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 input[type="submit"] .wide,
 button .wide {
@@ -150,15 +155,16 @@ input[type="submit"]:hover,
 button:hover,
 input[type="submit"]:focus,
 button:focus {
-  background: var(--theme-accent, #222);
-  background: linear-gradient(var(--theme-accent, #222), var(--theme-accent, #222));
+  background: var(--theme-accent, linear-gradient(135deg, #603bb8 0%, #7c5ce5 100%));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(124, 92, 229, 0.4);
   color: #fff;
 }
 input[type="submit"]:active,
 button:active {
-  background: var(--theme-accent, #111);
-  background: linear-gradient(var(--theme-accent, #111), var(--theme-accent, #111));
-  box-shadow: inset 0 3px 6px rgba(0,0,0,0.3);
+  background: var(--theme-accent, #603bb8);
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(124, 92, 229, 0.3);
   color: #fff;
 }
 input[type="submit"]:active:hover,
@@ -167,23 +173,15 @@ input[type="submit"]:active:focus,
 button:active:focus,
 input[type="submit"]:active:active,
 button:active:active {
-  background: #e6e6e6;
-  background: linear-gradient(#e6e6e6, #e6e6e6);
+  background: #603bb8;
 }
-/* The submit button of a useraccounts form inside a popup is a `.primary` too.
-   Member Settings / Change Password renders `+atForm(state='changePwd')`, whose
-   button is `button.at-btn#at-btn` with no class of ours on it - so it fell back
-   to the plain grey `button` above, while the Save button of Edit Profile beside
-   it in the same menu was the themed one. Two buttons, one menu, two looks.
-   It is named in the SAME rules rather than given a copy of them, so the theme
-   accent and the hover and active states have one home.
-   docs/Features/Page/Theme.md */
 input[type="submit"].primary,
 button.primary,
 .pop-over .at-form button.at-btn {
-  background: var(--theme-accent, #005377);
-  box-shadow: 0 1px 0 #4d4d4d;
+  background: var(--theme-accent, linear-gradient(135deg, #7c5ce5 0%, #9b7aff 100%));
+  box-shadow: 0 4px 14px rgba(124, 92, 229, 0.35);
   color: #fff;
+  border-radius: 20px;
 }
 input[type="submit"].primary:hover,
 button.primary:hover,
@@ -191,12 +189,14 @@ button.primary:hover,
 input[type="submit"].primary:focus,
 button.primary:focus,
 .pop-over .at-form button.at-btn:focus {
-  background: var(--theme-accent, #004766);
+  background: var(--theme-accent, linear-gradient(135deg, #603bb8 0%, #7c5ce5 100%));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(124, 92, 229, 0.45);
 }
 input[type="submit"].primary:active,
 button.primary:active,
 .pop-over .at-form button.at-btn:active {
-  background: var(--theme-accent, #01628c);
+  background: var(--theme-accent, #603bb8);
 }
 input[type="submit"].negate,
 button.negate {

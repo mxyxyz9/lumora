@@ -98,10 +98,10 @@ export const IntegrationsModal: React.FC<IntegrationsModalProps> = ({ isOpen, on
   };
 
   const PROVIDERS = [
-    { id: 'github' as ProviderType, label: 'GitHub Issues', badge: 'Active', icon: Github },
-    { id: 'jira' as ProviderType, label: 'Jira Software', badge: 'Cloud / DC', icon: Database },
-    { id: 'linear' as ProviderType, label: 'Linear', badge: 'GraphQL', icon: Radio },
-    { id: 'asana' as ProviderType, label: 'Asana', badge: 'REST', icon: CheckSquare },
+    { id: 'github' as const, label: 'GitHub Issues', icon: Github, badge: 'Active' },
+    { id: 'jira' as const, label: 'Jira Software', icon: Database, badge: 'Cloud / DC' },
+    { id: 'linear' as const, label: 'Linear', icon: Radio, badge: 'GraphQL' },
+    { id: 'asana' as const, label: 'Asana', icon: CheckSquare, badge: 'REST' },
   ];
 
   return (
@@ -112,11 +112,13 @@ export const IntegrationsModal: React.FC<IntegrationsModalProps> = ({ isOpen, on
       <div
         className="modal-dialog"
         style={{
-          width: '680px',
+          width: '640px',
           maxWidth: '92vw',
+          height: 'auto',
+          maxHeight: '88vh',
           background: 'var(--bg-modal)',
-          border: '1px solid var(--border-medium)',
-          borderRadius: 'var(--r-lg)',
+          borderRadius: '36px',
+          border: '1.5px solid var(--border-medium)',
           boxShadow: 'var(--shadow-modal)',
           overflow: 'hidden',
           display: 'flex',
@@ -124,36 +126,23 @@ export const IntegrationsModal: React.FC<IntegrationsModalProps> = ({ isOpen, on
         }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Modal Header */}
+        {/* Modal Header (Seamless, Minimalist) */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '16px 20px',
-            borderBottom: '1px solid var(--border-subtle)',
-            background: 'var(--bg-header)',
+            padding: '22px 26px 12px',
+            background: 'var(--bg-modal)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{
-              width: '30px',
-              height: '30px',
-              borderRadius: 'var(--r-sm)',
-              background: 'var(--bg-badge)',
-              border: '1px solid var(--border-medium)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--accent-blue)',
-            }}>
-              <Layers size={16} />
-            </div>
+            <Layers size={22} style={{ color: 'var(--accent-primary)', flexShrink: 0 }} />
             <div>
-              <h2 style={{ margin: 0, fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+              <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
                 Integrations & PM Sync
               </h2>
-              <p style={{ margin: '1px 0 0', fontSize: '11.5px', color: 'var(--text-muted)' }}>
+              <p style={{ margin: '2px 0 0', fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>
                 Synchronize cards and issue states with your external tracking tools
               </p>
             </div>
@@ -161,7 +150,7 @@ export const IntegrationsModal: React.FC<IntegrationsModalProps> = ({ isOpen, on
           <button
             onClick={onClose}
             className="btn-icon"
-            style={{ width: '28px', height: '28px' }}
+            style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', color: 'var(--accent-primary)' }}
             title="Close"
           >
             <X size={15} />
@@ -169,21 +158,21 @@ export const IntegrationsModal: React.FC<IntegrationsModalProps> = ({ isOpen, on
         </div>
 
         {/* Modal Body: Provider Sidebar + Form Panel */}
-        <div style={{ display: 'flex', minHeight: '380px' }}>
+        <div style={{ display: 'flex', minHeight: '380px', padding: '0 24px 24px', gap: '20px' }}>
           {/* Provider Sidebar */}
           <div
             style={{
-              width: '190px',
-              borderRight: '1px solid var(--border-subtle)',
-              backgroundColor: 'var(--bg-sidebar)',
-              padding: '12px 8px',
+              width: '180px',
+              padding: '12px 10px',
+              background: 'var(--bg-input)',
+              borderRadius: '24px',
               display: 'flex',
               flexDirection: 'column',
-              gap: '4px',
+              gap: '6px',
               flexShrink: 0,
             }}
           >
-            <div style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-muted)', padding: '4px 8px 6px' }}>
+            <div style={{ fontSize: '10.5px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-muted)', padding: '4px 8px 4px' }}>
               Supported Trackers
             </div>
             {PROVIDERS.map(p => {
@@ -198,30 +187,30 @@ export const IntegrationsModal: React.FC<IntegrationsModalProps> = ({ isOpen, on
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '8px 10px',
-                    borderRadius: 'var(--r-sm)',
-                    border: '1px solid',
-                    borderColor: isSelected ? 'var(--border-medium)' : 'transparent',
-                    background: isSelected ? 'var(--bg-card)' : 'transparent',
-                    color: isSelected ? 'var(--text-primary)' : 'var(--text-secondary)',
+                    padding: '9px 12px',
+                    borderRadius: '14px',
+                    border: 'none',
+                    background: isSelected ? 'var(--accent-primary)' : 'transparent',
+                    color: isSelected ? 'var(--accent-primary-text)' : 'var(--text-primary)',
                     cursor: 'pointer',
-                    fontWeight: isSelected ? 600 : 500,
-                    fontSize: '12.5px',
+                    fontWeight: isSelected ? 800 : 600,
+                    fontSize: '12px',
                     textAlign: 'left',
-                    transition: 'all var(--t-fast)',
+                    transition: 'all 0.15s ease',
+                    boxShadow: isSelected ? '0 4px 12px var(--border-card)' : 'none',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-                    <IconComponent size={14} style={{ color: isSelected ? 'var(--accent-blue)' : 'var(--text-muted)' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <IconComponent size={14} style={{ color: isSelected ? 'var(--accent-primary-text)' : 'var(--text-muted)' }} />
                     <span>{p.label}</span>
                   </div>
                   <span style={{
                     fontSize: '9.5px',
-                    fontWeight: 600,
-                    color: isSelected ? 'var(--text-secondary)' : 'var(--text-muted)',
-                    background: 'var(--bg-badge)',
-                    padding: '1px 5px',
-                    borderRadius: 'var(--r-xs)',
+                    fontWeight: 800,
+                    color: isSelected ? 'var(--accent-primary)' : 'var(--text-muted)',
+                    background: isSelected ? 'var(--accent-primary-text)' : 'var(--bg-modal)',
+                    padding: '2px 6px',
+                    borderRadius: '100px',
                   }}>
                     {p.badge}
                   </span>
@@ -231,54 +220,72 @@ export const IntegrationsModal: React.FC<IntegrationsModalProps> = ({ isOpen, on
           </div>
 
           {/* Tab Content Panel */}
-          <div style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: '16px', overflowY: 'auto', background: 'var(--bg-canvas)' }}>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px', overflowY: 'auto', background: 'transparent', padding: '4px 0 0' }}>
             {activeTab === 'github' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <h3 style={{ margin: '0 0 4px', fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>GitHub Issues & Pull Requests</h3>
-                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+                  <h3 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>GitHub Issues & Pull Requests</h3>
+                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.45, fontWeight: 500 }}>
                     Synchronize GitHub Issues into cards and automatically open Pull Requests during Codex execution.
                   </p>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Personal Access Token (PAT)</label>
+                  <label style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-secondary)' }}>Personal Access Token (PAT)</label>
                   <input
                     type="password"
                     value={githubPat}
                     onChange={e => setGithubPat(e.target.value)}
                     placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-                    className="form-input"
+                    style={{
+                      height: '38px',
+                      background: 'var(--bg-input)',
+                      border: '1.5px solid var(--border-subtle)',
+                      borderRadius: '16px',
+                      padding: '0 14px',
+                      fontSize: '12.5px',
+                      color: 'var(--text-primary)',
+                      outline: 'none',
+                    }}
                   />
-                  <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>
                     Requires <code>repo</code> permissions for issue reading and PR branch creation.
                   </span>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Repository (owner/repo)</label>
+                  <label style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-secondary)' }}>Repository (owner/repo)</label>
                   <input
                     type="text"
                     value={githubRepo}
                     onChange={e => setGithubRepo(e.target.value)}
                     placeholder="e.g. wekan/wekan"
-                    className="form-input"
+                    style={{
+                      height: '38px',
+                      background: 'var(--bg-input)',
+                      border: '1.5px solid var(--border-subtle)',
+                      borderRadius: '16px',
+                      padding: '0 14px',
+                      fontSize: '12.5px',
+                      color: 'var(--text-primary)',
+                      outline: 'none',
+                    }}
                   />
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '8px', borderTop: '1px solid var(--border-subtle)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '8px', marginTop: 'auto' }}>
                   <button
                     onClick={testGithub}
                     disabled={ghStatus.loading || !githubPat}
                     className="btn-primary"
-                    style={{ fontSize: '12px', height: '32px', padding: '0 14px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                    style={{ fontSize: '12px', height: '36px', padding: '0 20px', display: 'flex', alignItems: 'center', gap: '6px', borderRadius: '100px', background: 'var(--accent-primary)', color: 'var(--accent-primary-text)', boxShadow: '0 4px 14px var(--border-card)' }}
                   >
                     {ghStatus.loading ? <RefreshCw size={13} className="animate-spin" /> : <Check size={13} />}
                     <span>Test & Save Connection</span>
                   </button>
 
                   {ghStatus.msg && (
-                    <span style={{ fontSize: '12px', color: ghStatus.ok ? 'var(--success)' : 'var(--danger)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ fontSize: '12px', color: ghStatus.ok ? 'var(--success)' : 'var(--danger)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
                       {ghStatus.ok ? <CheckCircle2 size={13} /> : <AlertCircle size={13} />}
                       {ghStatus.msg}
                     </span>
@@ -288,72 +295,108 @@ export const IntegrationsModal: React.FC<IntegrationsModalProps> = ({ isOpen, on
             )}
 
             {activeTab === 'jira' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <h3 style={{ margin: '0 0 4px', fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Jira Software (Cloud & Data Center)</h3>
-                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+                  <h3 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>Jira Software (Cloud & Data Center)</h3>
+                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.45, fontWeight: 500 }}>
                     Map Jira issues into cards and transition status across backlog, in-progress, and shipped stages.
                   </p>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Jira Domain / URL</label>
+                  <label style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-secondary)' }}>Jira Domain / URL</label>
                   <input
                     type="text"
                     value={jiraDomain}
                     onChange={e => setJiraDomain(e.target.value)}
                     placeholder="my-company.atlassian.net"
-                    className="form-input"
+                    style={{
+                      height: '38px',
+                      background: 'var(--bg-input)',
+                      border: '1.5px solid var(--border-subtle)',
+                      borderRadius: '16px',
+                      padding: '0 14px',
+                      fontSize: '12.5px',
+                      color: 'var(--text-primary)',
+                      outline: 'none',
+                    }}
                   />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Email Address</label>
+                    <label style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-secondary)' }}>Email Address</label>
                     <input
                       type="email"
                       value={jiraEmail}
                       onChange={e => setJiraEmail(e.target.value)}
                       placeholder="user@company.com"
-                      className="form-input"
+                      style={{
+                        height: '38px',
+                        background: 'var(--bg-input)',
+                        border: '1.5px solid var(--border-subtle)',
+                        borderRadius: '16px',
+                        padding: '0 14px',
+                        fontSize: '12.5px',
+                        color: 'var(--text-primary)',
+                        outline: 'none',
+                      }}
                     />
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                    <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Project Key</label>
+                    <label style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-secondary)' }}>Project Key</label>
                     <input
                       type="text"
                       value={jiraProjectKey}
                       onChange={e => setJiraProjectKey(e.target.value)}
                       placeholder="e.g. PROJ"
-                      className="form-input"
+                      style={{
+                        height: '38px',
+                        background: 'var(--bg-input)',
+                        border: '1.5px solid var(--border-subtle)',
+                        borderRadius: '16px',
+                        padding: '0 14px',
+                        fontSize: '12.5px',
+                        color: 'var(--text-primary)',
+                        outline: 'none',
+                      }}
                     />
                   </div>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>API Token</label>
+                  <label style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-secondary)' }}>API Token</label>
                   <input
                     type="password"
                     value={jiraToken}
                     onChange={e => setJiraToken(e.target.value)}
                     placeholder="Atlassian API Token"
-                    className="form-input"
+                    style={{
+                      height: '38px',
+                      background: 'var(--bg-input)',
+                      border: '1.5px solid var(--border-subtle)',
+                      borderRadius: '16px',
+                      padding: '0 14px',
+                      fontSize: '12.5px',
+                      color: 'var(--text-primary)',
+                      outline: 'none',
+                    }}
                   />
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '8px', borderTop: '1px solid var(--border-subtle)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '8px', marginTop: 'auto' }}>
                   <button
                     onClick={testJira}
                     disabled={jiraStatus.loading || !jiraDomain || !jiraEmail || !jiraToken}
                     className="btn-primary"
-                    style={{ fontSize: '12px', height: '32px', padding: '0 14px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                    style={{ fontSize: '12px', height: '36px', padding: '0 20px', display: 'flex', alignItems: 'center', gap: '6px', borderRadius: '100px', background: 'var(--accent-primary)', color: 'var(--accent-primary-text)', boxShadow: '0 4px 14px var(--border-card)' }}
                   >
                     {jiraStatus.loading ? <RefreshCw size={13} className="animate-spin" /> : <Check size={13} />}
                     <span>Test & Save Jira</span>
                   </button>
 
                   {jiraStatus.msg && (
-                    <span style={{ fontSize: '12px', color: jiraStatus.ok ? 'var(--success)' : 'var(--danger)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ fontSize: '12px', color: jiraStatus.ok ? 'var(--success)' : 'var(--danger)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
                       {jiraStatus.ok ? <CheckCircle2 size={13} /> : <AlertCircle size={13} />}
                       {jiraStatus.msg}
                     </span>
@@ -363,49 +406,67 @@ export const IntegrationsModal: React.FC<IntegrationsModalProps> = ({ isOpen, on
             )}
 
             {activeTab === 'linear' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <h3 style={{ margin: '0 0 4px', fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Linear Workspace (GraphQL API)</h3>
-                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+                  <h3 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>Linear Workspace (GraphQL API)</h3>
+                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.45, fontWeight: 500 }}>
                     Real-time synchronization for engineering teams with high-speed Linear cycles.
                   </p>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Linear API Key</label>
+                  <label style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-secondary)' }}>Linear API Key</label>
                   <input
                     type="password"
                     value={linearApiKey}
                     onChange={e => setLinearApiKey(e.target.value)}
                     placeholder="lin_api_xxxxxxxxxxxxxxxxxxxx"
-                    className="form-input"
+                    style={{
+                      height: '38px',
+                      background: 'var(--bg-input)',
+                      border: '1.5px solid var(--border-subtle)',
+                      borderRadius: '16px',
+                      padding: '0 14px',
+                      fontSize: '12.5px',
+                      color: 'var(--text-primary)',
+                      outline: 'none',
+                    }}
                   />
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Target Team Key (Optional)</label>
+                  <label style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-secondary)' }}>Target Team Key (Optional)</label>
                   <input
                     type="text"
                     value={linearTeamKey}
                     onChange={e => setLinearTeamKey(e.target.value)}
                     placeholder="e.g. ENG"
-                    className="form-input"
+                    style={{
+                      height: '38px',
+                      background: 'var(--bg-input)',
+                      border: '1.5px solid var(--border-subtle)',
+                      borderRadius: '16px',
+                      padding: '0 14px',
+                      fontSize: '12.5px',
+                      color: 'var(--text-primary)',
+                      outline: 'none',
+                    }}
                   />
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '8px', borderTop: '1px solid var(--border-subtle)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '8px', marginTop: 'auto' }}>
                   <button
                     onClick={testLinear}
                     disabled={linearStatus.loading || !linearApiKey}
                     className="btn-primary"
-                    style={{ fontSize: '12px', height: '32px', padding: '0 14px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                    style={{ fontSize: '12px', height: '36px', padding: '0 20px', display: 'flex', alignItems: 'center', gap: '6px', borderRadius: '100px', background: 'var(--accent-primary)', color: 'var(--accent-primary-text)', boxShadow: '0 4px 14px var(--border-card)' }}
                   >
                     {linearStatus.loading ? <RefreshCw size={13} className="animate-spin" /> : <Check size={13} />}
                     <span>Test & Save Linear</span>
                   </button>
 
                   {linearStatus.msg && (
-                    <span style={{ fontSize: '12px', color: linearStatus.ok ? 'var(--success)' : 'var(--danger)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ fontSize: '12px', color: linearStatus.ok ? 'var(--success)' : 'var(--danger)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
                       {linearStatus.ok ? <CheckCircle2 size={13} /> : <AlertCircle size={13} />}
                       {linearStatus.msg}
                     </span>
@@ -415,49 +476,67 @@ export const IntegrationsModal: React.FC<IntegrationsModalProps> = ({ isOpen, on
             )}
 
             {activeTab === 'asana' && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <h3 style={{ margin: '0 0 4px', fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Asana Tasks & Projects</h3>
-                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.45 }}>
+                  <h3 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 800, color: 'var(--text-primary)' }}>Asana Tasks & Projects</h3>
+                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.45, fontWeight: 500 }}>
                     Synchronize tasks, custom fields, and sections directly with your Asana workspaces.
                   </p>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Personal Access Token (PAT)</label>
+                  <label style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-secondary)' }}>Personal Access Token (PAT)</label>
                   <input
                     type="password"
                     value={asanaPat}
                     onChange={e => setAsanaPat(e.target.value)}
                     placeholder="1/120xxxxxxxxxxxxxxxxxxxx"
-                    className="form-input"
+                    style={{
+                      height: '38px',
+                      background: 'var(--bg-input)',
+                      border: '1.5px solid var(--border-subtle)',
+                      borderRadius: '16px',
+                      padding: '0 14px',
+                      fontSize: '12.5px',
+                      color: 'var(--text-primary)',
+                      outline: 'none',
+                    }}
                   />
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)' }}>Project GID</label>
+                  <label style={{ fontSize: '12px', fontWeight: 800, color: 'var(--text-secondary)' }}>Project GID</label>
                   <input
                     type="text"
                     value={asanaProjectGid}
                     onChange={e => setAsanaProjectGid(e.target.value)}
                     placeholder="e.g. 120584930284"
-                    className="form-input"
+                    style={{
+                      height: '38px',
+                      background: 'var(--bg-input)',
+                      border: '1.5px solid var(--border-subtle)',
+                      borderRadius: '16px',
+                      padding: '0 14px',
+                      fontSize: '12.5px',
+                      color: 'var(--text-primary)',
+                      outline: 'none',
+                    }}
                   />
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '8px', borderTop: '1px solid var(--border-subtle)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '8px', marginTop: 'auto' }}>
                   <button
                     onClick={testAsana}
                     disabled={asanaStatus.loading || !asanaPat}
                     className="btn-primary"
-                    style={{ fontSize: '12px', height: '32px', padding: '0 14px', display: 'flex', alignItems: 'center', gap: '6px' }}
+                    style={{ fontSize: '12px', height: '36px', padding: '0 20px', display: 'flex', alignItems: 'center', gap: '6px', borderRadius: '100px', background: 'var(--accent-primary)', color: 'var(--accent-primary-text)', boxShadow: '0 4px 14px var(--border-card)' }}
                   >
                     {asanaStatus.loading ? <RefreshCw size={13} className="animate-spin" /> : <Check size={13} />}
                     <span>Test & Save Asana</span>
                   </button>
 
                   {asanaStatus.msg && (
-                    <span style={{ fontSize: '12px', color: asanaStatus.ok ? 'var(--success)' : 'var(--danger)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ fontSize: '12px', color: asanaStatus.ok ? 'var(--success)' : 'var(--danger)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
                       {asanaStatus.ok ? <CheckCircle2 size={13} /> : <AlertCircle size={13} />}
                       {asanaStatus.msg}
                     </span>

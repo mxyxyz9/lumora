@@ -37,12 +37,12 @@ textarea.js-edit-checklist-item {
 .checklist-progress-bar-container .checklist-progress-bar {
   width: 80%;
   height: 10px;
-  background-color: #e0e0e0;
+  background-color: #ede8f9;
   border-radius: 16px;
 }
 .checklist-progress-bar-container .checklist-progress-bar .checklist-progress {
   color: #fff;
-  background-color: #666;
+  background: linear-gradient(135deg, #7c5ce5 0%, #a68cff 100%);
   padding: 0.01em 16px;
   border-radius: 16px;
   height: 100%;
@@ -58,6 +58,9 @@ textarea.js-edit-checklist-item {
   line-height: calc(30px * var(--wekan-ui-font-scale, 1));
 }
 .checklist-title .title {
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 800;
+  color: #3b2a59;
   font-size: calc(18px * var(--wekan-ui-font-scale, 1));
   line-height: calc(25px * var(--wekan-ui-font-scale, 1));
 }
@@ -67,7 +70,7 @@ textarea.js-edit-checklist-item {
   padding-top: 6px;
 }
 .checklist-title .checklist-stat.is-finished {
-  color: #3cb500;
+  color: #1f8b4d;
 }
 .checklist-title span.fa.checklist-handle {
   padding-inline-end: 20px;
@@ -80,24 +83,32 @@ textarea.js-edit-checklist-item {
   inset-inline-end: 0;
 }
 .checklist {
-  background: #f7f7f7;
+  background: #fbf9ff;
+  border-radius: 20px;
+  border: 1px solid #ede8f9;
+  padding: 12px;
+  margin-bottom: 12px;
 }
 .checklist.placeholder {
-  background: #ccc;
-  border-radius: 2px;
+  background: #e0d4ff;
+  border-radius: 16px;
 }
 .checklist.ui-sortable-helper {
-  box-shadow: -2px 2px 8px rgba(0,0,0,0.3), 0 0 1px rgba(0,0,0,0.5);
-  transform: rotate(4deg);
+  box-shadow: 0 16px 32px rgba(100, 80, 200, 0.15);
+  transform: rotate(2deg);
   cursor: grabbing;
 }
 .checklist-item {
   margin: 0 0 0 0.1em;
   line-height: calc(18px * var(--wekan-ui-font-scale, 1));
-  font-size: 1.1em;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-size: 1.05em;
   margin-top: 3px;
   display: flex;
-  background: #f7f7f7;
+  background: transparent;
+  border-radius: 12px;
+  padding: 4px 8px;
+}
   opacity: 1;
   transition: height 0ms 400ms, opacity 400ms 0ms;
   height: auto;

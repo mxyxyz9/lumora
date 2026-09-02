@@ -15,3 +15,13 @@
 ### 3. Execution Working Directory
 - **Context**: When Codex executes code or runs deterministic gates, it needs a working directory root.
 - **Current Strategy**: Default to the current repository workspace (`/Users/rushil.dev/Desktop/wekan-main` or project root) with isolated git branch/worktree checkout.
+
+### 4. Lumora Voice Post-MVP Route Mapping (Step 4) [RESOLVED]
+- **Status**: Completed in `VoicePanel.tsx` via `useBoardStore.getState().createCard()`.
+- **Implementation**: Maps `suggestedList` case-insensitively with primary list fallback, embeds urgency & hashtag labels in description, and marks history audit.
+
+### 5. Kokoro-82M TTS Invocation Strategy (Step 6) [RESOLVED]
+- **Status**: Completed in `kokoroTtsService.ts` and `CardDetailModal.tsx`.
+- **Implementation**: Thin local ONNX/Python synthesis supporting 54 preset voices on CPU with automatic Web Speech fallback.
+
+

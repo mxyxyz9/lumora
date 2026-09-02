@@ -285,7 +285,7 @@
   display: flex !important;
   float: inline-start !important;
   margin-bottom: 0 !important;
-  border-inline-start: 1px solid #ccc !important;
+  border-inline-start: none !important;
   border-bottom: none !important;
 }
 

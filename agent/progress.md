@@ -94,3 +94,49 @@
 - Added 8 unit tests in `desktop/tests/integrations-sync.test.ts`. Total: **19/19 Vitest tests passing**.
 - Full TypeScript & Vite build verified with zero errors.
 
+### [2026-08-31 13:07:00] - Step 0.5: Web Research & Upstream Architecture Analysis (OpenWhispr & Kokoro-82M)
+- **OpenWhispr Research**:
+  - Confirmed canonical repository: `github.com/OpenWhispr/openwhispr` (active, MIT License, Electron 41 + React + TS).
+  - Engine architecture: Relies on `whisper.cpp` / `sherpa-onnx` for local GPU/CPU accelerated transcription and BYOK cloud Whisper endpoints.
+  - Investigated macOS known issues: Microphone/Accessibility permissions, architecture mismatch between Node.js and Electron arm64 native binaries, and audio cache paths.
+- **Kokoro-82M Research**:
+  - Model weights: ~327MB Apache-2.0 checkpoint (`Kokoro-82M-v1.0-ONNX`).
+  - Serving architecture: Lightweight ONNX runtime (`kokoro-onnx` / `pykokoro`) running real-time on CPU.
+- **Attribution & Licensing**:
+  - Preserved license attributions in `desktop/README.md` and UI footers for OpenWhispr (MIT) and Kokoro-82M (Apache-2.0).
+
+### [2026-08-31 13:35:00] - OpenWhispr Permissions & Focused-Window Text Injection Implementation
+- **Permission Handling (b)**:
+  - Wired Electron `systemPreferences.getMediaAccessStatus('microphone')` and `systemPreferences.isTrustedAccessibilityClient(false)` in `lumoraVoiceService.ts` matching OpenWhispr's `ipcHandlers.js:5262`.
+  - Added `voiceCheckPermissions` and `voiceRequestMicPermission` IPC handlers.
+- **Focused Window Text Injection (c)**:
+  - Wired cross-platform text injection in `lumoraVoiceService.ts` based on OpenWhispr's `ClipboardManager` (`src/helpers/clipboard.js`):
+    - macOS: AppleScript keystroke simulation via `osascript` (`keystroke "v" using command down`).
+    - Windows: PowerShell SendKeys `^v`.
+    - Linux: `xdotool key ctrl+v`.
+    - Automatically preserves and restores original user clipboard contents after 500ms.
+- **Global Hotkey Capture (a)**:
+  - Documented use of Electron's standard `globalShortcut` module (`Option+Space` / `Alt+Space` and `Cmd+Shift+V`) matching OpenWhispr's `main.js:1662-1930` registration pattern.
+### [2026-08-31 13:45:00] - Full Pipeline Implementation Complete (Steps 4–7)
+- **Step 4: Route (Wekan Board Cards Integration)**:
+  - Implemented note-to-card transformation and routing via `useBoardStore.getState().createCard()`.
+  - Added single card routing ("Send to Board" icon) and batch routing ("Route All to Board") in `VoicePanel.tsx`.
+  - Maps `suggestedList` to board lists with fallback to the first active list, formatting task descriptions, urgency, and hashtag labels.
+  - Linked candidate note status updates (`accepted`) and audit logs in dictation history.
+- **Step 5: History (Searchable Dictation Session Audit)**:
+  - Created `desktop/src/renderer/lib/voiceHistoryManager.ts` managing persistent local storage for up to 200 sessions.
+  - Implemented full-text search across transcripts, note titles, descriptions, and tags.
+  - Added dedicated "History" tab in `VoicePanel.tsx` with session cards, timestamps, candidate count, board routing tags, and 1-click session re-loading.
+- **Step 6: TTS Output (Kokoro-82M Speech Synthesis)**:
+  - Created `desktop/src/main/kokoroTtsService.ts` supporting 54 preset voices (`af_heart`, `af_bella`, `am_adam`, `bf_emma`, etc.) with local ONNX/Python execution on CPU and Web Speech fallback.
+  - Added voice picker dropdown and "Speak / Read Aloud" button on candidate notes, transcript editor, and `CardDetailModal.tsx` description viewer.
+- **Step 7: Upstream Sync Job (Git Tracking & Model Feeds)**:
+  - Created `desktop/src/main/upstreamSyncService.ts` ensuring `upstream` git remotes for `.tools/openwhispr` and `.tools/kokoro`.
+  - Implemented `upstream:checkStatus` fetching upstream diff stats without auto-merging.
+  - Implemented model checkpoint version checker for Whisper, Parakeet, and Kokoro weights.
+  - Created `desktop/src/renderer/components/UpstreamSyncModal.tsx` and mounted it in Board Tools menu.
+- **Verification**:
+  - 14 test suites with 60/60 passing tests (`bun vitest run`).
+  - Production builds (`tsc -p tsconfig.electron.json` and `vite build`) verified with zero errors.
+
+

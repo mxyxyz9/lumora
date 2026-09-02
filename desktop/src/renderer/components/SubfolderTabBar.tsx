@@ -120,23 +120,25 @@ export const SubfolderTabBar: React.FC = () => {
     <div
       style={{
         display: 'flex',
-        alignItems: 'flex-end',
+        alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '0 16px',
-        background: 'var(--bg-sidebar)',
-        borderBottom: '1px solid var(--border-subtle)',
+        padding: '0 20px',
+        background: 'var(--bg-header)',
+        borderBottom: '1.5px solid var(--border-subtle)',
         gap: '12px',
-        height: '38px',
+        height: '48px',
         userSelect: 'none',
         position: 'relative',
+        zIndex: 40,
+        boxShadow: '0 2px 8px var(--border-card)',
       }}
     >
-      {/* ── Browser Tab Strip (Chrome / Arc Style) ─────────────────── */}
+      {/* ── Playful Pill Tab Strip ─────────────────── */}
       <div
         style={{
           display: 'flex',
-          alignItems: 'flex-end',
-          gap: '2px',
+          alignItems: 'center',
+          gap: '8px',
           overflowX: 'auto',
           height: '100%',
           scrollbarWidth: 'none',
@@ -147,49 +149,54 @@ export const SubfolderTabBar: React.FC = () => {
           onClick={() => setActiveSwimlaneId('all')}
           style={{
             position: 'relative',
-            height: '33px',
+            height: '32px',
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
-            padding: '0 12px',
-            borderTopLeftRadius: '6px',
-            borderTopRightRadius: '6px',
-            background: activeSwimlaneId === 'all' ? 'var(--bg-app)' : 'transparent',
-            border: activeSwimlaneId === 'all' ? '1px solid var(--border-subtle)' : '1px solid transparent',
-            borderBottom: activeSwimlaneId === 'all' ? '1px solid var(--bg-app)' : '1px solid transparent',
-            marginBottom: activeSwimlaneId === 'all' ? '-1px' : '0',
-            zIndex: activeSwimlaneId === 'all' ? 2 : 1,
-            color: activeSwimlaneId === 'all' ? 'var(--text-primary)' : 'var(--text-secondary)',
-            fontSize: '12px',
-            fontWeight: activeSwimlaneId === 'all' ? 600 : 500,
+            padding: '0 14px',
+            borderRadius: '100px',
+            background: activeSwimlaneId === 'all' ? 'var(--accent-primary)' : 'var(--bg-card)',
+            border: activeSwimlaneId === 'all' ? 'none' : '1.5px solid var(--border-subtle)',
+            boxShadow: activeSwimlaneId === 'all' ? '0 4px 12px var(--border-card)' : '0 2px 6px var(--border-card)',
+            color: activeSwimlaneId === 'all' ? 'var(--accent-primary-text)' : 'var(--text-secondary)',
+            fontSize: '12.5px',
+            fontWeight: 800,
             cursor: 'pointer',
             whiteSpace: 'nowrap',
-            transition: 'all var(--t-fast) var(--ease-out)',
+            transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            transform: activeSwimlaneId === 'all' ? 'translateY(-1px)' : 'none',
           }}
           onMouseEnter={e => {
             if (activeSwimlaneId !== 'all') {
-              e.currentTarget.style.background = 'var(--bg-button-subtle)';
+              e.currentTarget.style.background = 'var(--bg-button-hover)';
+              e.currentTarget.style.borderColor = 'var(--accent-primary)';
+              e.currentTarget.style.color = 'var(--text-primary)';
+              e.currentTarget.style.transform = 'translateY(-1px)';
             }
           }}
           onMouseLeave={e => {
             if (activeSwimlaneId !== 'all') {
-              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.background = 'var(--bg-card)';
+              e.currentTarget.style.borderColor = 'var(--border-subtle)';
+              e.currentTarget.style.color = 'var(--text-secondary)';
+              e.currentTarget.style.transform = 'none';
             }
           }}
           title="All Cards across all workstreams (⌘1)"
         >
-          <Layers size={13} style={{ color: activeSwimlaneId === 'all' ? 'var(--accent-blue)' : 'var(--text-muted)' }} />
+          <Layers size={13} style={{ color: activeSwimlaneId === 'all' ? 'var(--accent-primary-text)' : 'var(--accent-primary)' }} />
           <span>All Cards</span>
 
           {/* Count badge */}
           <span
             style={{
               fontSize: '10.5px',
-              fontWeight: 700,
-              color: activeSwimlaneId === 'all' ? 'var(--accent-blue)' : 'var(--text-muted)',
-              background: activeSwimlaneId === 'all' ? 'rgba(79,142,247,0.1)' : 'var(--bg-badge)',
-              padding: '1px 6px',
-              borderRadius: 'var(--r-full)',
+              fontWeight: 800,
+              color: activeSwimlaneId === 'all' ? 'var(--accent-primary)' : 'var(--accent-primary)',
+              background: activeSwimlaneId === 'all' ? 'var(--accent-primary-text)' : 'var(--bg-input)',
+              border: activeSwimlaneId === 'all' ? 'none' : '1px solid var(--border-subtle)',
+              padding: '1px 7px',
+              borderRadius: '100px',
             }}
           >
             {cards.length}
@@ -198,14 +205,14 @@ export const SubfolderTabBar: React.FC = () => {
           {/* Shortcut badge */}
           <kbd
             style={{
-              fontSize: '9px',
+              fontSize: '9.5px',
               fontFamily: 'inherit',
-              fontWeight: 600,
-              color: 'var(--text-muted)',
-              background: 'var(--bg-badge)',
-              padding: '1px 4px',
-              borderRadius: '3px',
-              opacity: 0.8,
+              fontWeight: 700,
+              color: activeSwimlaneId === 'all' ? 'rgba(255,255,255,0.85)' : 'var(--text-muted)',
+              background: activeSwimlaneId === 'all' ? 'rgba(255,255,255,0.2)' : 'var(--bg-input)',
+              border: activeSwimlaneId === 'all' ? 'none' : '1px solid var(--border-subtle)',
+              padding: '1px 5px',
+              borderRadius: '6px',
             }}
           >
             ⌘1
@@ -224,17 +231,16 @@ export const SubfolderTabBar: React.FC = () => {
                 key={sw._id}
                 onSubmit={e => handleSaveEdit(sw._id, e)}
                 style={{
-                  height: '33px',
+                  height: '32px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '4px',
-                  background: 'var(--bg-app)',
-                  borderTopLeftRadius: '6px',
-                  borderTopRightRadius: '6px',
-                  border: '1px solid var(--border-medium)',
-                  borderBottom: '1px solid var(--bg-app)',
-                  padding: '0 8px',
-                  marginBottom: '-1px',
+                  gap: '6px',
+                  background: 'var(--bg-card)',
+                  borderRadius: '100px',
+                  border: '2px solid var(--accent-primary)',
+                  padding: '0 4px 0 12px',
+                  boxShadow: '0 4px 12px var(--border-card)',
+                  boxSizing: 'border-box',
                   zIndex: 3,
                 }}
               >
@@ -243,19 +249,39 @@ export const SubfolderTabBar: React.FC = () => {
                   value={editTitle}
                   onChange={e => setEditTitle(e.target.value)}
                   autoFocus
-                  className="form-input"
-                  style={{ padding: '2px 6px', fontSize: '12px', width: '120px', height: '22px', border: 'none' }}
+                  style={{
+                    border: 'none',
+                    outline: 'none',
+                    background: 'transparent',
+                    padding: '0',
+                    fontSize: '12.5px',
+                    fontWeight: 700,
+                    color: 'var(--text-primary)',
+                    width: '120px',
+                    fontFamily: 'inherit',
+                  }}
                 />
-                <button type="submit" className="btn-primary" style={{ padding: '0 6px', height: '20px', fontSize: '11px' }}>
+                <button type="submit" className="btn-primary" style={{ padding: '0 10px', height: '24px', fontSize: '11px', borderRadius: '100px', background: 'var(--accent-primary)', color: 'var(--accent-primary-text)' }}>
                   <Check size={11} />
                 </button>
                 <button
                   type="button"
                   onClick={() => setEditingId(null)}
-                  className="btn-subtle"
-                  style={{ padding: '0 4px', height: '20px' }}
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'var(--text-muted)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: 0,
+                  }}
                 >
-                  <X size={11} />
+                  <X size={12} />
                 </button>
               </form>
             );
@@ -267,49 +293,54 @@ export const SubfolderTabBar: React.FC = () => {
               onClick={() => setActiveSwimlaneId(sw._id)}
               style={{
                 position: 'relative',
-                height: '33px',
+                height: '32px',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '0 10px',
-                borderTopLeftRadius: '6px',
-                borderTopRightRadius: '6px',
-                background: isSelected ? 'var(--bg-app)' : 'transparent',
-                border: isSelected ? '1px solid var(--border-subtle)' : '1px solid transparent',
-                borderBottom: isSelected ? '1px solid var(--bg-app)' : '1px solid transparent',
-                marginBottom: isSelected ? '-1px' : '0',
-                zIndex: isSelected ? 2 : 1,
-                color: isSelected ? 'var(--text-primary)' : 'var(--text-secondary)',
-                fontSize: '12px',
-                fontWeight: isSelected ? 600 : 500,
+                padding: '0 12px',
+                borderRadius: '100px',
+                background: isSelected ? 'var(--accent-primary)' : 'var(--bg-card)',
+                border: isSelected ? 'none' : '1.5px solid var(--border-subtle)',
+                boxShadow: isSelected ? '0 4px 12px var(--border-card)' : '0 2px 6px var(--border-card)',
+                color: isSelected ? 'var(--accent-primary-text)' : 'var(--text-secondary)',
+                fontSize: '12.5px',
+                fontWeight: 800,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
-                transition: 'all var(--t-fast) var(--ease-out)',
+                transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                transform: isSelected ? 'translateY(-1px)' : 'none',
               }}
               onMouseEnter={e => {
                 if (!isSelected) {
-                  e.currentTarget.style.background = 'var(--bg-button-subtle)';
+                  e.currentTarget.style.background = 'var(--bg-button-hover)';
+                  e.currentTarget.style.borderColor = 'var(--accent-primary)';
+                  e.currentTarget.style.color = 'var(--text-primary)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
                 }
               }}
               onMouseLeave={e => {
                 if (!isSelected) {
-                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.background = 'var(--bg-card)';
+                  e.currentTarget.style.borderColor = 'var(--border-subtle)';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                  e.currentTarget.style.transform = 'none';
                 }
               }}
               title={`Filter by ${sw.title} (⌘${shortcutNum})`}
             >
-              <Folder size={12} style={{ color: isSelected ? 'var(--accent-blue)' : 'var(--text-muted)' }} />
+              <Folder size={12} style={{ color: isSelected ? 'var(--accent-primary-text)' : 'var(--accent-primary)' }} />
               <span>{sw.title}</span>
 
               {/* Count badge */}
               <span
                 style={{
                   fontSize: '10.5px',
-                  fontWeight: 700,
-                  color: isSelected ? 'var(--accent-blue)' : 'var(--text-muted)',
-                  background: isSelected ? 'rgba(79,142,247,0.1)' : 'var(--bg-badge)',
-                  padding: '1px 6px',
-                  borderRadius: 'var(--r-full)',
+                  fontWeight: 800,
+                  color: isSelected ? 'var(--accent-primary)' : 'var(--accent-primary)',
+                  background: isSelected ? 'var(--accent-primary-text)' : 'var(--bg-input)',
+                  border: isSelected ? 'none' : '1px solid var(--border-subtle)',
+                  padding: '1px 7px',
+                  borderRadius: '100px',
                 }}
               >
                 {swCards.length}
@@ -319,14 +350,14 @@ export const SubfolderTabBar: React.FC = () => {
               {shortcutNum <= 9 && (
                 <kbd
                   style={{
-                    fontSize: '9px',
+                    fontSize: '9.5px',
                     fontFamily: 'inherit',
-                    fontWeight: 600,
-                    color: 'var(--text-muted)',
-                    background: 'var(--bg-badge)',
-                    padding: '1px 4px',
-                    borderRadius: '3px',
-                    opacity: 0.8,
+                    fontWeight: 700,
+                    color: isSelected ? 'rgba(255,255,255,0.85)' : 'var(--text-muted)',
+                    background: isSelected ? 'rgba(255,255,255,0.2)' : 'var(--bg-input)',
+                    border: isSelected ? 'none' : '1px solid var(--border-subtle)',
+                    padding: '1px 5px',
+                    borderRadius: '6px',
                   }}
                 >
                   ⌘{shortcutNum}
@@ -347,15 +378,17 @@ export const SubfolderTabBar: React.FC = () => {
                 }}
                 className="btn-icon"
                 style={{
-                  width: '18px',
-                  height: '18px',
+                  width: '20px',
+                  height: '20px',
                   padding: 0,
                   marginLeft: '2px',
-                  opacity: isSelected ? 0.9 : 0.4,
+                  background: isSelected ? 'rgba(255,255,255,0.2)' : 'transparent',
+                  color: isSelected ? 'var(--accent-primary-text)' : 'var(--text-muted)',
+                  border: 'none',
                 }}
                 title="Tab options"
               >
-                <MoreHorizontal size={11} />
+                <MoreHorizontal size={12} />
               </button>
             </div>
           );
@@ -366,17 +399,16 @@ export const SubfolderTabBar: React.FC = () => {
           <form
             onSubmit={handleAddSubmit}
             style={{
-              height: '33px',
+              height: '32px',
               display: 'flex',
               alignItems: 'center',
-              gap: '4px',
-              background: 'var(--bg-app)',
-              borderTopLeftRadius: '6px',
-              borderTopRightRadius: '6px',
-              border: '1px solid var(--border-subtle)',
-              borderBottom: '1px solid var(--bg-app)',
-              padding: '0 8px',
-              marginBottom: '-1px',
+              gap: '6px',
+              background: 'var(--bg-card)',
+              borderRadius: '100px',
+              border: '2px solid var(--accent-primary)',
+              padding: '0 4px 0 12px',
+              boxShadow: '0 4px 12px var(--border-card)',
+              boxSizing: 'border-box',
               zIndex: 3,
             }}
           >
@@ -386,15 +418,24 @@ export const SubfolderTabBar: React.FC = () => {
               value={newTitle}
               onChange={e => setNewTitle(e.target.value)}
               placeholder="New tab name..."
-              className="form-input"
-              style={{ padding: '2px 6px', fontSize: '12px', width: '130px', height: '22px', border: 'none' }}
               autoFocus
+              style={{
+                border: 'none',
+                outline: 'none',
+                background: 'transparent',
+                padding: '0',
+                fontSize: '12.5px',
+                fontWeight: 700,
+                color: 'var(--text-primary)',
+                width: '130px',
+                fontFamily: 'inherit',
+              }}
             />
             <button
               type="submit"
               disabled={!newTitle.trim()}
               className="btn-primary"
-              style={{ padding: '0 6px', height: '20px', fontSize: '11px' }}
+              style={{ padding: '0 12px', height: '24px', fontSize: '11.5px', borderRadius: '100px', background: 'var(--accent-primary)', color: 'var(--accent-primary-text)' }}
             >
               Add
             </button>
@@ -404,10 +445,21 @@ export const SubfolderTabBar: React.FC = () => {
                 setIsAdding(false);
                 setNewTitle('');
               }}
-              className="btn-subtle"
-              style={{ padding: '0 4px', height: '20px' }}
+              style={{
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--text-muted)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: 0,
+              }}
             >
-              <X size={11} />
+              <X size={12} />
             </button>
           </form>
         ) : (
@@ -416,16 +468,18 @@ export const SubfolderTabBar: React.FC = () => {
             onClick={() => setIsAdding(true)}
             className="btn-icon"
             style={{
-              width: '24px',
-              height: '24px',
+              width: '28px',
+              height: '28px',
               alignSelf: 'center',
               marginLeft: '4px',
-              borderRadius: '4px',
-              color: 'var(--text-muted)',
+              borderRadius: '50%',
+              color: 'var(--accent-primary)',
+              background: 'var(--bg-card)',
+              border: '1.5px solid var(--border-subtle)',
             }}
             title="Create new subfolder tab"
           >
-            <Plus size={13} />
+            <Plus size={14} />
           </button>
         )}
       </div>
@@ -435,36 +489,36 @@ export const SubfolderTabBar: React.FC = () => {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '2px',
+          gap: '4px',
           background: 'var(--bg-card)',
-          padding: '2px',
-          borderRadius: 'var(--r-md)',
-          border: '1px solid var(--border-medium)',
-          boxShadow: 'var(--shadow-xs)',
+          padding: '3px',
+          borderRadius: '100px',
+          border: '1.5px solid var(--border-subtle)',
+          boxShadow: '0 2px 6px var(--border-card)',
           flexShrink: 0,
-          marginBottom: '3px',
         }}
       >
         <button
           type="button"
           onClick={() => setViewMode('tabs')}
           style={{
-            padding: '3px 8px',
-            borderRadius: 'var(--r-xs)',
+            padding: '4px 12px',
+            borderRadius: '100px',
             border: 'none',
-            background: viewMode === 'tabs' ? 'var(--bg-button-hover)' : 'transparent',
-            color: viewMode === 'tabs' ? 'var(--text-primary)' : 'var(--text-muted)',
+            background: viewMode === 'tabs' ? 'var(--accent-primary)' : 'transparent',
+            color: viewMode === 'tabs' ? 'var(--accent-primary-text)' : 'var(--text-secondary)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '5px',
-            fontSize: '11.5px',
-            fontWeight: viewMode === 'tabs' ? 700 : 500,
-            transition: 'all var(--t-fast)',
+            gap: '6px',
+            fontSize: '12px',
+            fontWeight: 800,
+            transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            boxShadow: viewMode === 'tabs' ? '0 2px 8px var(--border-card)' : 'none',
           }}
           title="Single Subfolder Focus Mode"
         >
-          <LayoutGrid size={11} style={{ color: viewMode === 'tabs' ? 'var(--accent-blue)' : 'inherit' }} />
+          <LayoutGrid size={12} style={{ color: viewMode === 'tabs' ? 'var(--accent-primary-text)' : 'var(--accent-primary)' }} />
           <span>Focus Tab</span>
         </button>
 
@@ -472,22 +526,23 @@ export const SubfolderTabBar: React.FC = () => {
           type="button"
           onClick={() => setViewMode('stacked')}
           style={{
-            padding: '3px 8px',
-            borderRadius: 'var(--r-xs)',
+            padding: '4px 12px',
+            borderRadius: '100px',
             border: 'none',
-            background: viewMode === 'stacked' ? 'var(--bg-button-hover)' : 'transparent',
-            color: viewMode === 'stacked' ? 'var(--text-primary)' : 'var(--text-muted)',
+            background: viewMode === 'stacked' ? 'var(--accent-primary)' : 'transparent',
+            color: viewMode === 'stacked' ? 'var(--accent-primary-text)' : 'var(--text-secondary)',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '5px',
-            fontSize: '11.5px',
-            fontWeight: viewMode === 'stacked' ? 700 : 500,
-            transition: 'all var(--t-fast)',
+            gap: '6px',
+            fontSize: '12px',
+            fontWeight: 800,
+            transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            boxShadow: viewMode === 'stacked' ? '0 2px 8px var(--border-card)' : 'none',
           }}
           title="Stacked Swimlanes Mode (View all subfolders grouped vertically)"
         >
-          <Rows3 size={11} style={{ color: viewMode === 'stacked' ? 'var(--accent-purple)' : 'inherit' }} />
+          <Rows3 size={12} style={{ color: viewMode === 'stacked' ? 'var(--accent-primary-text)' : 'var(--accent-primary)' }} />
           <span>Stacked Lanes</span>
         </button>
       </div>

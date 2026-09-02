@@ -120,11 +120,12 @@
   will-change: flex-basis;
   overflow-y: auto;
   overflow-x: hidden;
-  background: #f7f7f7;
-  border-radius: 0 0 6px 6px;
+  background: #ffffff;
+  border-radius: 28px;
+  border: 1px solid #ede8f9;
   z-index: 30;
   animation: flexGrowIn 0.1s;
-  box-shadow: 0 0 8px 0 #b3b3b3;
+  box-shadow: 0 20px 60px rgba(59, 42, 89, 0.18);
   transition: flex-basis 0.1s, box-shadow 0.15s;
   box-sizing: border-box;
 }
@@ -143,7 +144,8 @@ body.desktop-mode .card-details:not(.card-details-popup) {
      made the handle capable of shrinking only. */
   max-width: calc(100vw - 16px);
   flex-basis: auto;
-  border-radius: 3px;
+  border-radius: 28px;
+  box-shadow: 0 20px 60px rgba(59, 42, 89, 0.22);
   z-index: 2001;
 }
 
@@ -254,9 +256,10 @@ body.desktop-mode .card-details.card-details-collapsed {
 }
 .card-details .card-details-header {
   margin: 0 -20px 5px;
-  padding: 8px 20px;
-  background: #ededed;
-  border-bottom: 1px solid #dbdbdb;
+  padding: 12px 20px;
+  background: #fbf9ff;
+  border-bottom: 1px solid #ede8f9;
+  border-radius: 28px 28px 0 0;
   position: sticky;
   top: 0px;
   z-index: 500;
@@ -372,7 +375,9 @@ body.desktop-mode .card-details.card-details-collapsed {
   color: #a6a6a6;
 }
 .card-details .card-details-header .card-details-title {
-  font-weight: bold;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 800;
+  color: #3b2a59;
   font-size: 1.35em;
   margin: 7px 0 0;
   padding: 0;

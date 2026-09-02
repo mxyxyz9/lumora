@@ -46,19 +46,19 @@ summary:focus-visible,
 [tabindex]:focus-visible,
 [role="button"]:focus-visible,
 [contenteditable="true"]:focus-visible {
-  outline: 2px solid #1565c0;
+  outline: 2px solid #7c5ce5;
   outline-offset: 2px;
-  /* Add a light halo so the outline is visible on both light and dark colored
+  /* Add a soft lavender halo so the outline is visible on both light and dark colored
    * board headers. */
-  box-shadow: 0 0 0 4px rgba(21, 101, 192, 0.35);
-  border-radius: 2px;
+  box-shadow: 0 0 0 4px rgba(124, 92, 229, 0.35);
+  border-radius: 8px;
 }
 /* Browsers that do not support :focus-visible fall back to :focus so keyboard
  * users are never left without an indicator. */
 .no-focus-visible-support a:focus,
 .no-focus-visible-support button:focus,
 .no-focus-visible-support [tabindex]:focus {
-  outline: 2px solid #1565c0;
+  outline: 2px solid #7c5ce5;
   outline-offset: 2px;
 }
 
@@ -195,10 +195,10 @@ button {
      variable (client/components/main/uiFont.css). As a shorthand it also reset
      `line-height` to normal and the line below set it again, so splitting it
      changes nothing else. */
-  font-family: Roboto, Poppins, "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-family: 'Quicksand', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: calc(14px * var(--wekan-ui-font-scale, 1));
   line-height: calc(18px * var(--wekan-ui-font-scale, 1));
-  color: #4d4d4d;
+  color: #3b2a59;
   /* Improve text rendering */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -217,7 +217,8 @@ text-size-adjust: 100%;
 
 }
 body {
-  background: #dedede;
+  background: #f4f0ff;
+  color: #3b2a59;
   margin: 0;
   position: relative;
   z-index: 0;
@@ -250,29 +251,6 @@ body.mobile-mode #content {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  /* #6488, and the reason that issue kept coming back after being closed three
-     times: THE LAST PIECE OF VIEWPORT ARITHMETIC. This said
-     `height: calc(100dvh - 48px)`, and 48px is a guess at how tall the header is.
-     The header is not 48px and is not any one number - Utils publishes
-     --wekan-header-height from a ResizeObserver for exactly this reason, because
-     the quick-access bar WRAPS to a second and third row depending on the
-     language and the window width, and its own comment says "every fixed number
-     for it has been wrong for some of those".
-     On a phone, where the bar does wrap, #content was therefore taller than the
-     room under the header by however much the header exceeded 48px, so its
-     bottom sat BELOW the bottom of the screen. body.mobile-mode is
-     `position: fixed` and the phone rules make it `overflow: hidden`, so that
-     strip is unreachable: everything below it inherits the error through the
-     `height: 100%` chain (boardsList.css), and the last rows of the board list
-     end up where no gesture can reach them. That is "in mobile board menu you
-     cant scroll boards" - the list scrolls, it just ends off screen.
-     Nothing has to be computed here. body is a flex COLUMN of exactly one
-     viewport and this is its `flex: 1` item (below), so the space left under the
-     header - whatever the header turns out to be this paint - IS this box. The
-     arithmetic was overriding a correct answer with a wrong one.
-     `min-height: 0` so it can be SHORTER than its content: a flex item will not
-     shrink below its content otherwise, and an inner scroller whose ancestor
-     refuses to shrink never scrolls. */
   min-height: 0;
   overscroll-behavior: contain;
 }
@@ -296,7 +274,8 @@ body.mobile-mode #content {
   bottom: 0;
   inset-inline-start: 0;
   inset-inline-end: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(59, 42, 89, 0.45);
+  backdrop-filter: blur(8px);
   z-index: 100;
   overflow-y: auto;
 }
@@ -304,13 +283,16 @@ body.mobile-mode #content {
   width: min(500px, 90vw);
   min-height: 180px;
   margin: 45px auto;
-  padding: 18px 28px;
-  border-radius: 7px;
-  background: #dedede;
+  padding: 24px 32px;
+  border-radius: 28px;
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(59, 42, 89, 0.22);
   z-index: 110;
 }
 #modal .modal-content h2 {
   margin-bottom: 27px;
+  font-weight: 800;
+  color: #3b2a59;
 }
 #modal .modal-content .modal-close-btn {
   display: block;
@@ -321,13 +303,16 @@ body.mobile-mode #content {
   width: min(800px, 95vw);
   min-height: 0px;
   margin: 45px auto;
-  padding: 18px 28px;
-  border-radius: 7px;
-  background: #dedede;
+  padding: 24px 32px;
+  border-radius: 28px;
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(59, 42, 89, 0.22);
   z-index: 110;
 }
 #modal .modal-content-wide h2 {
   margin-bottom: 27px;
+  font-weight: 800;
+  color: #3b2a59;
 }
 #modal .modal-content-wide .modal-close-btn {
   display: block;
@@ -358,11 +343,17 @@ body.mobile-mode #content {
 /* #6465: heading sizes back to the 6.09 values (22/18/16px) — the vw clamps
    resolved to 24/20/18px on desktop and compounded the density regression. */
 h1 {
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 800;
+  color: #3b2a59;
   font-size: calc(22px * var(--wekan-ui-font-scale, 1));
   line-height: 1.2em;
   margin: 0 0 9px;
 }
 h2 {
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 800;
+  color: #3b2a59;
   font-size: calc(18px * var(--wekan-ui-font-scale, 1));
   line-height: 1.2em;
   margin: 0 0 7px;
@@ -371,20 +362,23 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 700;
+  color: #3b2a59;
   font-size: calc(16px * var(--wekan-ui-font-scale, 1));
   line-height: 1.25em;
   margin: 0 0 5px;
 }
 .quiet,
 .quiet a {
-  color: #8c8c8c;
+  color: #8c7ba8;
 }
 .error,
 .error a {
   color: #eb3800;
 }
 .no-items-message {
-  color: #666;
+  color: #7d6b99;
   margin: 36px 0;
   text-align: center;
 }

@@ -11,7 +11,7 @@ import {
   ToggleRight, ChevronLeft, ChevronRight, Bot, Move, FilePlus, Edit3,
   Navigation, Wrench, MessageSquare, FolderKanban, Undo2, Paperclip,
   Image as ImageIcon, Calendar, Clock, AlertCircle, Maximize2, CheckSquare,
-  FileSpreadsheet, FileText,
+  FileSpreadsheet, FileText, UploadCloud,
 } from 'lucide-react';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -683,7 +683,6 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
 
   return (
     <div className="drawer-overlay" onClick={onClose}>
-      {/* Hidden file input for screenshot/image/spreadsheet upload */}
       <input
         ref={fileInputRef}
         type="file"
@@ -693,7 +692,6 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
         onChange={handleFileInputChange}
       />
 
-      {/* ── Outer shell (resize + panels) ──────────────────────────────── */}
       <div
         style={{
           width: `${drawerWidth}px`,
@@ -702,14 +700,18 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
           display: 'flex',
           flexDirection: 'row',
           position: 'relative',
+          background: 'var(--bg-modal)',
+          borderTopLeftRadius: '36px',
+          borderBottomLeftRadius: '36px',
+          borderLeft: '1.5px solid var(--border-medium)',
           boxShadow: 'var(--shadow-modal)',
+          overflow: 'hidden',
         }}
         onClick={e => e.stopPropagation()}
         onDragOver={e => { e.preventDefault(); setIsDraggingOver(true); }}
         onDragLeave={e => { e.preventDefault(); setIsDraggingOver(false); }}
         onDrop={handleDrop}
       >
-        {/* Resize grip */}
         <div
           onMouseDown={handleResizeMouseDown}
           title="Drag to resize"
@@ -718,7 +720,6 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
           <div className="resize-grip" style={{ width: '3px', height: '48px', borderRadius: '99px', background: 'var(--border-medium)', opacity: 0, transition: 'opacity 180ms' }} />
         </div>
 
-        {/* ── History Sidebar ──────────────────────────────────────────── */}
         <div
           style={{
             width: historyOpen ? `${historyPanelWidth}px` : '0',
@@ -739,7 +740,7 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
                 <button
                   type="button"
                   onClick={startNewConversation}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent-blue)', padding: '2px', borderRadius: 'var(--r-xs)', display: 'flex' }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent-primary)', padding: '2px', borderRadius: 'var(--r-xs)', display: 'flex' }}
                   title="New chat"
                 >
                   <Plus size={13} />
@@ -754,36 +755,31 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
                       key={conv.id}
                       onClick={() => switchConversation(conv.id)}
                       style={{
-                        padding: '7px 9px',
+                        padding: '8px 10px',
                         borderRadius: 'var(--r-sm)',
                         cursor: 'pointer',
-                        background: conv.id === activeConvId ? 'var(--bg-button-hover)' : 'transparent',
-                        border: conv.id === activeConvId ? '1px solid var(--border-medium)' : '1px solid transparent',
-                        marginBottom: '2px',
+                        background: conv.id === activeConvId ? 'var(--bg-card)' : 'transparent',
+                        marginBottom: '3px',
                         display: 'flex',
-                        alignItems: 'flex-start',
+                        alignItems: 'center',
                         justifyContent: 'space-between',
-                        gap: '4px',
-                        transition: 'all 120ms',
+                        gap: '6px',
+                        border: conv.id === activeConvId ? '1px solid var(--border-subtle)' : '1px solid transparent',
                       }}
-                      onMouseEnter={e => { if (conv.id !== activeConvId) e.currentTarget.style.background = 'var(--bg-button-subtle)'; }}
-                      onMouseLeave={e => { if (conv.id !== activeConvId) e.currentTarget.style.background = 'transparent'; }}
                     >
-                      <div style={{ overflow: 'hidden', flex: 1 }}>
-                        <div style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', minWidth: 0 }}>
+                        <MessageSquare size={12} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+                        <span style={{ fontSize: '11.5px', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {conv.title}
-                        </div>
-                        <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>
-                          {relTime(conv.updatedAt)} · {conv.messages.length} msgs
-                        </div>
+                        </span>
                       </div>
                       <button
                         type="button"
                         onClick={e => { e.stopPropagation(); deleteConversation(conv.id); }}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '1px', opacity: 0.6, flexShrink: 0 }}
-                        title="Delete conversation"
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '2px', borderRadius: 'var(--r-xs)', display: 'flex' }}
+                        title="Delete chat"
                       >
-                        <Trash2 size={10} />
+                        <Trash2 size={11} />
                       </button>
                     </div>
                   ))
@@ -793,71 +789,93 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
           )}
         </div>
 
-        {/* ── Main Chat Panel ──────────────────────────────────────────── */}
-        <div
-          style={{
-            flex: 1,
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            background: 'var(--bg-canvas)',
-            borderLeft: '1px solid var(--border-card)',
-            overflow: 'hidden',
-            position: 'relative',
-          }}
-        >
-          {/* Drag and drop overlay banner */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
           {isDraggingOver && (
-            <div style={{ position: 'absolute', inset: 0, background: 'rgba(35,131,226,0.15)', border: '2px dashed var(--accent-blue)', backdropFilter: 'blur(4px)', zIndex: 120, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '8px', pointerEvents: 'none' }}>
-              <ImageIcon size={32} style={{ color: 'var(--accent-blue)' }} />
-              <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>Drop screenshots to analyze</div>
-              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Copilot will diagnose the issue and draft your task</div>
+            <div style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(79, 142, 247, 0.15)',
+              backdropFilter: 'blur(4px)',
+              border: '2px dashed var(--accent-blue)',
+              zIndex: 999,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '12px',
+              pointerEvents: 'none',
+            }}>
+              <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--accent-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+                <UploadCloud size={24} />
+              </div>
+              <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>
+                Drop image to attach to Lumora Copilot
+              </span>
             </div>
           )}
 
-          {/* ── Header ─────────────────────────────────────────────────── */}
-          <div style={{ padding: '10px 14px', borderBottom: '1px solid var(--border-subtle)', background: 'var(--bg-header)', display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-            <button type="button" onClick={() => { setHistoryOpen(p => { LS.set(HISTORY_OPEN_KEY, !p); return !p; }); }} className="btn-icon" title={historyOpen ? 'Hide history' : 'Show history'} style={{ color: historyOpen ? 'var(--accent-blue)' : 'var(--text-muted)' }}>
-              <History size={14} />
-            </button>
+          <div style={{ padding: '14px 18px', borderBottom: '1.5px solid var(--border-subtle)', background: 'var(--bg-modal)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <button
+                type="button"
+                onClick={() => { setHistoryOpen(p => { LS.set(HISTORY_OPEN_KEY, !p); return !p; }); }}
+                className="btn-icon"
+                title={historyOpen ? 'Hide history' : 'Show history'}
+                style={{ width: '32px', height: '32px', borderRadius: '50%', background: historyOpen ? 'var(--border-medium)' : 'var(--bg-input)', border: '1px solid var(--border-subtle)', color: 'var(--accent-primary)' }}
+              >
+                <History size={14} />
+              </button>
 
-            <LumoraLogo size={16} showText={false} />
+              <LumoraLogo size={18} showText={false} />
 
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-primary)' }}>Lumora Copilot</span>
-                <span style={{ fontSize: '9px', fontWeight: 700, padding: '1px 5px', borderRadius: 'var(--r-full)', background: aiProvider === 'codex' ? 'rgba(129,140,248,0.15)' : 'rgba(77,171,98,0.12)', color: aiProvider === 'codex' ? '#818cf8' : 'var(--accent-green)', display: 'flex', alignItems: 'center', gap: '3px' }}>
-                  <span style={{ width: '4px', height: '4px', borderRadius: '50%', background: aiProvider === 'codex' ? '#818cf8' : 'var(--accent-green)' }} />
-                  {aiProvider === 'codex' ? 'Codex ACP (OS Auth)' : aiProvider === 'gemini' ? activeModelLabel : 'Ollama'}
-                </span>
-              </div>
+              <span style={{ fontSize: '14.5px', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                Lumora Copilot
+              </span>
+
+              <span style={{ fontSize: '10.5px', fontWeight: 800, color: 'var(--accent-primary)', background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', padding: '2px 8px', borderRadius: '100px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--accent-green)', flexShrink: 0 }} />
+                <span>{aiProvider === 'codex' ? 'Codex ACP' : aiProvider === 'gemini' ? activeModelLabel : 'Ollama'}</span>
+              </span>
             </div>
 
-            {/* Actions toggle — compact icon-only with colored dot */}
-            <button type="button" onClick={() => toggleActionsMode()}
-              title={actionsEnabled ? 'Actions ON — click to disable board edits' : 'Actions OFF — click to enable board edits (or type /actions)'}
-              style={{ display: 'flex', alignItems: 'center', gap: '4px', padding: '3px 7px', borderRadius: 'var(--r-full)', border: `1px solid ${actionsEnabled ? 'rgba(77,171,98,0.35)' : 'var(--border-subtle)'}`, background: actionsEnabled ? 'rgba(77,171,98,0.08)' : 'transparent', cursor: 'pointer', transition: 'all 140ms', flexShrink: 0 }}>
-              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: actionsEnabled ? 'var(--accent-green)' : 'var(--text-muted)', flexShrink: 0, transition: 'background 140ms' }} />
-              <span style={{ fontSize: '10px', fontWeight: 600, color: actionsEnabled ? 'var(--accent-green)' : 'var(--text-muted)', letterSpacing: '0.01em' }}>{actionsEnabled ? 'Actions' : 'Actions'}</span>
-            </button>
-
-            <button onClick={() => setShowConfig(!showConfig)} className="btn-icon" title="Configure AI" style={{ color: showConfig ? 'var(--accent-blue)' : undefined }}><Settings2 size={14} /></button>
-            <button onClick={startNewConversation} className="btn-icon" title="New chat"><Plus size={14} /></button>
-            <button onClick={onClose} className="btn-icon" title="Close"><X size={14} /></button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <button
+                onClick={startNewConversation}
+                className="btn-icon"
+                style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', color: 'var(--accent-primary)' }}
+                title="New chat"
+              >
+                <Plus size={14} />
+              </button>
+              <button
+                onClick={() => setShowConfig(!showConfig)}
+                className="btn-icon"
+                style={{ width: '32px', height: '32px', borderRadius: '50%', background: showConfig ? 'var(--border-medium)' : 'var(--bg-input)', border: '1px solid var(--border-subtle)', color: 'var(--accent-primary)' }}
+                title="Configure AI"
+              >
+                <Settings2 size={14} />
+              </button>
+              <button
+                onClick={onClose}
+                className="btn-icon"
+                style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#f4f0ff', border: '1px solid #ede8f9', color: '#7c5ce5' }}
+                title="Close"
+              >
+                <X size={14} />
+              </button>
+            </div>
           </div>
 
           {/* ── Context bar ────────────────────────────────────────────── */}
-          <div style={{ padding: '5px 16px', background: 'var(--bg-card)', borderBottom: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '10.5px', color: 'var(--text-muted)', flexShrink: 0 }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <FolderKanban size={10} style={{ color: 'var(--accent-blue)' }} />
-              <span><strong style={{ color: 'var(--text-secondary)' }}>{activeBoard?.title || 'Workspace'}</strong> — {cards.length} cards · {lists.length} cols · {swimlanes.length} subfolders · {boards.length} projects</span>
+          <div style={{ padding: '6px 18px', background: '#fbf9ff', borderBottom: '1.5px solid #ede8f9', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', color: '#8c7ba8', flexShrink: 0, fontWeight: 600 }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <FolderKanban size={11} style={{ color: '#7c5ce5' }} />
+              <span><strong style={{ color: '#201435' }}>{activeBoard?.title || 'Workspace'}</strong> — {cards.length} cards · {lists.length} cols · {swimlanes.length} subfolders</span>
             </span>
-            {actionsEnabled && (
-              <span style={{ display: 'flex', alignItems: 'center', gap: '3px', color: 'var(--accent-green)' }}>
-                <Wrench size={9} />
-                <span style={{ fontWeight: 600 }}>Board edits enabled</span>
-              </span>
-            )}
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: '#2ecc71', fontWeight: 700, fontSize: '10.5px' }}>
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#2ecc71' }} />
+              <span>Board edits active</span>
+            </span>
           </div>
 
           {/* ── Inline config ──────────────────────────────────────────── */}
@@ -1020,20 +1038,8 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
                       </div>
                     )}
 
-                    {/* ── Bubble ─── */}
-                    <div
-                      style={{
-                        padding: isUser ? '9px 14px' : '14px 16px',
-                        borderRadius: isUser ? '16px 16px 4px 16px' : '4px 16px 16px 16px',
-                        background: isUser ? 'var(--accent-blue)' : 'var(--bg-card)',
-                        color: isUser ? '#fff' : 'var(--text-primary)',
-                        border: isUser ? 'none' : '1px solid var(--border-medium)',
-                        fontSize: '13px',
-                        lineHeight: 1.6,
-                        position: 'relative',
-                        wordBreak: 'break-word',
-                      }}
-                    >
+                    {/* ── Bubble ── */}
+                    <div className={isUser ? 'copilot-bubble-user' : 'copilot-bubble-assistant'}>
                       {isUser
                         ? <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
                         : <div className="ai-markdown-body" dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} />
@@ -1084,7 +1090,7 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
 
             {isLoading && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-muted)', fontSize: '12px', padding: '4px 2px' }}>
-                <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-purple))', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#7c5ce5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   <Loader2 size={11} className="animate-spin" style={{ color: '#fff' }} />
                 </div>
                 <div>
@@ -1130,24 +1136,22 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
 
             {/* Slash command palette */}
             {slashPaletteOpen && filteredSlash.length > 0 && (
-              <div style={{ position: 'absolute', bottom: 'calc(100% + 4px)', left: '14px', right: '14px', background: 'var(--bg-card)', border: '1px solid var(--border-medium)', borderRadius: 'var(--r-lg)', boxShadow: 'var(--shadow-lg)', overflow: 'hidden', zIndex: 100 }}>
-                <div style={{ padding: '6px 12px 4px', fontSize: '10px', color: 'var(--text-muted)', fontWeight: 600, borderBottom: '1px solid var(--border-subtle)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>Commands</div>
+              <div className="slash-palette">
+                <div className="slash-palette-header">Commands</div>
                 {filteredSlash.map((cmd, i) => (
-                  <div key={cmd.cmd} onMouseDown={e => { e.preventDefault(); executeSlashCommand(cmd); }}
-                    style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 12px', cursor: 'pointer', background: i === slashHighlight ? 'var(--bg-button-hover)' : 'transparent', transition: 'background 80ms', borderBottom: i < filteredSlash.length - 1 ? '1px solid var(--border-subtle)' : 'none' }}
+                  <div key={cmd.cmd} className={`slash-cmd-row ${i === slashHighlight ? 'highlighted' : ''}`}
+                    onMouseDown={e => { e.preventDefault(); executeSlashCommand(cmd); }}
                     onMouseEnter={() => setSlashHighlight(i)}>
-                    <div style={{ width: '24px', height: '24px', borderRadius: 'var(--r-sm)', background: 'var(--bg-input)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: cmd.color, flexShrink: 0 }}>{cmd.icon}</div>
+                    <div className="slash-cmd-icon" style={{ color: cmd.color }}>{cmd.icon}</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)' }}>{cmd.label}</span>
+                        <span style={{ fontSize: '12.5px', fontWeight: 600, color: 'var(--text-primary)' }}>{cmd.label}</span>
                         <code style={{ fontSize: '9.5px', fontFamily: 'var(--font-mono)', background: 'var(--bg-input)', padding: '0 4px', borderRadius: '3px', color: 'var(--text-muted)' }}>{cmd.cmd}</code>
                       </div>
                       <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{cmd.description}</span>
                     </div>
                     {cmd.action === 'toggle' && (
-                      <span style={{ fontSize: '9px', fontWeight: 700, padding: '1px 5px', borderRadius: 'var(--r-full)', background: actionsEnabled ? 'rgba(77,171,98,0.12)' : 'rgba(226,185,61,0.12)', color: actionsEnabled ? 'var(--accent-green)' : 'var(--accent-amber)' }}>
-                        {actionsEnabled ? 'ON' : 'OFF'}
-                      </span>
+                      <span style={{ fontSize: '9px', fontWeight: 700, padding: '1px 5px', borderRadius: 'var(--r-full)', background: actionsEnabled ? 'rgba(77,171,98,0.12)' : 'rgba(226,185,61,0.12)', color: actionsEnabled ? 'var(--accent-green)' : 'var(--accent-amber)' }}>{actionsEnabled ? 'ON' : 'OFF'}</span>
                     )}
                   </div>
                 ))}
@@ -1155,17 +1159,7 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
             )}
 
             {/* Modern Clean AI Chat Input Box */}
-            <div style={{
-              background: 'var(--bg-input)',
-              border: `1px solid ${slashPaletteOpen ? 'var(--accent-blue)' : 'var(--border-medium)'}`,
-              borderRadius: 'var(--r-lg)',
-              padding: '10px 12px 8px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '8px',
-              boxShadow: 'var(--shadow-sm)',
-              transition: 'border-color 140ms',
-            }}>
+            <div className="copilot-input-wrap">
               <textarea
                 ref={textareaRef}
                 value={inputText}
@@ -1177,96 +1171,74 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
                   : "Ask Lumora Copilot, attach screenshots, or type / for commands…"}
                 rows={2}
                 style={{
-                  width: '100%',
-                  background: 'transparent',
-                  border: 'none',
-                  color: 'var(--text-primary)',
-                  fontSize: '13px',
-                  resize: 'none',
-                  outline: 'none',
-                  fontFamily: 'inherit',
-                  lineHeight: 1.5,
-                  padding: 0,
-                  margin: 0,
+                  width: '100%', background: 'transparent', border: 'none',
+                  color: 'var(--text-primary)', fontSize: '13.5px', resize: 'none', outline: 'none',
+                  fontFamily: 'inherit', lineHeight: 1.55, padding: 0, margin: 0,
+                  fontWeight: 600,
                 }}
               />
 
               {/* Bottom Action Toolbar */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingTop: '6px',
-                borderTop: '1px solid var(--border-subtle)',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '10px', borderTop: '1.5px solid var(--border-subtle)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    title="Attach screenshot or documents (multi-select supported)"
+                    title="Attach files"
                     className="btn-subtle"
                     style={{
-                      height: '26px',
-                      padding: '0 8px',
-                      fontSize: '11px',
+                      height: '28px',
+                      padding: '0 12px',
+                      fontSize: '11.5px',
                       gap: '5px',
-                      color: attachedImages.length > 0 ? 'var(--accent-blue)' : 'var(--text-secondary)',
-                      borderRadius: 'var(--r-sm)',
+                      color: attachedImages.length > 0 ? 'var(--accent-primary-text)' : 'var(--accent-primary)',
+                      background: attachedImages.length > 0 ? 'var(--accent-primary)' : 'var(--bg-input)',
+                      border: '1px solid var(--border-subtle)',
+                      borderRadius: '100px',
+                      fontWeight: 800,
                     }}
                   >
                     <Paperclip size={12} />
                     <span>Attach</span>
                   </button>
-
                   <button
                     type="button"
                     onClick={() => { setSlashPaletteOpen(true); setSlashFilter(''); }}
                     className="btn-subtle"
                     style={{
-                      height: '26px',
-                      padding: '0 8px',
-                      fontSize: '11px',
+                      height: '28px',
+                      padding: '0 12px',
+                      fontSize: '11.5px',
                       gap: '4px',
-                      color: 'var(--text-muted)',
-                      borderRadius: 'var(--r-sm)',
-                      fontFamily: 'var(--font-mono)',
+                      color: 'var(--accent-primary)',
+                      background: 'var(--bg-input)',
+                      border: '1px solid var(--border-subtle)',
+                      borderRadius: '100px',
+                      fontWeight: 800,
                     }}
                   >
-                    <span>/ Commands</span>
+                    / Commands
                   </button>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <span style={{ fontSize: '10.5px', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <Cpu size={10} />
-                    <span>{aiProvider === 'gemini' ? activeModelLabel : 'Ollama'}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontSize: '11px', color: 'var(--accent-primary)', background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', padding: '3px 10px', borderRadius: '100px', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <Cpu size={11} />
+                    <span>{aiProvider === 'codex' ? 'Codex' : aiProvider === 'gemini' ? activeModelLabel : 'Ollama'}</span>
                   </span>
-
                   <button
                     type="button"
                     onClick={() => handleSendMessage()}
                     disabled={(!inputText.trim() && attachedImages.length === 0 && attachedDocs.length === 0) || isLoading || slashPaletteOpen}
-                    className="btn-primary"
-                    style={{
-                      width: '28px',
-                      height: '28px',
-                      padding: 0,
-                      borderRadius: 'var(--r-sm)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      opacity: (!inputText.trim() && attachedImages.length === 0 && attachedDocs.length === 0) || isLoading || slashPaletteOpen ? 0.35 : 1,
-                      cursor: 'pointer',
-                      flexShrink: 0,
-                    }}
+                    className="copilot-send-btn"
                   >
-                    <ArrowUp size={13} />
+                    <ArrowUp size={15} strokeWidth={2.5} />
                   </button>
                 </div>
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px', fontSize: '10.5px', color: 'var(--text-subtle)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '6px', fontSize: '10.5px', color: 'var(--text-muted)', fontWeight: 600 }}>
               <span>Paste/drop screenshot · Return to send · Shift+Return for new line</span>
             </div>
           </div>

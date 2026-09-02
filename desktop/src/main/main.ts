@@ -3,6 +3,9 @@ import path from 'path';
 import fs from 'fs';
 import { soloModeManager } from './soloMode';
 import { codexAcpService } from './codexAcpService';
+import { lumoraVoiceService } from './lumoraVoiceService';
+import { kokoroTtsService } from './kokoroTtsService';
+import { upstreamSyncService } from './upstreamSyncService';
 
 const isDev = process.env.NODE_ENV === 'development' || !app.isPackaged;
 const appDisplayName = isDev ? 'Lumora (Dev)' : 'Lumora';
@@ -165,6 +168,7 @@ function createWindow() {
   });
 
   codexAcpService.setMainWindow(mainWindow);
+  lumoraVoiceService.setMainWindow(mainWindow);
 
   const distHtmlPath = path.join(__dirname, '../../dist/index.html');
 
@@ -193,6 +197,7 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null;
     codexAcpService.setMainWindow(null);
+    lumoraVoiceService.setMainWindow(null);
   });
 }
 
@@ -371,6 +376,62 @@ ipcMain.handle('codex:writeLearnings', async (event, content, repoPath) => {
   return await codexAcpService.writeLearnings(content, repoPath || process.cwd());
 });
 
+// IPC Handlers for Lumora Voice Dictation (OpenWhispr base)
+ipcMain.handle('voice:getStatus', async () => {
+  return lumoraVoiceService.getStatus();
+});
+
+ipcMain.handle('voice:setRecording', async (event, isRecording: boolean) => {
+  lumoraVoiceService.setRecording(Boolean(isRecording));
+  return true;
+});
+
+ipcMain.handle('voice:setHotkey', async (event, hotkey: string) => {
+  return lumoraVoiceService.setHotkey(hotkey);
+});
+
+ipcMain.handle('voice:transcribeAudio', async (event, audioBase64: string, options?: any) => {
+  return await lumoraVoiceService.transcribeAudio(audioBase64, options);
+});
+
+ipcMain.handle('voice:checkWhisperInstalled', async () => {
+  return lumoraVoiceService.detectLocalWhisper();
+});
+
+ipcMain.handle('voice:checkPermissions', async () => {
+  return await lumoraVoiceService.checkPermissions();
+});
+
+ipcMain.handle('voice:requestMicPermission', async () => {
+  return await lumoraVoiceService.requestMicPermission();
+});
+
+ipcMain.handle('voice:injectText', async (event, text: string) => {
+  return await lumoraVoiceService.injectTextIntoFocusedApp(text);
+});
+
+// --- Kokoro-82M Text-To-Speech (TTS) IPC Handlers ---
+ipcMain.handle('tts:getStatus', async () => {
+  return kokoroTtsService.getStatus();
+});
+
+ipcMain.handle('tts:setVoice', async (event, voiceId: string) => {
+  return kokoroTtsService.setVoice(voiceId);
+});
+
+ipcMain.handle('tts:synthesize', async (event, text: string, options?: any) => {
+  return await kokoroTtsService.synthesize(text, options);
+});
+
+// --- Upstream Git Tracking & Model Checkpoint Feed IPC Handlers ---
+ipcMain.handle('upstream:checkStatus', async (event, repoKey: 'openwhispr' | 'kokoro') => {
+  return await upstreamSyncService.checkUpstreamStatus(repoKey);
+});
+
+ipcMain.handle('upstream:checkModelCheckpoints', async () => {
+  return await upstreamSyncService.checkModelCheckpoints();
+});
+
 app.whenReady().then(() => {
   const iconPath = getAppIcon();
   if (process.platform === 'darwin' && app.dock && iconPath) {
@@ -404,6 +465,7 @@ app.on('before-quit', (e) => {
 app.on('window-all-closed', () => {
   soloModeManager.stopSoloMode();
   codexAcpService.shutdown();
+  lumoraVoiceService.unregisterGlobalHotkeys();
   if (process.platform !== 'darwin') {
     app.quit();
   }

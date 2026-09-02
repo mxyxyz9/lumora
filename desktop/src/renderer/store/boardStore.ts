@@ -160,7 +160,7 @@ function initializeGuestWorkspaceIfEmpty() {
 }
 
 const DEFAULT_SETTINGS: AppSettings = {
-  theme: 'dark',
+  theme: 'lavender',
   fontScale: 'normal',
   listWidth: 300,
   appMode: 'team',
@@ -171,11 +171,16 @@ const DEFAULT_SETTINGS: AppSettings = {
   appIcon: 'dark',
 };
 
-function applyThemeToDom(theme: string) {
+function applyThemeToDom(theme: string, customBackground?: string) {
   if (typeof document === 'undefined' || !document.documentElement) return;
   document.documentElement.setAttribute('data-theme', theme);
   document.documentElement.className = '';
   document.documentElement.classList.add(`theme-${theme}`);
+  if (customBackground) {
+    document.documentElement.style.setProperty('--custom-canvas-bg', customBackground);
+  } else {
+    document.documentElement.style.removeProperty('--custom-canvas-bg');
+  }
 }
 
 function loadStoredSettings(): AppSettings {
@@ -183,7 +188,7 @@ function loadStoredSettings(): AppSettings {
     const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
     if (raw) {
       const stored = { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
-      applyThemeToDom(stored.theme || DEFAULT_SETTINGS.theme);
+      applyThemeToDom(stored.theme || DEFAULT_SETTINGS.theme, stored.customBackground);
       if (stored.appIcon && typeof window !== 'undefined' && window.electronAPI?.setAppIcon) {
         window.electronAPI.setAppIcon(stored.appIcon);
       }
@@ -249,6 +254,7 @@ interface BoardState {
   isMemberModalOpen: boolean;
   isActivityDrawerOpen: boolean;
   isGitHubModalOpen: boolean;
+  isArchivedCardsModalOpen: boolean;
 
   // Action methods
   showConfirm: (opts: Omit<ConfirmDialogState, 'isOpen'>) => void;
@@ -290,6 +296,8 @@ interface BoardState {
   // Card Operations
   createCard: (listId: string, title: string, description?: string, customSwimlaneId?: string) => Promise<string>;
   updateCard: (cardId: string, updateData: Partial<Card>) => Promise<void>;
+  archiveCard: (cardId: string) => Promise<void>;
+  unarchiveCard: (cardId: string) => Promise<void>;
   moveCard: (cardId: string, targetListId: string, targetSwimlaneId?: string, sort?: number) => Promise<void>;
   reorderCards: (sourceCardId: string, targetListId: string, targetIndex?: number) => Promise<void>;
   setCardSwimlane: (cardId: string, targetSwimlaneId: string) => Promise<void>;
@@ -323,6 +331,7 @@ interface BoardState {
   setMemberModalOpen: (open: boolean) => void;
   setActivityDrawerOpen: (open: boolean) => void;
   setGitHubModalOpen: (open: boolean) => void;
+  setArchivedCardsModalOpen: (open: boolean) => void;
   isSearchOpen: boolean;
   setSearchOpen: (open: boolean) => void;
 
@@ -339,8 +348,8 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   updateSettings: (newSettings) => {
     const updated = { ...get().settings, ...newSettings };
     set({ settings: updated });
-    if (newSettings.theme) {
-      applyThemeToDom(newSettings.theme);
+    if (newSettings.theme || newSettings.customBackground !== undefined) {
+      applyThemeToDom(updated.theme, updated.customBackground);
     }
     if (newSettings.appIcon && window.electronAPI?.setAppIcon) {
       window.electronAPI.setAppIcon(newSettings.appIcon);
@@ -387,6 +396,8 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   isMemberModalOpen: false,
   isActivityDrawerOpen: false,
   isGitHubModalOpen: false,
+  isArchivedCardsModalOpen: false,
+  setArchivedCardsModalOpen: (open) => set({ isArchivedCardsModalOpen: open }),
   isSearchOpen: false,
   setSearchOpen: (open) => set({ isSearchOpen: open }),
 
@@ -1016,6 +1027,14 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     }
 
     await wekanApi.updateCard(session.serverUrl, session.token, activeBoardId, card.listId, cardId, updateData);
+  },
+
+  archiveCard: async (cardId) => {
+    await get().updateCard(cardId, { archived: true });
+  },
+
+  unarchiveCard: async (cardId) => {
+    await get().updateCard(cardId, { archived: false });
   },
 
   moveCard: async (cardId, targetListId, targetSwimlaneId, sort) => {

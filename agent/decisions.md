@@ -76,5 +76,68 @@
   - Automatically surfaces newly released OpenAI models as soon as Codex CLI / ACP updates without requiring application recompilation.
   - Allows seamless switching of models and reasoning effort in active sessions via `session/set_config_option`.
 
+### Decision 11: OpenWhispr STT Architecture & License Attribution
+- **Decision**: Integrate the underlying speech-to-text pipeline architecture pioneered by OpenWhispr (MIT License) rather than maintaining an unneeded separate Electron window app.
+- **Rationale**:
+  - OpenWhispr's core strength is its reliable pipeline: 16kHz mono audio capture -> `whisper.cpp` / `sherpa-onnx` local inference with fallback to BYOK cloud Whisper endpoints.
+  - Retains all MIT license headers and attributes OpenWhispr in `desktop/README.md` and UI footers.
+
+### Decision 12: Dual Transcription Pipeline (Local Whisper + Cloud BYOK)
+- **Decision**: Main process `LumoraVoiceService` dynamically scans local PATH and `~/.lumora/models/` for `whisper-cli` / `whisper.cpp` binaries. If not present or if user has configured an API key (OpenAI, Groq, or Gemini), it automatically routes through high-speed cloud Whisper endpoints.
+- **Rationale**:
+  - Ensures Lumora Voice works immediately on day one even if C++ compilation / local binaries are not yet installed on the host machine.
+  - Gives users choice between 100% offline privacy-first local Whisper or ultra-fast cloud transcription.
+
+### Decision 13: Reuse of AiService Task Breakdown Schema for Structure Pass
+- **Decision**: `VoiceStructureService` uses the exact same prompting and extraction pattern as `AiService.generateTaskBreakdown()`, utilizing the existing `AiConfig` (Gemini / Ollama / Codex ACP).
+- **Rationale**:
+  - Avoids introducing redundant AI abstractions.
+  - Ensures consistent classification into board lists ("To Do", "In Progress", etc.) and urgency tiers across the application.
+
+### Decision 14: Scope Discipline & Strict MVP Checkpoint Isolation
+- **Decision**: For the MVP checkpoint, candidate notes are held in-memory in `VoicePanel.tsx` with Accept / Edit / Discard review operations. No cards are written to the Wekan REST/DDP board, no TTS audio is synthesized, and no upstream git sync jobs are triggered until MVP review is approved.
+- **Rationale**:
+  - Directly fulfills the prompt's hard requirement for scope discipline and validation before expanding the pipeline.
+
+### Decision 15: OpenWhispr Repository Cloned Fork
+- **Decision**: Cloned canonical `OpenWhispr/openwhispr` under `.tools/openwhispr` and imported its model registry and modules into `desktop/src/forks/openwhispr/` with original MIT `LICENSE` intact. Rebuilt `lumoraVoiceService.ts` on top of OpenWhispr's real model registry (`modelRegistryData.json`) and configuration.
+- **Rationale**:
+  - Strictly complies with the "fork, don't reinvent" requirement.
+  - Leverages OpenWhispr's battle-tested model download URLs, checksums, and Whisper/Parakeet configurations.
+
+### Decision 16: Complete Decoupling of Codex ACP from Voice Structuring
+- **Decision**: The structure pass in `VoiceStructureService` and `VoicePanel` is strictly scoped to `VoiceAiConfig` (`'gemini' | 'ollama'`).
+- **Rationale**:
+  - Codex ACP is an autonomous agent pipeline with subprocess lifecycle management, git branches, and deterministic quality gates meant for coding tasks.
+  - Voice note structuring is a lightweight, low-latency JSON transformation best served by standard LLM inference APIs (Gemini / Ollama), avoiding unnecessary subprocess overhead.
+
+### Decision 18: Direct Route to Wekan Board via useBoardStore
+- **Decision**: Candidate notes in `VoicePanel` route directly to the active board lists using `useBoardStore.getState().createCard()` rather than introducing an intermediate sync service.
+- **Rationale**:
+  - Leverages the existing battle-tested Wekan REST/DDP integration with optimistic UI updates and guest/solo/live server support.
+  - Automatically matches list titles with fallback to the primary list.
+
+### Decision 19: Persistent Dictation History Architecture
+- **Decision**: Created `VoiceHistoryManager` with structured session logs stored in persistent client storage (up to 200 sessions).
+- **Rationale**:
+  - Preserves dictation audio duration, raw transcripts, structured candidate notes, and routed card IDs.
+  - Enables full-text multi-field search and 1-click re-loading of past sessions into the review workspace.
+
+### Decision 20: Kokoro-82M TTS Real-Time Speech Synthesis
+- **Decision**: Integrated `KokoroTtsService` supporting 54 preset voices with ONNX execution on CPU and Web Speech fallback.
+- **Rationale**:
+  - Runs in real-time without requiring GPU hardware or expensive cloud TTS APIs.
+  - Added thin "Speak" controls on candidate notes, transcripts, and card descriptions without cluttered voice selection UI.
+
+### Decision 21: Safe Upstream Sync & Checkpoint Feeds
+- **Decision**: `UpstreamSyncService` adds `upstream` git remotes to companion forks (`.tools/openwhispr` and `.tools/kokoro`) and surfaces incoming commit diffs for human review without silent auto-merges.
+- **Rationale**:
+  - Ensures local adaptations are never overwritten unexpectedly.
+  - Separately queries model release feeds for Whisper, Parakeet, and Kokoro weights so model updates remain pure config changes.
+
+
+
+
+
 
 

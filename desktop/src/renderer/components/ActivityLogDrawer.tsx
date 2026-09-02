@@ -105,32 +105,19 @@ export const ActivityLogDrawer: React.FC = () => {
         }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Header */}
+        {/* Seamless Header */}
         <div
           style={{
-            padding: '16px 20px',
-            borderBottom: '1px solid var(--border-subtle)',
+            padding: '24px 24px 12px',
+            borderBottom: 'none',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            background: 'var(--bg-header)',
+            background: 'var(--bg-modal)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: 'var(--r-md)',
-                background: 'rgba(79,142,247,0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--accent-blue)',
-              }}
-            >
-              <ActivityIcon size={16} />
-            </div>
+            <ActivityIcon size={22} style={{ color: 'var(--accent-primary)', flexShrink: 0 }} />
             <div>
               <h2 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)' }}>
                 Activity & Audit Trail

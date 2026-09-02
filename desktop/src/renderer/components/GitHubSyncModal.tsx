@@ -72,23 +72,44 @@ export const GitHubSyncModal: React.FC = () => {
   const syncedCards = cards.filter(c => c.github);
 
   return (
-    <div className="modal-backdrop" onClick={() => setGitHubModalOpen(false)}>
-      <div className="modal-content" style={{ maxWidth: '620px' }} onClick={(e) => e.stopPropagation()}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+    <div className="confirm-modal-overlay" onClick={() => setGitHubModalOpen(false)} style={{ zIndex: 110 }}>
+      <div
+        className="modal-dialog"
+        style={{
+          width: '620px',
+          maxWidth: '92vw',
+          maxHeight: '85vh',
+          background: 'var(--bg-modal)',
+          borderRadius: '36px',
+          border: '1.5px solid var(--border-medium)',
+          boxShadow: 'var(--shadow-modal)',
+          overflow: 'hidden',
+          padding: '24px 28px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Seamless Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ width: '36px', height: '36px', borderRadius: 'var(--radius-md)', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Github size={20} />
-            </div>
+            <Github size={22} style={{ color: 'var(--accent-primary)', flexShrink: 0 }} />
             <div>
-              <h2 className="modal-title">GitHub Two-Way Sync</h2>
-              <p className="modal-subtitle">Bi-directional issue sync with cards, comments & state tracking</p>
+              <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+                GitHub Two-Way Sync
+              </h2>
+              <p style={{ margin: '2px 0 0', fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>
+                Bi-directional issue sync with cards, comments & state tracking
+              </p>
             </div>
           </div>
           <button
             onClick={() => setGitHubModalOpen(false)}
-            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}
+            className="btn-icon"
+            style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', color: 'var(--accent-primary)' }}
           >
-            <X size={18} />
+            <X size={15} />
           </button>
         </div>
 

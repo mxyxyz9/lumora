@@ -12,7 +12,7 @@ export const SettingsModal: React.FC = () => {
 
   if (!isSettingsModalOpen) return null;
 
-  const handleThemeChange = (theme: 'dark' | 'light' | 'oled') => {
+  const handleThemeChange = (theme: string) => {
     updateSettings({ theme });
     document.documentElement.setAttribute('data-theme', theme);
   };
@@ -25,102 +25,88 @@ export const SettingsModal: React.FC = () => {
     updateSettings({ appMode });
   };
 
+  const THEME_OPTIONS = [
+    { id: 'lavender', name: '🌸 Lavender', bg: '#f4f0ff', accent: '#7c5ce5' },
+    { id: 'sakura', name: '🍓 Sakura', bg: '#fdf2f8', accent: '#ec4899' },
+    { id: 'vanilla', name: '🍯 Vanilla', bg: '#fffdf5', accent: '#d97706' },
+    { id: 'midnight', name: '🪐 Midnight', bg: '#0d0b18', accent: '#a29bfe' },
+    { id: 'abyss', name: '🌌 Abyss', bg: '#080c14', accent: '#38bdf8' },
+    { id: 'emerald_dark', name: '🌲 Emerald', bg: '#05120f', accent: '#34d399' },
+  ];
+
   return (
-    <div className="modal-backdrop" onClick={() => setSettingsModalOpen(false)}>
+    <div className="confirm-modal-overlay" onClick={() => setSettingsModalOpen(false)} style={{ zIndex: 110 }}>
       <div
-        className="modal-content"
-        style={{ maxWidth: '560px', padding: '24px' }}
+        className="modal-dialog"
+        style={{
+          width: '560px',
+          maxWidth: '92vw',
+          maxHeight: '85vh',
+          background: 'var(--bg-modal)',
+          borderRadius: '36px',
+          border: '1.5px solid var(--border-medium)',
+          boxShadow: '0 24px 60px rgba(0, 0, 0, 0.25)',
+          overflow: 'hidden',
+          padding: '24px 28px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '18px',
+        }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+        {/* Seamless Header */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <h2 className="modal-title">Settings & Preferences</h2>
-            <p className="modal-subtitle">Customize theme, layout density, and runtime mode</p>
+            <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 800, color: 'var(--text-primary)' }}>
+              Settings & Preferences
+            </h2>
+            <p style={{ margin: '2px 0 0', fontSize: '12px', fontWeight: 600, color: 'var(--text-muted)' }}>
+              Customize theme, layout density, and runtime mode
+            </p>
           </div>
           <button
             onClick={() => setSettingsModalOpen(false)}
-            className="btn-header-action"
-            style={{ padding: '4px', border: 'none' }}
+            className="btn-icon"
+            style={{ width: '32px', height: '32px', borderRadius: '50%', background: 'var(--bg-input)', border: '1px solid var(--border-subtle)', color: 'var(--accent-primary)' }}
           >
-            <X size={16} />
+            <X size={15} />
           </button>
         </div>
 
-        <div style={{ height: '1px', background: 'var(--border-subtle)', marginBottom: '20px' }} />
-
         {/* Section 1: Appearance */}
         <div style={{ marginBottom: '20px' }}>
-          <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '10px' }}>
-            Theme & Appearance
+          <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>
+            Workspace Theme
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px', marginBottom: '16px' }}>
-            <button
-              type="button"
-              onClick={() => handleThemeChange('dark')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                padding: '9px 12px',
-                borderRadius: 'var(--radius-sm)',
-                background: settings.theme === 'dark' ? 'var(--bg-button-subtle-hover)' : 'var(--bg-input)',
-                border: `1px solid ${settings.theme === 'dark' ? 'var(--border-active)' : 'var(--border-subtle)'}`,
-                color: 'var(--text-primary)',
-                cursor: 'pointer',
-                fontWeight: 500,
-                fontSize: '0.8rem',
-              }}
-            >
-              <Moon size={14} />
-              <span>Dark</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleThemeChange('oled')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                padding: '9px 12px',
-                borderRadius: 'var(--radius-sm)',
-                background: settings.theme === 'oled' ? 'var(--bg-button-subtle-hover)' : 'var(--bg-input)',
-                border: `1px solid ${settings.theme === 'oled' ? 'var(--border-active)' : 'var(--border-subtle)'}`,
-                color: 'var(--text-primary)',
-                cursor: 'pointer',
-                fontWeight: 500,
-                fontSize: '0.8rem',
-              }}
-            >
-              <Monitor size={14} />
-              <span>OLED</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleThemeChange('light')}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-                padding: '9px 12px',
-                borderRadius: 'var(--radius-sm)',
-                background: settings.theme === 'light' ? 'var(--bg-button-subtle-hover)' : 'var(--bg-input)',
-                border: `1px solid ${settings.theme === 'light' ? 'var(--border-active)' : 'var(--border-subtle)'}`,
-                color: 'var(--text-primary)',
-                cursor: 'pointer',
-                fontWeight: 500,
-                fontSize: '0.8rem',
-              }}
-            >
-              <Sun size={14} />
-              <span>Light</span>
-            </button>
+            {THEME_OPTIONS.map(t => {
+              const isSel = settings.theme === t.id || (t.id === 'lavender' && (!settings.theme || settings.theme === 'playful' || settings.theme === 'light'));
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => handleThemeChange(t.id)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    padding: '9px 12px',
+                    borderRadius: '16px',
+                    background: isSel ? 'var(--bg-card-hover)' : 'var(--bg-input)',
+                    border: `1.5px solid ${isSel ? t.accent : 'var(--border-subtle)'}`,
+                    color: 'var(--text-primary)',
+                    cursor: 'pointer',
+                    fontWeight: 700,
+                    fontSize: '0.8rem',
+                    transition: 'all 0.18s ease',
+                  }}
+                >
+                  <span>{t.name}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* Column Width Slider */}

@@ -1,15 +1,11 @@
 .pop-over {
-  background: #fff;
-  border-radius: 6px;
-  border: 1px solid #dbdbdb;
-  border-bottom-color: #c2c2c2;
-  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid rgba(166, 140, 255, 0.2);
+  box-shadow: 0 16px 40px rgba(59, 42, 89, 0.16);
   position: absolute;
   /* Wider default to fit full color palette */
   width: min(380px, 55vw);
-  /* …and never wider than the window it opens in. A popup is positioned from the
-     element that opened it, so one opened near the right edge used to run off the
-     screen and lose its right-hand side - fields, and the Save button with them. */
   max-width: calc(100vw - 20px);
   z-index: 99999;
   margin-top: 6px;
@@ -42,16 +38,19 @@
   height: 41px;
   position: relative;
   margin-bottom: 6px;
-  background: #f7f7f7;
-  border-bottom: 1px solid #dcdcdc;
-  color: #666;
+  background: #fbf9ff;
+  border-bottom: 1px solid #ede8f9;
+  border-radius: 24px 24px 0 0;
+  color: #3b2a59;
 }
 .pop-over .header .header-title {
   display: block;
+  font-family: 'Quicksand', system-ui, sans-serif;
+  font-weight: 800;
+  color: #3b2a59;
   line-height: calc(36px * var(--wekan-ui-font-scale, 1));
   padding-top: 5px;
   margin: 0 18px;
-  font-weight: bold;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -635,18 +634,20 @@
   clear: both;
   cursor: pointer;
   display: block;
+  font-family: 'Quicksand', system-ui, sans-serif;
   font-weight: 700;
-  padding: 1.5px 10px;
+  padding: 3px 12px;
+  border-radius: 12px;
   position: relative;
-  margin: 0;
+  margin: 2px 6px;
   text-decoration: none;
   overflow: hidden;
   line-height: calc(33px * var(--wekan-ui-font-scale, 1));
   display: flex;
-  /*  flex-wrap:wrap;*/
-  gap: 5px;
+  gap: 8px;
   align-items: center;
-  color: #000 !important;
+  color: #3b2a59 !important;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .pop-over-list li > a > .member {
   align-self: flex-start;
@@ -678,19 +679,10 @@
   flex: 0 0 auto;
 }
 
-/* The highlighted row is the SAME highlight the All Boards left menu gives its
-   selected entry, and the Admin Panel gives its own: the theme accent, with the
-   label AND the icon in white. It was a fixed dark navy (#005377), so Member
-   Settings highlighted "My Cards" in a colour that appeared nowhere else on the
-   page and stayed navy however the user had themed WeKan.
-
-   The fallback is the WeKan header blue, so with no chosen theme the row matches
-   the bar above it exactly. `!important` on the colour because the base rule
-   above pins every row's text to `#000 !important`; the icon is named separately
-   for the same reason. */
 .pop-over-list li > a:not(.disabled):hover {
-  background-color: var(--theme-accent, #2980b9);
+  background-color: var(--theme-accent, #7c5ce5);
   color: #fff !important;
+  transform: translateX(3px);
 }
 .pop-over-list li > a:not(.disabled):hover i,
 .pop-over-list li > a:not(.disabled):hover i.fa {
