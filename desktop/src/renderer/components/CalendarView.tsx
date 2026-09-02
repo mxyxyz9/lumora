@@ -719,7 +719,7 @@ export const CalendarView: React.FC = () => {
                           const pal = getCardPalette(c, cardIdx);
                           const cardBg = isDarkTheme ? (pal.darkBg || 'var(--bg-card)') : pal.bg;
                           const cardTitle = isDarkTheme ? (pal.darkTitle || 'var(--text-primary)') : pal.title;
-                          const cardBorder = isDarkTheme ? (pal.darkBorder || '1px solid var(--border-subtle)') : '1px solid rgba(0,0,0,0.06)';
+                          const cardBorder = isDarkTheme ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid rgba(0,0,0,0.06)';
 
                           return (
                             <div
@@ -772,7 +772,7 @@ export const CalendarView: React.FC = () => {
                           );
                         })}
                         {cellCards.length > 3 && (
-                          <span style={{ fontSize: '10px', fontWeight: 800, color: '#7c5ce5', textAlign: 'center', marginTop: '2px' }}>
+                          <span style={{ fontSize: '10px', fontWeight: 800, color: 'var(--accent-primary)', textAlign: 'center', marginTop: '2px' }}>
                             +{cellCards.length - 3} more
                           </span>
                         )}
@@ -922,7 +922,7 @@ export const CalendarView: React.FC = () => {
                           const isCardDragged = draggedCardId === c._id;
                           const cardBg = isDarkTheme ? (pal.darkBg || 'var(--bg-card)') : pal.bg;
                           const cardTitle = isDarkTheme ? (pal.darkTitle || 'var(--text-primary)') : pal.title;
-                          const cardBorder = isDarkTheme ? (pal.darkBorder || '1px solid var(--border-subtle)') : '1px solid rgba(0,0,0,0.06)';
+                          const cardBorder = isDarkTheme ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid rgba(0,0,0,0.06)';
                           const tagBg = isDarkTheme ? (pal.darkTagBg || 'rgba(255,255,255,0.08)') : pal.tagBg;
                           const tagColor = isDarkTheme ? (pal.darkTagColor || pal.text) : pal.tagColor;
 
@@ -1211,7 +1211,7 @@ export const CalendarView: React.FC = () => {
                 const isCardDragged = draggedCardId === c._id;
                 const cardBg = isDarkTheme ? (pal.darkBg || 'var(--bg-card)') : pal.bg;
                 const cardTitle = isDarkTheme ? (pal.darkTitle || 'var(--text-primary)') : pal.title;
-                const cardBorder = isDarkTheme ? (pal.darkBorder || '1px solid var(--border-subtle)') : '1px solid rgba(0,0,0,0.06)';
+                const cardBorder = isDarkTheme ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid rgba(0,0,0,0.06)';
                 const tagBg = isDarkTheme ? (pal.darkTagBg || 'rgba(255,255,255,0.08)') : pal.tagBg;
                 const tagColor = isDarkTheme ? (pal.darkTagColor || pal.text) : pal.tagColor;
 
@@ -1284,7 +1284,7 @@ export const CalendarView: React.FC = () => {
                 const isCardDragged = draggedCardId === c._id;
                 const cardBg = isDarkTheme ? (pal.darkBg || 'var(--bg-card)') : pal.bg;
                 const cardTitle = isDarkTheme ? (pal.darkTitle || 'var(--text-primary)') : pal.title;
-                const cardBorder = isDarkTheme ? (pal.darkBorder || '1px solid var(--border-subtle)') : '1px solid rgba(0,0,0,0.06)';
+                const cardBorder = isDarkTheme ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid rgba(0,0,0,0.06)';
 
                 return (
                   <div
@@ -1417,7 +1417,7 @@ export const CalendarView: React.FC = () => {
                           const pal = getCardPalette(c, idx);
                           const cardBg = isDarkTheme ? (pal.darkBg || 'var(--bg-card)') : pal.bg;
                           const cardTitle = isDarkTheme ? (pal.darkTitle || 'var(--text-primary)') : pal.title;
-                          const cardBorder = isDarkTheme ? (pal.darkBorder || '1px solid var(--border-subtle)') : '1px solid rgba(0,0,0,0.06)';
+                          const cardBorder = isDarkTheme ? '1px solid rgba(255, 255, 255, 0.06)' : '1px solid rgba(0,0,0,0.06)';
                           const tagColor = isDarkTheme ? (pal.darkTagColor || pal.text) : pal.tagColor;
 
                           return (
@@ -1526,8 +1526,8 @@ export const CalendarView: React.FC = () => {
                           type="button"
                           onClick={() => setSelectedDayColor(p.id)}
                           style={{
-                            background: isDarkTheme ? p.darkBg : p.bg,
-                            border: selectedDayColor === p.id ? '2.5px solid var(--accent-primary)' : `1px solid ${isDarkTheme ? p.darkBorder : 'rgba(0,0,0,0.1)'}`,
+                            background: isDarkTheme ? (p.darkBg || 'var(--bg-card)') : p.bg,
+                            border: selectedDayColor === p.id ? '2.5px solid var(--accent-primary)' : `1px solid ${isDarkTheme ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.1)'}`,
                             borderRadius: '14px',
                             height: '36px',
                             display: 'flex',

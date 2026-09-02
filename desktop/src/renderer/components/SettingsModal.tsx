@@ -29,9 +29,9 @@ export const SettingsModal: React.FC = () => {
     { id: 'lavender', name: '🌸 Lavender', bg: '#f4f0ff', accent: '#7c5ce5' },
     { id: 'sakura', name: '🍓 Sakura', bg: '#fdf2f8', accent: '#ec4899' },
     { id: 'vanilla', name: '🍯 Vanilla', bg: '#fffdf5', accent: '#d97706' },
-    { id: 'midnight', name: '🪐 Midnight', bg: '#0d0b18', accent: '#a29bfe' },
-    { id: 'abyss', name: '🌌 Abyss', bg: '#080c14', accent: '#38bdf8' },
-    { id: 'emerald_dark', name: '🌲 Emerald', bg: '#05120f', accent: '#34d399' },
+    { id: 'midnight', name: '⚡ Studio Slate', bg: '#090a0f', accent: '#818cf8' },
+    { id: 'abyss', name: '💎 Carbon Titanium', bg: '#0b0c10', accent: '#38bdf8' },
+    { id: 'emerald_dark', name: '🌲 Nordic Pine', bg: '#090f0e', accent: '#34d399' },
   ];
 
   return (

@@ -342,7 +342,7 @@ export const GlobalSearchModal: React.FC<GlobalSearchModalProps> = ({
               const tagBg = isDarkTheme ? (pal.darkTagBg || 'rgba(255,255,255,0.08)') : pal.tagBg;
               const tagColor = isDarkTheme ? (pal.darkTagColor || pal.text) : pal.tagColor;
               const cardBorder = isDarkTheme
-                ? (isSelected ? '2px solid var(--accent-primary)' : (pal.darkBorder || '1px solid var(--border-subtle)'))
+                ? (isSelected ? '2px solid var(--accent-primary)' : '1px solid rgba(255, 255, 255, 0.06)')
                 : (isSelected ? '2px solid var(--accent-primary)' : '1px solid rgba(0,0,0,0.06)');
 
               return (

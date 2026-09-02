@@ -82,7 +82,10 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
     deleteAttachment,
     addBoardLabel,
     showConfirm,
+    settings,
   } = useBoardStore();
+
+  const isDarkTheme = ['midnight', 'abyss', 'emerald_dark', 'dark', 'oled'].includes(settings.theme || '');
 
   const list = lists.find(l => l._id === card.listId);
   const swimlane = swimlanes.find(s => s._id === card.swimlaneId);
@@ -881,7 +884,7 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
             {/* Card Color Property */}
             <div className="notion-prop-row">
               <div className="notion-prop-label">
-                <Palette size={13} style={{ color: '#7c5ce5' }} />
+                <Palette size={13} style={{ color: 'var(--accent-primary)' }} />
                 <span>Card Color</span>
               </div>
               <div className="notion-prop-value" ref={colorMenuRef}>
@@ -896,7 +899,7 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                       width: '14px',
                       height: '14px',
                       borderRadius: '50%',
-                      background: currentCardPalette.bg,
+                      background: isDarkTheme ? (currentCardPalette.darkBg || 'var(--bg-card)') : currentCardPalette.bg,
                       border: '1.5px solid rgba(0,0,0,0.15)',
                     }}
                   />
@@ -919,7 +922,7 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                             setIsColorOpen(false);
                           }}
                           style={{
-                            background: p.bg,
+                            background: isDarkTheme ? (p.darkBg || 'var(--bg-card)') : p.bg,
                             border: (card.color === p.id || (!card.color && currentCardPalette.id === p.id))
                               ? '2.5px solid var(--accent-primary)'
                               : '1px solid var(--border-subtle)',
@@ -931,7 +934,7 @@ const CardDetailDrawerInner: React.FC<CardDetailDrawerInnerProps> = ({ card }) =
                             cursor: 'pointer',
                             fontWeight: 800,
                             fontSize: '10.5px',
-                            color: p.title,
+                            color: isDarkTheme ? p.darkTitle : p.title,
                             boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
                             transition: 'all 0.15s ease',
                           }}

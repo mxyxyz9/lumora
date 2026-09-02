@@ -1090,8 +1090,8 @@ export const AiAssistantDrawer: React.FC<AiAssistantDrawerProps> = ({ isOpen, on
 
             {isLoading && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--text-muted)', fontSize: '12px', padding: '4px 2px' }}>
-                <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: '#7c5ce5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Loader2 size={11} className="animate-spin" style={{ color: '#fff' }} />
+                <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Loader2 size={11} className="animate-spin" style={{ color: 'var(--accent-primary-text, #ffffff)' }} />
                 </div>
                 <div>
                   <div style={{ fontSize: '11.5px', fontWeight: 600, color: 'var(--text-secondary)' }}>Copilot is analyzing…</div>

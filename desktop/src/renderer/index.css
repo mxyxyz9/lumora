@@ -247,87 +247,87 @@
   --logo-dot:              #fcd34d;
 }
 
-/* ── 4. Cyber Midnight (Neon Violet Obsidian Dark Theme) ───────────────── */
+/* ── 4. Studio Slate (Anthropic/Linear Dark Theme) ───────────────── */
 [data-theme='midnight'], [data-theme='purple'], [data-theme='dark'], [data-theme='notion_dark'] {
-  --bg-app:        #0d0b18;
-  --bg-canvas:     #0d0b18;
-  --bg-sidebar:    #131024;
-  --bg-header:     #16132a;
-  --bg-column:     #1a1632;
-  --bg-card:       #231d42;
-  --bg-card-hover: #2d2654;
-  --bg-modal:      #16132a;
-  --bg-input:      #110e20;
-  --bg-input-focus:#231d42;
-  --bg-button-subtle: #1e1938;
-  --bg-button-hover:  #2d2452;
-  --bg-badge:         #231d42;
-  --border-subtle: rgba(162, 155, 254, 0.16);
-  --border-medium: rgba(162, 155, 254, 0.28);
-  --border-strong: rgba(162, 155, 254, 0.5);
+  --bg-app:        #0c0d12;
+  --bg-canvas:     #0c0d12;
+  --bg-sidebar:    #11131a;
+  --bg-header:     #11131a;
+  --bg-column:     #161822;
+  --bg-card:       #1d202d;
+  --bg-card-hover: #262a3b;
+  --bg-modal:      #161822;
+  --bg-input:      #0c0d12;
+  --bg-input-focus:#1d202d;
+  --bg-button-subtle: #1a1d29;
+  --bg-button-hover:  #242938;
+  --bg-badge:         #1d202d;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.24);
   --border-card:   rgba(0, 0, 0, 0.45);
-  --border-sidebar:rgba(162, 155, 254, 0.14);
+  --border-sidebar:rgba(255, 255, 255, 0.08);
   --shadow-xs:   0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.5);
   --shadow-md:   0 8px 24px rgba(0, 0, 0, 0.6);
   --shadow-lg:   0 16px 40px rgba(0, 0, 0, 0.7);
   --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.35);
-  --shadow-modal:0 24px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(162, 155, 254, 0.2);
-  --text-primary:  #f8f6ff;
-  --text-secondary:#ded7ff;
-  --text-muted:    #a69ccf;
-  --text-subtle:   #796e9e;
-  --text-inverse:  #0d0b18;
-  --accent-blue:   #00cec9;
+  --shadow-modal:0 24px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --text-primary:  #f1f3f9;
+  --text-secondary:#94a3b8;
+  --text-muted:    #64748b;
+  --text-subtle:   #475569;
+  --text-inverse:  #0c0d12;
+  --accent-blue:   #38bdf8;
   --accent-purple: #c084fc;
   --accent-green:  #34d399;
   --accent-amber:  #fbbf24;
   --accent-red:    #f87171;
   --accent-rose:   #f472b6;
-  --accent-primary:#a29bfe;
-  --accent-primary-text: #0d0b18;
+  --accent-primary:#818cf8;
+  --accent-primary-text: #ffffff;
   --success:       #34d399;
   --warning:       #fbbf24;
   --danger:        #f87171;
-  --info:          #a29bfe;
-  --logo-left-pill:        #a29bfe;
-  --logo-left-pill-bottom: #6c5ce7;
-  --logo-right-pill:       #00cec9;
-  --logo-right-pill-bottom:#0984e3;
-  --logo-dot:              #81ecec;
+  --info:          #818cf8;
+  --logo-left-pill:        #818cf8;
+  --logo-left-pill-bottom: #6366f1;
+  --logo-right-pill:       #a78bfa;
+  --logo-right-pill-bottom:#8b5cf6;
+  --logo-dot:              #c084fc;
 }
 
-/* ── 5. Obsidian Abyss (Carbon Sapphire Dark Theme) ───────────────────── */
+/* ── 5. Carbon Titanium (Google Material & Apple Pro Dark) ───────────────────── */
 [data-theme='abyss'], [data-theme='obsidian'], [data-theme='slate'] {
-  --bg-app:        #080c14;
-  --bg-canvas:     #080c14;
-  --bg-sidebar:    #0e1320;
-  --bg-header:     #101726;
-  --bg-column:     #141c2e;
-  --bg-card:       #1c283e;
-  --bg-card-hover: #243552;
-  --bg-modal:      #101726;
-  --bg-input:      #0b101c;
-  --bg-input-focus:#1c283e;
-  --bg-button-subtle: #141d2e;
-  --bg-button-hover:  #1e2b44;
-  --bg-badge:         #1c283e;
-  --border-subtle: rgba(56, 189, 248, 0.16);
-  --border-medium: rgba(56, 189, 248, 0.28);
-  --border-strong: rgba(56, 189, 248, 0.5);
+  --bg-app:        #090a0f;
+  --bg-canvas:     #090a0f;
+  --bg-sidebar:    #0e1017;
+  --bg-header:     #0e1017;
+  --bg-column:     #141722;
+  --bg-card:       #1c212e;
+  --bg-card-hover: #252b3d;
+  --bg-modal:      #141722;
+  --bg-input:      #090a0f;
+  --bg-input-focus:#1c212e;
+  --bg-button-subtle: #181c29;
+  --bg-button-hover:  #22283a;
+  --bg-badge:         #1c212e;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.24);
   --border-card:   rgba(0, 0, 0, 0.5);
-  --border-sidebar:rgba(56, 189, 248, 0.14);
+  --border-sidebar:rgba(255, 255, 255, 0.08);
   --shadow-xs:   0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.5);
   --shadow-md:   0 8px 24px rgba(0, 0, 0, 0.6);
   --shadow-lg:   0 16px 40px rgba(0, 0, 0, 0.7);
   --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.35);
-  --shadow-modal:0 24px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(56, 189, 248, 0.2);
+  --shadow-modal:0 24px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.1);
   --text-primary:  #f8fafc;
-  --text-secondary:#d1dbe8;
-  --text-muted:    #94a7c0;
-  --text-subtle:   #627794;
-  --text-inverse:  #080c14;
+  --text-secondary:#94a3b8;
+  --text-muted:    #64748b;
+  --text-subtle:   #475569;
+  --text-inverse:  #090a0f;
   --accent-blue:   #38bdf8;
   --accent-purple: #818cf8;
   --accent-green:  #34d399;
@@ -335,49 +335,49 @@
   --accent-red:    #f87171;
   --accent-rose:   #f472b6;
   --accent-primary:#38bdf8;
-  --accent-primary-text: #080c14;
+  --accent-primary-text: #090a0f;
   --success:       #34d399;
   --warning:       #fbbf24;
   --danger:        #f87171;
   --info:          #38bdf8;
-  --logo-left-pill:        #6366f1;
-  --logo-left-pill-bottom: #4f46e5;
-  --logo-right-pill:       #38bdf8;
-  --logo-right-pill-bottom:#0284c7;
-  --logo-dot:              #7dd3fc;
+  --logo-left-pill:        #38bdf8;
+  --logo-left-pill-bottom: #0284c7;
+  --logo-right-pill:       #7dd3fc;
+  --logo-right-pill-bottom:#38bdf8;
+  --logo-dot:              #bae6fd;
 }
 
-/* ── 6. Twilight Emerald (Aurora Pine Dark Theme) ─────────────────────── */
+/* ── 6. Nordic Pine (Scandinavian Dark Minimalist) ─────────────────────── */
 [data-theme='emerald_dark'], [data-theme='twilight_emerald'], [data-theme='forest_dark'] {
-  --bg-app:        #05120f;
-  --bg-canvas:     #05120f;
-  --bg-sidebar:    #091c17;
-  --bg-header:     #0c241e;
-  --bg-column:     #102c25;
-  --bg-card:       #163c32;
-  --bg-card-hover: #1e4e42;
-  --bg-modal:      #0c241e;
-  --bg-input:      #061612;
-  --bg-input-focus:#163c32;
-  --bg-button-subtle: #0f2b23;
-  --bg-button-hover:  #174236;
-  --bg-badge:         #163c32;
-  --border-subtle: rgba(52, 211, 153, 0.16);
-  --border-medium: rgba(52, 211, 153, 0.28);
-  --border-strong: rgba(52, 211, 153, 0.5);
+  --bg-app:        #0a1010;
+  --bg-canvas:     #0a1010;
+  --bg-sidebar:    #0f1717;
+  --bg-header:     #0f1717;
+  --bg-column:     #142020;
+  --bg-card:       #1a2929;
+  --bg-card-hover: #223636;
+  --bg-modal:      #142020;
+  --bg-input:      #0a1010;
+  --bg-input-focus:#1a2929;
+  --bg-button-subtle: #182626;
+  --bg-button-hover:  #203333;
+  --bg-badge:         #1a2929;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.14);
+  --border-strong: rgba(255, 255, 255, 0.24);
   --border-card:   rgba(0, 0, 0, 0.5);
-  --border-sidebar:rgba(52, 211, 153, 0.14);
+  --border-sidebar:rgba(255, 255, 255, 0.08);
   --shadow-xs:   0 1px 3px rgba(0, 0, 0, 0.4);
   --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.5);
   --shadow-md:   0 8px 24px rgba(0, 0, 0, 0.6);
   --shadow-lg:   0 16px 40px rgba(0, 0, 0, 0.7);
   --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.35);
-  --shadow-modal:0 24px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(52, 211, 153, 0.2);
-  --text-primary:  #f0fdf8;
-  --text-secondary:#bbf7dd;
-  --text-muted:    #7adcb5;
-  --text-subtle:   #51967d;
-  --text-inverse:  #05120f;
+  --shadow-modal:0 24px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  --text-primary:  #e6f4ea;
+  --text-secondary:#86a397;
+  --text-muted:    #587066;
+  --text-subtle:   #3c4f48;
+  --text-inverse:  #0a1010;
   --accent-blue:   #2dd4bf;
   --accent-purple: #a78bfa;
   --accent-green:  #34d399;
@@ -392,9 +392,9 @@
   --info:          #34d399;
   --logo-left-pill:        #34d399;
   --logo-left-pill-bottom: #059669;
-  --logo-right-pill:       #2dd4bf;
-  --logo-right-pill-bottom:#0d9488;
-  --logo-dot:              #6ee7b7;
+  --logo-right-pill:       #6ee7b7;
+  --logo-right-pill-bottom:#10b981;
+  --logo-dot:              #a7f3d0;
 }
 
 /* ── Reset ─────────────────────────────────────────────────────────────── */
@@ -1032,8 +1032,8 @@ html, body, #root {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: #7c5ce5;
-  color: #ffffff;
+  background: var(--accent-primary, #7c5ce5);
+  color: var(--accent-primary-text, #ffffff);
   font-weight: 800;
   font-size: 13px;
   border: none;
@@ -1044,18 +1044,18 @@ html, body, #root {
   line-height: 1;
   height: 34px;
   letter-spacing: -0.01em;
-  box-shadow: 0 4px 14px rgba(124, 92, 229, 0.25);
+  box-shadow: 0 4px 14px var(--border-card);
 }
 
 .btn-primary:hover {
-  background: #6a49db;
+  filter: brightness(1.08);
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 20px rgba(124, 92, 229, 0.35);
+  box-shadow: 0 6px 20px var(--border-card);
 }
 
 .btn-primary:active {
   transform: scale(0.97);
-  box-shadow: 0 2px 8px rgba(124, 92, 229, 0.3);
+  box-shadow: 0 2px 8px var(--border-card);
 }
 
 .btn-primary:disabled {
@@ -1268,7 +1268,8 @@ html, body, #root {
 [data-theme='midnight'] .kanban-column,
 [data-theme='abyss'] .kanban-column,
 [data-theme='emerald_dark'] .kanban-column {
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .kanban-column:active {
@@ -1340,12 +1341,45 @@ html, body, #root {
 .column-count {
   font-weight: 800;
   font-size: 1rem;
-  color: #ffffff;
-  background: #a68cff;
+  color: var(--accent-primary-text, #ffffff);
+  background: var(--accent-primary, #7c5ce5);
   padding: 3px 12px;
   border-radius: 20px;
-  box-shadow: 0 2px 6px rgba(166, 140, 255, 0.35);
+  box-shadow: 0 2px 6px var(--border-card);
   line-height: 1.3;
+}
+
+/* ── Add Column Dashed Card (Theme-Aware) ────────────────────────────── */
+.board-add-column-card {
+  width: 100%;
+  min-height: 120px;
+  padding: 24px 20px;
+  background: var(--bg-card);
+  border: 2.5px dashed var(--border-medium);
+  border-radius: 40px;
+  color: var(--accent-primary);
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 16px var(--border-card);
+}
+
+.board-add-column-card:hover {
+  background: var(--bg-card-hover);
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 12px 30px var(--border-card);
+}
+
+.board-add-column-card:active {
+  transform: translateY(-1px) scale(1);
 }
 
 .card-list,
@@ -1389,9 +1423,25 @@ html, body, #root {
   box-shadow: 0 10px 0px rgba(100, 80, 200, 0.08), 0 8px 20px rgba(100, 80, 200, 0.06);
 }
 
+[data-theme='midnight'] .kanban-card:hover,
+[data-theme='abyss'] .kanban-card:hover,
+[data-theme='emerald_dark'] .kanban-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 10px 0px rgba(0,0,0,0.35), 0 8px 20px rgba(0,0,0,0.2) !important;
+  filter: brightness(1.15);
+}
+
 .kanban-card:active {
   transform: translateY(-2px) scale(1.01);
   box-shadow: 0 4px 0px rgba(100, 80, 200, 0.06);
+}
+
+[data-theme='midnight'] .kanban-card:active,
+[data-theme='abyss'] .kanban-card:active,
+[data-theme='emerald_dark'] .kanban-card:active {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 4px 0px rgba(0,0,0,0.3) !important;
+  filter: brightness(1.1);
 }
 
 .kanban-card.is-dragging {
@@ -1709,13 +1759,13 @@ html, body, #root {
 .confirm-icon-badge.primary,
 .confirm-icon-badge.info,
 .confirm-icon-badge.default {
-  color: #7c5ce5;
+  color: var(--accent-primary, #7c5ce5);
 }
 
 .confirm-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(32, 20, 53, 0.45);
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   z-index: 99999;
@@ -1850,15 +1900,15 @@ html, body, #root {
 }
 
 .confirm-btn-primary {
-  background: #7c5ce5;
-  color: #ffffff !important;
+  background: var(--accent-primary, #7c5ce5);
+  color: var(--accent-primary-text, #ffffff) !important;
   border: none;
-  box-shadow: 0 2px 10px rgba(124, 92, 229, 0.25);
+  box-shadow: 0 2px 10px var(--border-card);
 }
 
 .confirm-btn-primary:hover {
-  background: #6a49db;
-  box-shadow: 0 4px 16px rgba(124, 92, 229, 0.35);
+  filter: brightness(1.08);
+  box-shadow: 0 4px 16px var(--border-card);
   transform: translateY(-1px);
 }
 
@@ -2654,14 +2704,14 @@ html, body, #root {
 }
 
 .voice-record-btn.idle {
-  background: #7c5ce5;
-  box-shadow: 0 6px 20px rgba(124, 92, 229, 0.35);
+  background: var(--accent-primary, #7c5ce5);
+  box-shadow: 0 6px 20px var(--border-card);
 }
 
 .voice-record-btn.idle:hover:not(:disabled) {
-  background: #6a49db;
+  filter: brightness(1.08);
   transform: scale(1.05);
-  box-shadow: 0 8px 26px rgba(124, 92, 229, 0.45);
+  box-shadow: 0 8px 26px var(--border-card);
 }
 
 .voice-record-btn.recording {
@@ -2750,8 +2800,8 @@ html, body, #root {
 
 /* ── Copilot Chat Bubbles (Playful Theme) ─────────────────────────────── */
 .copilot-bubble-user {
-  background: #7c5ce5;
-  color: #ffffff;
+  background: var(--accent-primary, #7c5ce5);
+  color: var(--accent-primary-text, #ffffff);
   border-radius: 20px 20px 4px 20px;
   padding: 10px 16px;
   font-size: 13.5px;
@@ -2760,7 +2810,7 @@ html, body, #root {
   max-width: 84%;
   align-self: flex-end;
   position: relative;
-  box-shadow: 0 4px 14px rgba(124, 92, 229, 0.25);
+  box-shadow: 0 4px 14px var(--border-card);
   font-weight: 500;
 }
 
@@ -2854,15 +2904,15 @@ html, body, #root {
   height: 34px;
   border-radius: 50%;
   border: none;
-  background: #7c5ce5;
-  color: #ffffff;
+  background: var(--accent-primary, #7c5ce5);
+  color: var(--accent-primary-text, #ffffff);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.18s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(124, 92, 229, 0.25);
+  box-shadow: 0 2px 8px var(--border-card);
 }
 
 .copilot-send-btn:disabled {

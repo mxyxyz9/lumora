@@ -34,13 +34,12 @@ export const PASTEL_PALETTES = [
     title: '#382800',
     tagBg: 'rgba(255,255,255,0.7)',
     tagColor: '#8a6a00',
-    darkBg: 'linear-gradient(145deg, rgba(245, 158, 11, 0.18) 0%, rgba(36, 26, 14, 0.95) 100%)',
-    darkText: '#fcd34d',
-    darkTitle: '#ffffff',
-    darkBorder: '1.5px solid rgba(245, 158, 11, 0.38)',
-    darkTagBg: 'rgba(245, 158, 11, 0.22)',
-    darkTagColor: '#fef08a',
-    darkGlow: 'rgba(245, 158, 11, 0.2)',
+    // Dark: Rich Golden Amber
+    darkBg: '#3a3018',
+    darkText: '#d4a84a',
+    darkTitle: '#ffe4a0',
+    darkTagBg: 'rgba(245, 190, 50, 0.18)',
+    darkTagColor: '#f0c850',
   },
   {
     id: 'purple',
@@ -50,13 +49,12 @@ export const PASTEL_PALETTES = [
     title: '#24143a',
     tagBg: 'rgba(255,255,255,0.7)',
     tagColor: '#493396',
-    darkBg: 'linear-gradient(145deg, rgba(168, 85, 247, 0.2) 0%, rgba(28, 18, 50, 0.95) 100%)',
-    darkText: '#d8b4fe',
-    darkTitle: '#ffffff',
-    darkBorder: '1.5px solid rgba(168, 85, 247, 0.38)',
-    darkTagBg: 'rgba(168, 85, 247, 0.22)',
-    darkTagColor: '#e9d5ff',
-    darkGlow: 'rgba(168, 85, 247, 0.2)',
+    // Dark: Royal Amethyst
+    darkBg: '#2e2050',
+    darkText: '#b89edb',
+    darkTitle: '#ddd0ff',
+    darkTagBg: 'rgba(180, 140, 255, 0.18)',
+    darkTagColor: '#c8a8ff',
   },
   {
     id: 'sky',
@@ -66,13 +64,12 @@ export const PASTEL_PALETTES = [
     title: '#0c383b',
     tagBg: 'rgba(255,255,255,0.7)',
     tagColor: '#1e7075',
-    darkBg: 'linear-gradient(145deg, rgba(56, 189, 248, 0.18) 0%, rgba(14, 26, 44, 0.95) 100%)',
-    darkText: '#7dd3fc',
-    darkTitle: '#ffffff',
-    darkBorder: '1.5px solid rgba(56, 189, 248, 0.38)',
-    darkTagBg: 'rgba(56, 189, 248, 0.22)',
-    darkTagColor: '#bae6fd',
-    darkGlow: 'rgba(56, 189, 248, 0.2)',
+    // Dark: Deep Ocean
+    darkBg: '#163040',
+    darkText: '#68b8d0',
+    darkTitle: '#b8e4f4',
+    darkTagBg: 'rgba(80, 190, 230, 0.18)',
+    darkTagColor: '#70c8e8',
   },
   {
     id: 'coral',
@@ -82,13 +79,12 @@ export const PASTEL_PALETTES = [
     title: '#4d0f0f',
     tagBg: 'rgba(255,255,255,0.7)',
     tagColor: '#a62a2a',
-    darkBg: 'linear-gradient(145deg, rgba(244, 63, 94, 0.18) 0%, rgba(38, 16, 26, 0.95) 100%)',
-    darkText: '#fda4af',
-    darkTitle: '#ffffff',
-    darkBorder: '1.5px solid rgba(244, 63, 94, 0.38)',
-    darkTagBg: 'rgba(244, 63, 94, 0.22)',
-    darkTagColor: '#fecdd3',
-    darkGlow: 'rgba(244, 63, 94, 0.2)',
+    // Dark: Wine Rose
+    darkBg: '#422028',
+    darkText: '#d48088',
+    darkTitle: '#ffc4ca',
+    darkTagBg: 'rgba(230, 100, 110, 0.18)',
+    darkTagColor: '#e88898',
   },
   {
     id: 'green',
@@ -98,13 +94,12 @@ export const PASTEL_PALETTES = [
     title: '#0a3d20',
     tagBg: 'rgba(255,255,255,0.7)',
     tagColor: '#1f8b4d',
-    darkBg: 'linear-gradient(145deg, rgba(52, 211, 153, 0.18) 0%, rgba(12, 34, 26, 0.95) 100%)',
-    darkText: '#6ee7b7',
-    darkTitle: '#ffffff',
-    darkBorder: '1.5px solid rgba(52, 211, 153, 0.38)',
-    darkTagBg: 'rgba(52, 211, 153, 0.22)',
-    darkTagColor: '#a7f3d0',
-    darkGlow: 'rgba(52, 211, 153, 0.2)',
+    // Dark: Emerald Forest
+    darkBg: '#183828',
+    darkText: '#60c090',
+    darkTitle: '#b0ecc8',
+    darkTagBg: 'rgba(60, 200, 130, 0.18)',
+    darkTagColor: '#68d098',
   },
   {
     id: 'peach',
@@ -114,13 +109,12 @@ export const PASTEL_PALETTES = [
     title: '#52200f',
     tagBg: 'rgba(255,255,255,0.7)',
     tagColor: '#c45b38',
-    darkBg: 'linear-gradient(145deg, rgba(249, 115, 22, 0.18) 0%, rgba(38, 20, 16, 0.95) 100%)',
-    darkText: '#fdba74',
-    darkTitle: '#ffffff',
-    darkBorder: '1.5px solid rgba(249, 115, 22, 0.38)',
-    darkTagBg: 'rgba(249, 115, 22, 0.22)',
-    darkTagColor: '#fed7aa',
-    darkGlow: 'rgba(249, 115, 22, 0.2)',
+    // Dark: Burnt Sienna
+    darkBg: '#3e2818',
+    darkText: '#d09060',
+    darkTitle: '#f0c8a8',
+    darkTagBg: 'rgba(220, 140, 80, 0.18)',
+    darkTagColor: '#e0a070',
   },
   {
     id: 'pink',
@@ -130,13 +124,12 @@ export const PASTEL_PALETTES = [
     title: '#4a0f30',
     tagBg: 'rgba(255,255,255,0.7)',
     tagColor: '#a62a6e',
-    darkBg: 'linear-gradient(145deg, rgba(236, 72, 153, 0.2) 0%, rgba(42, 16, 36, 0.95) 100%)',
-    darkText: '#f472b6',
-    darkTitle: '#ffffff',
-    darkBorder: '1.5px solid rgba(236, 72, 153, 0.38)',
-    darkTagBg: 'rgba(236, 72, 153, 0.22)',
-    darkTagColor: '#fbcfe8',
-    darkGlow: 'rgba(236, 72, 153, 0.2)',
+    // Dark: Deep Magenta
+    darkBg: '#3e1835',
+    darkText: '#d070a8',
+    darkTitle: '#ffc0e0',
+    darkTagBg: 'rgba(220, 100, 180, 0.18)',
+    darkTagColor: '#e080c0',
   },
   {
     id: 'slate',
@@ -146,13 +139,12 @@ export const PASTEL_PALETTES = [
     title: '#2f3542',
     tagBg: 'rgba(255,255,255,0.7)',
     tagColor: '#57606f',
-    darkBg: 'linear-gradient(145deg, rgba(148, 163, 184, 0.15) 0%, rgba(22, 28, 42, 0.95) 100%)',
-    darkText: '#cbd5e1',
-    darkTitle: '#ffffff',
-    darkBorder: '1.5px solid rgba(148, 163, 184, 0.32)',
-    darkTagBg: 'rgba(148, 163, 184, 0.2)',
-    darkTagColor: '#e2e8f0',
-    darkGlow: 'rgba(148, 163, 184, 0.15)',
+    // Dark: Steel Blue
+    darkBg: '#242830',
+    darkText: '#8898b0',
+    darkTitle: '#c8d0e0',
+    darkTagBg: 'rgba(140, 160, 200, 0.18)',
+    darkTagColor: '#98a8c8',
   },
 ];
 
@@ -211,8 +203,8 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ card, index }) => {
   const cardBg = isDarkTheme ? (palette.darkBg || 'var(--bg-card)') : palette.bg;
   const cardText = isDarkTheme ? (palette.darkText || 'var(--text-secondary)') : palette.text;
   const cardTitle = isDarkTheme ? (palette.darkTitle || 'var(--text-primary)') : palette.title;
-  const cardBorder = isDarkTheme ? (palette.darkBorder || '1.5px solid var(--border-subtle)') : '1px solid rgba(0,0,0,0.06)';
-  const tagBg = isDarkTheme ? (palette.darkTagBg || 'rgba(255,255,255,0.12)') : palette.tagBg;
+  const cardBorder = isDarkTheme ? 'none' : '1px solid rgba(0,0,0,0.06)';
+  const tagBg = isDarkTheme ? (palette.darkTagBg || 'rgba(255,255,255,0.1)') : palette.tagBg;
   const tagColor = isDarkTheme ? (palette.darkTagColor || palette.text) : palette.tagColor;
 
   useEffect(() => {
@@ -333,7 +325,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ card, index }) => {
           color: cardText,
           border: cardBorder,
           transform: isDraggedOver ? 'translateY(4px)' : undefined,
-          boxShadow: isDarkTheme ? `0 4px 16px rgba(0,0,0,0.4), 0 0 14px ${palette.darkGlow || 'rgba(0,0,0,0)'}` : undefined,
+          boxShadow: isDarkTheme ? '0 4px 0px rgba(0,0,0,0.25)' : undefined,
           transition: 'transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease',
         }}
       >
@@ -385,10 +377,10 @@ export const KanbanCard: React.FC<KanbanCardProps> = ({ card, index }) => {
                     width: '24px',
                     height: '24px',
                     borderRadius: '50%',
-                    background: isDarkTheme ? p.darkBg : p.bg,
+                    background: isDarkTheme ? (p.darkBg || 'var(--bg-card)') : p.bg,
                     border: (card.color === p.id || (!card.color && p.id === palette.id))
                       ? `2px solid var(--accent-primary)`
-                      : `1.5px solid ${isDarkTheme ? p.darkBorder : 'rgba(0,0,0,0.1)'}`,
+                      : `1.5px solid ${isDarkTheme ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.1)'}`,
                     cursor: 'pointer',
                   }}
                   title={p.name}

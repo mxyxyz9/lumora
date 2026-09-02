@@ -956,39 +956,8 @@ export const BoardView: React.FC = () => {
                 ) : (
                   <button
                     onClick={() => setIsAddingList(true)}
-                    style={{
-                      width: '100%',
-                      minHeight: '120px',
-                      padding: '24px 20px',
-                      background: 'rgba(255, 255, 255, 0.65)',
-                      border: '2.5px dashed rgba(166, 140, 255, 0.5)',
-                      borderRadius: '40px',
-                      color: '#a68cff',
-                      fontSize: '1.1rem',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px',
-                      transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                      backdropFilter: 'blur(8px)',
-                    }}
-                    onMouseEnter={e => {
-                      (e.currentTarget as HTMLElement).style.background = '#ffffff';
-                      (e.currentTarget as HTMLElement).style.color = '#7c5ce5';
-                      (e.currentTarget as HTMLElement).style.borderColor = '#7c5ce5';
-                      (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
-                      (e.currentTarget as HTMLElement).style.boxShadow = '0 12px 30px rgba(124, 92, 229, 0.15)';
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget as HTMLElement).style.background = 'rgba(255, 255, 255, 0.65)';
-                      (e.currentTarget as HTMLElement).style.color = '#a68cff';
-                      (e.currentTarget as HTMLElement).style.borderColor = 'rgba(166, 140, 255, 0.5)';
-                      (e.currentTarget as HTMLElement).style.transform = 'none';
-                      (e.currentTarget as HTMLElement).style.boxShadow = 'none';
-                    }}
+                    className="board-add-column-card"
+                    title="Add a new column"
                   >
                     <Plus size={20} />
                     <span>+ Add Column</span>
